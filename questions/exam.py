@@ -1,0 +1,18 @@
+import latex
+import functions
+
+file = open('exam.tex', 'w')
+
+latex.document_class(file)
+latex.packages(file)
+latex.new_commands(file)
+latex.begin(file)
+latex.set_tabs(file)
+
+q = functions.SimpleInverse()
+
+question = latex.QuestionTree(part_number=1, question_statement=q.write_question(), solution_statement=q.write_solution(), num_lines=q._num_lines)
+question.write_question(file)
+question.write_solution(file)
+
+latex.end(file)
