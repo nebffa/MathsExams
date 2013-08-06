@@ -16,13 +16,13 @@ class Sin(object):
         # base: h == 1 or pi
         # difficulty +: h != 1, h is an integer or the reciprocal of one
         a = not_named_yet.randint_no_zero(-2, 2)
-        c = not_named_yet.random.choice([-5*sympy.pi/6, -3*sympy.pi/4, -2*sympy.pi/3, -sympy.pi/2, -sympy.pi/3, -sympy.pi/4, -sympy.pi/6, 0,
+        c = random.choice([-5*sympy.pi/6, -3*sympy.pi/4, -2*sympy.pi/3, -sympy.pi/2, -sympy.pi/3, -sympy.pi/4, -sympy.pi/6,
                                          sympy.pi/6, sympy.pi/4, sympy.pi/3, sympy.pi/2, 2*sympy.pi/3, 3*sympy.pi/4, 5*sympy.pi/6, sympy.pi])
 
         if difficulty == 1:
-            self.equation = sympy.sin(a*x)
+            self.equation = sympy.sin(a*x, evaluate=False)
         elif difficulty == 2:
-            self.equation = sympy.sin(a*x + c)
+            self.equation = sympy.sin(a*x + c, evaluate=False)
         else:
             raise ValueError('You have supplied an invalid difficulty level! Choose between 1 or 2')
 
@@ -33,13 +33,13 @@ class Cos(object):
         # base: h == 1 or pi
         # difficulty +: h != 1, h is an integer or the reciprocal of one
         a = not_named_yet.randint_no_zero(-2, 2)
-        c = not_named_yet.random.choice([-5*sympy.pi/6, -3*sympy.pi/4, -2*sympy.pi/3, -sympy.pi/2, -sympy.pi/3, -sympy.pi/4, -sympy.pi/6, 0,
+        c = random.choice([-5*sympy.pi/6, -3*sympy.pi/4, -2*sympy.pi/3, -sympy.pi/2, -sympy.pi/3, -sympy.pi/4, -sympy.pi/6,
                                          sympy.pi/6, sympy.pi/4, sympy.pi/3, sympy.pi/2, 2*sympy.pi/3, 3*sympy.pi/4, 5*sympy.pi/6, sympy.pi])
 
         if difficulty == 1:
-            self.equation = sympy.cos(a*x)
+            self.equation = sympy.cos(a*x, evaluate=False)
         elif difficulty == 2:
-            self.equation = sympy.cos(a*x + c)
+            self.equation = sympy.cos(a*x + c, evaluate=False)
         else:
             raise ValueError('You have supplied an invalid difficulty level! Choose between 1 or 2')
 
@@ -50,7 +50,7 @@ class Tan(object):
         # base: h == 1 or pi
         # difficulty +: h != 1, h is an integer or the reciprocal of one
         a = not_named_yet.randint_no_zero(-2, 2)
-        c = not_named_yet.random.choice([-5*sympy.pi/6, -3*sympy.pi/4, -2*sympy.pi/3, -sympy.pi/2, -sympy.pi/3, -sympy.pi/4, -sympy.pi/6, 0,
+        c = random.choice([-5*sympy.pi/6, -3*sympy.pi/4, -2*sympy.pi/3, -sympy.pi/2, -sympy.pi/3, -sympy.pi/4, -sympy.pi/6,
                                          sympy.pi/6, sympy.pi/4, sympy.pi/3, sympy.pi/2, 2*sympy.pi/3, 3*sympy.pi/4, 5*sympy.pi/6, sympy.pi])
 
         if difficulty == 1:

@@ -14,4 +14,3 @@ class PiecewiseProbDensityFunction(object):
             self.equation = all_functions.request_cos(difficulty=1)
         elif self.function_type == 'linear':
             self.equation = all_functions.request_linear(difficulty)
-
