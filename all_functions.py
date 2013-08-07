@@ -1,8 +1,8 @@
 import random
 import sympy
-from maths.polynomials import linear, quadratic, absolute_value, hyperbola
-from maths.logs_exps import log, exp
-from maths.trig import trig
+from .polynomials import linear, quadratic, absolute_value, hyperbola
+from .logs_exps import log, exp
+from .trig import trig
 
 
 def random_function(linear_difficulty=random.randint(1, 2),
