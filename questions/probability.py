@@ -1,6 +1,6 @@
 import sympy
 import random
-from .. import all_functions, not_named_yet
+from .. import all_functions, not_named_yet, domains
 from ..symbols import *
 
 
@@ -43,12 +43,11 @@ class PiecewiseProbDensityFunction(object):
 
             self.domain = sympy.Interval(lower, upper, False, False)
         elif self.function_type == 'quadratic':
-            x1_intercept = not_named_yet.randint(-3, 1)
+            self.domain = domains.integer_domain()
 
-            x2_intercept = x1_intercept + not_named_yet.randint(4, 6)
-            self.equation = z*(x - x1_intercept) * (x - x2_intercept)
 
-            area = self.equation.integrate((x, x1_intercept, x2_intercept))
+
+            area = self.equation.integrate((x, self.domain.left, self.domain.right))
 
             values = sympy.solve(area - 1)
 
