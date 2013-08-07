@@ -1,5 +1,5 @@
 import sympy
-from maths import all_functions
+from .. import all_functions
 from sympy.abc import *
 
 

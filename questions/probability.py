@@ -1,7 +1,7 @@
 import sympy
 import random
-from maths import all_functions, not_named_yet
-from maths.symbols import *
+from .. import all_functions, not_named_yet
+from ..symbols import *
 
 
 class PiecewiseProbDensityFunction(object):

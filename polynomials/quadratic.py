@@ -1,8 +1,8 @@
+import sympy
 import random
 import gmpy
-from maths import not_named_yet
+from .. import not_named_yet
 from sympy.abc import *
-import sympy
 
 coefficients_bound = 5
 

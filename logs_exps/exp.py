@@ -1,6 +1,6 @@
 import sympy
-from maths import not_named_yet
-from maths.polynomials.linear import request_linear
+from .. import not_named_yet
+from ..polynomials.linear import request_linear
 
 
 class Exp(object):

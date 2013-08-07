@@ -4,7 +4,7 @@ import copy
 import operator
 import itertools
 import math
-from maths import not_named_yet
+from .. import not_named_yet
 from sympy.abc import *
 
 coefficients_bound = 5

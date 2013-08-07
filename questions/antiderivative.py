@@ -1,8 +1,7 @@
 import sympy
 import random
 from sympy.abc import *
-from maths import all_functions
-#from maths import not_named_yet
+from .. import all_functions
 
 
 class Antiderivative(object):

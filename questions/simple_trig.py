@@ -1,8 +1,8 @@
 import sympy
 import random
 from sympy.abc import *
-from maths import all_functions, sets
-from maths.trig import trig
+from .. import all_functions, sets
+from ..trig import trig
 
 
 class SimpleTrigSolve(object):

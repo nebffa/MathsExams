@@ -1,7 +1,7 @@
 import sympy
 import random
 from sympy.abc import *
-from maths import all_functions, solutions_printing, not_named_yet
+from .. import all_functions, solutions_printing, not_named_yet
 
 
 class SimpleDefiniteIntegral(object):
