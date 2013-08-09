@@ -50,9 +50,6 @@ def test_question(question_obj):
         tex_to_pdf.make_pdf('test')
         os.remove('test.pdf')
     except:  # on error, the file is somehow deleted, so recreate it so we can see what went wrong
-        f = open('test.tex', 'w')
-        _write_question(f, question_tree)
-        f.close()
         raise IOError('Could not compile .tex file')
 
 
