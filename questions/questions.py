@@ -1,7 +1,14 @@
-from ..latex import latex
+from ..latex import latex, tex_to_pdf
 
 
 def new_question(question_number, part):
+    """ Create a new question.
+
+    Required inputs: 
+        1. Question number inside the exam
+        2. A question part
+
+    """
     return latex.QuestionTree(part_number=question_number, 
                               question_statement=part.question_statement(), 
                               solution_statement=part.solution_statement(), 
@@ -10,6 +17,15 @@ def new_question(question_number, part):
 
 
 def add_part(question_tree, tree_location1, tree_location2=None, part=None):
+    """ Add a new part to an existing question.
+
+    Required inputs:
+        1. A QuestionTree object
+        2. A question part
+        3. The part's location inside the QuestionTree
+
+    """
+
     if part is None:
         question_tree.add_part(tree_location1)
     else:
@@ -20,12 +36,29 @@ def add_part(question_tree, tree_location1, tree_location2=None, part=None):
                                num_marks=part.num_marks)
         
 
-def question_test(f, question):
+def test_question(question_class):
+    """ Test whether a question's latex is compilable to a PDF.
+    """ 
+    question = question_class()
+
+    question_tree = new_question(question_number=1, part=question)
+    write_question('test.tex', question_tree)
+
+    try:
+        tex_to_pdf('test.tex')
+    except:
+        raise IOError('Could not compile .tex file')
+
+
+def _write_question(f, question_tree):
+    """ A helper function to test_question - writes a single question as a standalone .tex file.
+    """
+
     latex.document_class(f)
     latex.packages(f)
     latex.new_commands(f)
     latex.set_tabs(f)
     latex.begin(f)
-    question.write_question(f)
-    question.write_solution(f)
+    question_tree.write_question(f)
+    question_tree.write_solution(f)
     latex.end(f)
