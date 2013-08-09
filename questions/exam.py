@@ -1,4 +1,4 @@
-import latex
+from ..latex import latex
 import functions
 
 file = open('exam.tex', 'w')
@@ -11,7 +11,7 @@ latex.set_tabs(file)
 
 q = functions.SimpleInverse()
 
-question = latex.QuestionTree(part_number=1, question_statement=q.write_question(), solution_statement=q.write_solution(), num_lines=q._num_lines)
+question = latex.QuestionTree(part_number=1, question_statement=q.question_statement(), solution_statement=q.solution_statement(), num_lines=q._num_lines)
 question.write_question(file)
 question.write_solution(file)
 

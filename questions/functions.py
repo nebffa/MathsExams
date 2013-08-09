@@ -55,7 +55,7 @@ class SimpleInverse(object):
             self.domain, self.range = func.domain, func.range
         self.inverse_domain, self.inverse_range = self.range, self.domain
 
-    def write_question(self):
+    def question_statement(self):
         if random.choice([True, False]):
             self._num_lines, self._marks = 6, 2  # the question won't involve finding the domain
             question_statement = r'''Let $f:%s \rightarrow R, f(x) = %s$. Find the rule and
@@ -67,7 +67,7 @@ class SimpleInverse(object):
 
         return question_statement
 
-    def write_solution(self):
+    def solution_statement(self):
         solution = ''
         if self._num_lines == 7:
             solution += r'$d_{f^{-1}} = r_{f} = %s$' % sympy.latex(self.inverse_domain)

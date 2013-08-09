@@ -1,5 +1,3 @@
-
-
 def latex_newline():
     return r' \\ ' + '\n'
 
@@ -21,6 +19,8 @@ def new_commands(f):
     f.write('\leavevmode\n')
     f.write('\leaders\hrule\hskip\dimexpr\\textwidth -\@tempdima\mbox{}}\n\n')
 
+def set_tabs(f):
+    f.write(r'\= \tab \tab \= \tab \tab \= \\' + '\n')
 
 def begin(f):
     f.write(r'\begin{document}' + '\n')
@@ -31,10 +31,6 @@ def end(f):
     f.write('\end{tabbing}\n')
     f.write('\end{document}\n\n')
     f.close()
-
-
-def set_tabs(f):
-    f.write(r'\= \tab \tab \= \tab \tab \= \\' + '\n')
 
 
 class Part(object):
