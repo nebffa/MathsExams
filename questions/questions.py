@@ -38,11 +38,12 @@ def add_part(question_tree, tree_location1, tree_location2=None, part=None):
 
 def test_question(question_class):
     """ Test whether a question's latex is compilable to a PDF.
+
     """ 
     question = question_class()
 
     question_tree = new_question(question_number=1, part=question)
-    write_question('test.tex', question_tree)
+    _write_question('test.tex', question_tree)
 
     try:
         tex_to_pdf('test.tex')
@@ -52,6 +53,7 @@ def test_question(question_class):
 
 def _write_question(f, question_tree):
     """ A helper function to test_question - writes a single question as a standalone .tex file.
+
     """
 
     latex.document_class(f)
