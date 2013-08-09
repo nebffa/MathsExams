@@ -1,6 +1,6 @@
 import sympy
 import random
-from .. import all_functions, not_named_yet, domains
+from .. import domains
 from ..symbols import *
 
 
@@ -8,50 +8,65 @@ class PiecewiseProbDensityFunction(object):
     def __init__(self):
         self.function_type = random.choice(['sin', 'cos', 'linear', 'quadratic'])
 
-        self.function_type = 'quadratic'
-
         if self.function_type == 'sin':
-            self.equation = all_functions.request_sin(difficulty=1).equation
-        elif self.function_type == 'cos':
-            self.equation = all_functions.request_cos(difficulty=1).equation
-        elif self.function_type == 'linear':
             while True:
-                m = not_named_yet.randint(-2, 2, exclude=[0])
-                a = random.randint(8, 12)
-                c = not_named_yet.randint_no_zero(-3, 3)
+                self.domain = domains.integer_domain(low=0, high=2, minimum_distance=1)
+                m = random.choice([sympy.pi/2, sympy.pi])
+                self.equation = k * sympy.sin(m*x)
 
-                self.equation = ((m*x + c)/a).together()
+                area = self.equation.integrate((x, self.domain.left, self.domain.right))
+                try:
+                    self.value = sympy.solve(area - 1)[0]
+                except:
+                    self.value = None
 
-                x_intercept = -c/m
-
-                if m < 0:
-                    upper = x_intercept - 1
-                    trapezoid_area = (upper - z)/2 * (self.equation.subs({x: upper}) + self.equation.subs({x: z}))
-                    lower = sympy.solve(trapezoid_area - 1)
-
-                    lower = filter(lambda f: f < upper, lower)[0]
-                    
-                elif m > 0:
-                    lower = x_intercept + 1
-                    trapezoid_area = (z - lower)/2 * (self.equation.subs({x: lower}) + self.equation.subs({x: z}))
-                    upper = sympy.solve(trapezoid_area - 1)
-
-                    upper = filter(lambda f: f > lower, upper)[0]
-
-                if sympy.ask(sympy.Q.rational(lower)) and sympy.ask(sympy.Q.rational(upper)):
+                if self.value is not None:
+                    self.equation = self.equation.subs({k: self.value})
                     break
 
-            self.domain = sympy.Interval(lower, upper, False, False)
+        elif self.function_type == 'cos':
+            while True:
+                self.domain = domains.integer_domain(low=0, high=2, minimum_distance=1)
+                m = random.choice([sympy.pi/2, sympy.pi])
+                self.equation = k * sympy.cos(m*x)
+
+                area = self.equation.integrate((x, self.domain.left, self.domain.right))
+                try:
+                    self.value = sympy.solve(area - 1)[0]
+                except:
+                    self.value = None
+
+                if self.value is not None:
+                    self.equation = self.equation.subs({k: self.value})
+                    break
+
+        elif self.function_type == 'linear':
+            self.domain = domains.integer_domain()
+            m = random.randint(1, 2)
+            a = random.randint(7, 12)
+            self.equation = (m*x + z) / a
+
+            area = self.equation.integrate((x, self.domain.left, self.domain.right))
+            self.value = sympy.solve(area - 1)
+            self.equation = self.equation.subs({z: self.value[0]})
+
         elif self.function_type == 'quadratic':
             self.domain = domains.integer_domain()
-
+            self.equation = z * (x - self.domain.left) * (x - self.domain.right)
 
 
             area = self.equation.integrate((x, self.domain.left, self.domain.right))
-
             values = sympy.solve(area - 1)
+            self.equation = self.equation.subs({z: values[0]})
 
-            print values
+    def question_statement(self):
+        piecewise = sympy.Piecewise((self.equation, self.domain.left < x < self.domain.right), (0, True))
+        line_1 = r'The function $f(x) = %s$ is a probability density function for the continuous random variable $X$.' % sympy.latex(piecewise)
+        line_2 = r'Show that $k = %s$.' % self.value
+        return line_1 + line_2
+
+    def solution(self):
+        pass
 
 
 y = PiecewiseProbDensityFunction()

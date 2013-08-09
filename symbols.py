@@ -11,4 +11,5 @@ x7 = sympy.Wild('x7')
 x8 = sympy.Wild('x8')
 x9 = sympy.Wild('x9')
 
+k = sympy.Symbol('k')
 x, y, z = sympy.symbols('x y z')
