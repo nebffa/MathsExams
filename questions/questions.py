@@ -1,5 +1,5 @@
 from ..latex import latex, tex_to_pdf
-
+import os
 
 def new_question(question_number, part):
     """ Create a new question.
@@ -36,18 +36,23 @@ def add_part(question_tree, tree_location1, tree_location2=None, part=None):
                                num_marks=part.num_marks)
         
 
-def test_question(question_class):
+def test_question(question_obj):
     """ Test whether a question's latex is compilable to a PDF.
 
     """ 
-    question = question_class()
 
-    question_tree = new_question(question_number=1, part=question)
-    _write_question('test.tex', question_tree)
+    question_tree = new_question(question_number=1, part=question_obj)
+    f = open('test.tex', 'w')
+    _write_question(f, question_tree)
+    f.close()
 
     try:
-        tex_to_pdf('test.tex')
-    except:
+        tex_to_pdf.make_pdf('test')
+        os.remove('test.pdf')
+    except:  # on error, the file is somehow deleted, so recreate it so we can see what went wrong
+        f = open('test.tex', 'w')
+        _write_question(f, question_tree)
+        f.close()
         raise IOError('Could not compile .tex file')
 
 
@@ -59,8 +64,8 @@ def _write_question(f, question_tree):
     latex.document_class(f)
     latex.packages(f)
     latex.new_commands(f)
-    latex.set_tabs(f)
     latex.begin(f)
+    latex.set_tabs(f)
     question_tree.write_question(f)
     question_tree.write_solution(f)
     latex.end(f)

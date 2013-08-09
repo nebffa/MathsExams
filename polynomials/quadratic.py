@@ -29,6 +29,9 @@ class Quadratic(object):
 
     def __init__(self, difficulty):
 
+        if difficulty not in [1, 2, 3]:
+            raise ValueError('You gave an invalid difficulty of %d!' % difficulty)
+
         while True:
             a = not_named_yet.randint_no_zero(-coefficients_bound + 2, coefficients_bound - 2)
             b = random.randint(-coefficients_bound * 4, coefficients_bound * 4)

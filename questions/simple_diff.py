@@ -7,7 +7,7 @@ from .. import all_functions, not_named_yet
 class SimpleDiff(object):
     def __init__(self):
         self.num_lines = 5
-        self.__marks = 2
+        self.num_marks = 2
 
         # since we will never write the function type when writing the exam, we would like to not expose this. however,
         # class SimpleDiffEval needs to know what function type was used here as 1a and 1b never use the same function type
@@ -67,7 +67,7 @@ class SimpleDiff(object):
         #    file.write('\> \linefill \\\\\n')
         #file.write('\\\\\n')
 
-    def solution(self):
+    def solution_statement(self):
         total_string = ''
         if self._question_type == 'f':
             # look for chain rule candidates and show extra working for the chain rule
@@ -98,7 +98,7 @@ class SimpleDiffEval(object):
     # since questions 1a and 1b never use the same function type
     def __init__(self, function_type_in_simple_diff):
         self.num_lines = 5
-        self.__marks = 2
+        self.num_marks = 2
 
         function_types = ['product', 'quotient', 'composite']
         try:
@@ -136,8 +136,7 @@ class SimpleDiffEval(object):
 
         elif self.__function_type == 'quotient':
             # 2009 1b: y = cos(x) / (2x + 2), a = pi
-            # 2012 1b: y =
-            x / sin(x), a = pi / 2
+            # 2012 1b: y = x / sin(x), a = pi / 2
             x = sympy.Symbol('x')
             special_function = random.choice([sympy.cos(x), sympy.sin(x), sympy.exp(x)])
             linear_function = all_functions.request_linear(difficulty=3).equation
@@ -229,7 +228,7 @@ class SimpleDiffEval(object):
         #file.write('\\\\\n')
         #file.write('\n')
 
-    def solution(self):
+    def solution_statement(self):
         # needs more work at the moment - likely an inbetween step to evaluate every subexpression in f'(x) but not f'(x) itself
         total_string = "$%s'(x) = %s$ \\\\ \n" % (self._question_type, sympy.latex(self.derivative))
         x = sympy.Symbol('x')

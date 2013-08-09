@@ -105,8 +105,9 @@ class Part(object):
         return r'\textbf{%s.} \tab\=' % part_symbol
 
 
+# TODO: needs work to incorporate num_marks in the latex output
 class QuestionTree(object):
-    def __init__(self, part_number, question_statement='', solution_statement='', num_lines=0):
+    def __init__(self, part_number, question_statement='', solution_statement='', num_lines=0, num_marks=0):
         #self.data = {'part_number': part_no, 'statement': stmt, 'num_lines': num_lines}
         self.root = Part(part_number, question_statement, solution_statement, num_lines)
 

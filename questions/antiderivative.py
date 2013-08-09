@@ -9,7 +9,8 @@ class Antiderivative(object):
 
         # there is no correlation between function type and marks assigned, so we have to choose between
         # the historic 1 or 2 marks this question has been assigned
-        self._marks = random.randint(1, 2)
+        self.num_marks = random.randint(1, 2)
+        self.num_lines = 4
 
         self._function_type = random.choice(['linear', 'trig'])
 
@@ -51,12 +52,12 @@ class Antiderivative(object):
 
         return 'Find an antiderivative of $%s$ with respect to $x$.' % equation
 
-    def solution(self):
+    def solution_statement(self):
         # sympy integrates things like 1/x as log(x), not log(|x|) (the explanation given to me was that it was due to complex numbers)
 
         proper_antiderivative = self.antiderivative.replace(sympy.log(a), sympy.log(sympy.Abs(a)))
 
-        total_string = r'$%s + c$ \\\n' % sympy.latex(proper_antiderivative)
-        total_string += r'The constant $c$ is not necessary. It can be any real number, including zero. \\\n\n'
+        total_string = r'$%s + c$' % sympy.latex(proper_antiderivative)
+        total_string += r'The constant $c$ is not necessary. It can be any real number, including zero.'
 
         return total_string
