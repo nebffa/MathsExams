@@ -8,6 +8,7 @@ def document_class(f):
 
 def packages(f):
     f.write('\usepackage{amsmath}\n')  # used for \left and \right which are for absolute values
+    f.write('\usepackage{amssymb}\n')
     f.write('\usepackage{mathptmx}\n')
     f.write('\usepackage[margin=1cm]{geometry}\n\n')
 
@@ -94,7 +95,7 @@ class Part(object):
         return total_string
 
     def _question_lines(self, depth, num_lines):
-        total_string = ('\>' * depth + r'\linefill' + latex_newline()) * num_lines
+        total_string = (r'\>' * depth + r'\linefill' + latex_newline()) * num_lines
 
         return total_string + '\n'
 
