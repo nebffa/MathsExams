@@ -49,7 +49,7 @@ def test_question(question_obj):
     try:
         tex_to_pdf.make_pdf('test')
         os.remove('test.pdf')
-    except:  # on error, the file is somehow deleted, so recreate it so we can see what went wrong
+    except:
         raise IOError('Could not compile .tex file')
 
 
