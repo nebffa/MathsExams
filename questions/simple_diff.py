@@ -171,7 +171,7 @@ class SimpleDiffEval(object):
             # of a trig function
             outer_function = random.choice([sympy.exp, sympy.log])
 
-            inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 5)).equation
+            inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 3)).equation
 
             if outer_function == sympy.exp:
                 # with bad x values we can get things like: dy/dx = (4*x + 4)*exp(2*x**2 + 4*x + 20), at x = 1, dy/dx = exp(26)
@@ -184,7 +184,7 @@ class SimpleDiffEval(object):
                         count += 1
 
                     if count > 5:
-                        inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 5)).equation
+                        inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 3)).equation
             elif outer_function == sympy.log:
                 # the inner quadratic may never yield a positive number in this domain, so we will try
                 # a couple of times to find an x value that works, then we will request a new quadratic
@@ -197,7 +197,7 @@ class SimpleDiffEval(object):
                         count += 1
 
                     if count > 5:
-                        inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 5)).equation
+                        inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 3)).equation
             self.equation = outer_function(inner_function)
 
         if self.__function_type == 'quotient':

@@ -8,6 +8,7 @@ class SimpleDefiniteIntegral(object):
     def __init__(self):
         # 2009 2b: Evaluate integral(sqrt(x) + 1, 1, 4) [10 lines] [3 marks]
         self.num_lines = 3
+        self.num_marks = 3
 
         function_type = random.choice(['exp', 'trig', 'sqrt'])
 
