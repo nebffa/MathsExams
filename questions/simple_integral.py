@@ -37,11 +37,11 @@ class SimpleDefiniteIntegral(object):
 
         return question_statement
 
-    def solution(self):
+    def solution_statement(self):
         line_1 = r'$\displaystyle\int^{%d}_{%d} %s\ dx = \left[%s\right]_{%d}^{%d}$' % (self.boundary[1], self.boundary[0], sympy.latex(self.equation),
                                                                                     sympy.latex(self.equation.integrate()), self.boundary[1], self.boundary[0])
-        line_2 = '= ' + solutions_printing.integral_working(self.equation, x, self.boundary[0], self.boundary[1])
-        line_3 = '= ' + sympy.latex(self.answer)
+        line_2 = r'$= ' + solutions_printing.integral_working(self.equation, x, self.boundary[0], self.boundary[1]) + r'$'
+        line_3 = r'$= ' + sympy.latex(self.answer) + r'$'
 
         return line_1 + line_2 + line_3
 
@@ -50,6 +50,7 @@ class DefiniteIntegralEquality(object):
     def __init__(self):
         # 2010 2b. Find p given that int(2, 3, 1/(1-x)) = ln(p) [7 lines] [3 marks]
         self.num_lines = 7
+        self.num_marks = 3
         function = all_functions.request_linear(difficulty=3).equation
 
         self.equation = 1 / function
@@ -102,19 +103,19 @@ class DefiniteIntegralEquality(object):
         return r'Find p given that $\displaystyle\int^{%d}_{%d} %s\ dx = %s$' % (self.boundary[1], self.boundary[0],
                                                                                  sympy.latex(self.equation), sympy.latex(self.integral))
 
-    def solution(self):
+    def solution_statement(self):
         line1 = r'$\displaystyle\int^{%d}_{%d} %s\ dx = \left[%s\right]_{%d}^{%d}$' % (self.boundary[1], self.boundary[0], sympy.latex(self.equation),
                                                                                        sympy.latex(self.antiderivative), self.boundary[1], self.boundary[0])
-        inner_function = self.antiderivative.replace(a * log(b), b)
+        inner_function = self.antiderivative.replace(a * sympy.log(b), b)
 
         inner_upper = inner_function.subs({x: self.boundary[1]})
         inner_lower = inner_function.subs({x: self.boundary[0]})
 
-        upper_bound = self.antiderivative.replace(log(a), log(inner_upper, evaluate=False))
-        lower_bound = self.antiderivative.replace(log(a), log(inner_lower, evaluate=False))
+        upper_bound = self.antiderivative.replace(sympy.log(a), sympy.log(inner_upper, evaluate=False))
+        lower_bound = self.antiderivative.replace(sympy.log(a), sympy.log(inner_lower, evaluate=False))
 
-        line2 = r'$= %s %s %s' % (sympy.latex(upper_bound), '-' if lower_bound.could_extract_minus_sign() else '+', sympy.latex(abs(lower_bound)))
+        line2 = r'$= %s %s %s$' % (sympy.latex(upper_bound), '-' if lower_bound.could_extract_minus_sign() else '+', sympy.latex(abs(lower_bound)))
 
-        line3 = r'$= %s,     \therefore p = %s' % (sympy.latex(self.integral), sympy.latex(self.p))
+        line3 = r'$= %s,     \therefore p = %s$' % (sympy.latex(self.integral), sympy.latex(self.p))
 
         return line1 + line2 + line3
