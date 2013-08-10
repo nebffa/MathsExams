@@ -46,11 +46,12 @@ def test_question(question_obj):
     _write_question(f, question_tree)
     f.close()
 
-    try:
-        tex_to_pdf.make_pdf('test')
-        os.remove('test.pdf')
-    except:
-        raise IOError('Could not compile .tex file')
+    tex_to_pdf.make_pdf('test')
+    #try:
+    #    tex_to_pdf.make_pdf('test')
+    #    #os.remove('test.pdf')
+    #except:
+    #    raise IOError('Could not compile .tex file')
 
 
 def _write_question(f, question_tree):
