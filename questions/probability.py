@@ -2,10 +2,20 @@ import sympy
 import random
 from maths import domains
 from maths.symbols import *
+from maths.latex import expressions
 
 
 class PiecewiseProbDensityFunction(object):
     def __init__(self):
+
+        # 2008 Q4 [7 lines] [2 marks]
+        # 2010 Q7a [12 lines] [3 marks]
+        # 2012 Q8b [12 lines] [3 marks]
+
+        self.num_marks = 3
+        self.num_lines = 12
+
+
         self.function_type = random.choice(['sin', 'cos', 'linear', 'quadratic'])
 
         if self.function_type == 'sin':
@@ -56,8 +66,8 @@ class PiecewiseProbDensityFunction(object):
 
 
             area = self.equation.integrate((x, self.domain.left, self.domain.right))
-            values = sympy.solve(area - 1)
-            self.equation = self.equation.subs({z: values[0]})
+            self.value = sympy.solve(area - 1)[0]
+            self.equation = self.equation.subs({z: self.value})
 
     def question_statement(self):
         piecewise = sympy.Piecewise((self.equation, self.domain.left < x < self.domain.right), (0, True))
@@ -65,11 +75,11 @@ class PiecewiseProbDensityFunction(object):
         line_2 = r'Show that $k = %s$.' % self.value
         return line_1 + line_2
 
-    def solution(self):
-        pass
-
-
-y = PiecewiseProbDensityFunction()
-print y.equation
-print y.domain
-print y.equation.integrate((x, y.domain.left, y.domain.right))
+    def solution_statement(self):
+        line_1 = r'$k %s = 1$' % expressions.integral(lb=self.domain.left, ub=self.domain.right, expr=self.equation)
+        line_2 = r'$k %s = k %s = k %s = 1$' % (expressions.integral_intermediate(lb=self.domain.left, ub=self.domain.right, expr=self.equation),
+                                    expressions.integral_intermediate_eval(lb=self.domain.left, ub=self.domain.right, expr=self.equation),
+                                    sympy.latex(self.equation.subs({x: self.domain.right}) - self.equation.subs({x: self.domain.left}))
+                                    )
+        line_3 = r'$\therefore k = %s$' % self.value
+        return line_1 + line_2 + line_3
