@@ -1,5 +1,5 @@
-from .. import exp
-from ...symbols import *
+from maths.logs_exps import exp
+from maths.symbols import *
 import sympy
 
 

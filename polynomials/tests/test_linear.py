@@ -1,5 +1,5 @@
-from .. import linear
-from ...symbols import *
+from maths.polynomials import linear
+from maths.symbols import *
 
 
 def test_difficulty_one():

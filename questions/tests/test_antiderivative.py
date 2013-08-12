@@ -1,4 +1,4 @@
-from .. import questions, antiderivative
+from maths.questions import questions, antiderivative
 
 
 def test_Antiderivative():

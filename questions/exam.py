@@ -1,4 +1,4 @@
-from ..latex import latex
+from maths.latex import latex
 import functions
 
 file = open('exam.tex', 'w')

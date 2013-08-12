@@ -1,4 +1,4 @@
-from .. import questions, simple_diff
+from maths.questions import questions, simple_diff
 
 
 def test_SimpleDiff():

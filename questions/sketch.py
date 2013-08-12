@@ -1,6 +1,6 @@
 import sympy
 from sympy.abc import *
-from .. import all_functions
+from maths import all_functions
 
 
 class SimpleSketch(object):

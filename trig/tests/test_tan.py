@@ -1,5 +1,5 @@
-from .. import trig
-from ...symbols import *
+from maths.trig import trig
+from maths.symbols import *
 import sympy
 
 

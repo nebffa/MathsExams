@@ -1,5 +1,5 @@
-from .. import hyperbola
-from ...symbols import *
+from maths.polynomials import hyperbola
+from maths.symbols import *
 
 
 def test_difficulty_one():

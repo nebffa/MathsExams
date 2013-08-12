@@ -1,5 +1,5 @@
-from .. import quadratic
-from ...symbols import *
+from maths.polynomials import quadratic
+from maths.symbols import *
 import gmpy
 
 

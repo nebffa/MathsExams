@@ -1,5 +1,5 @@
-from ..latex import latex, tex_to_pdf
-import os
+from maths.latex import latex, tex_to_pdf
+
 
 def new_question(question_number, part):
     """ Create a new question.

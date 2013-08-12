@@ -1,6 +1,6 @@
 import sympy
 import random
-from .. import all_functions, not_named_yet
+from maths import all_functions, not_named_yet
 
 
 # always produces Q1a

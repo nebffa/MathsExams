@@ -1,7 +1,7 @@
 import sympy
 import random
 import gmpy
-from .. import not_named_yet
+from maths import not_named_yet
 from sympy.abc import *
 
 coefficients_bound = 5

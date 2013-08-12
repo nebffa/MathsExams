@@ -1,4 +1,4 @@
-from .. import questions, simple_integral
+from maths.questions import questions, simple_integral
 
 
 def test_SimpleDefiniteIntegral():

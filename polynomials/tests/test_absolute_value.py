@@ -1,5 +1,5 @@
-from .. import absolute_value
-from ...symbols import *
+from maths.polynomials import absolute_value
+from maths.symbols import *
 from sympy import Abs
 
 

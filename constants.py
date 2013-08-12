@@ -1,1 +1,0 @@
-coefficients_bound = 5

@@ -1,4 +1,4 @@
-from .. import domains
+from maths import domains
 
 
 def test_integer_domain():

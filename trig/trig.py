@@ -4,7 +4,7 @@ import copy
 import operator
 import itertools
 import math
-from .. import not_named_yet
+from maths import not_named_yet
 from sympy.abc import *
 
 coefficients_bound = 5
@@ -17,7 +17,7 @@ class Sin(object):
         # difficulty +: h != 1, h is an integer or the reciprocal of one
         a = not_named_yet.randint_no_zero(-2, 2)
         c = random.choice([-5*sympy.pi/6, -3*sympy.pi/4, -2*sympy.pi/3, -sympy.pi/2, -sympy.pi/3, -sympy.pi/4, -sympy.pi/6,
-                                         sympy.pi/6, sympy.pi/4, sympy.pi/3, sympy.pi/2, 2*sympy.pi/3, 3*sympy.pi/4, 5*sympy.pi/6, sympy.pi])
+                                         sympy.pi/6, sympy.pi/4, sympy.pi/3, sympy.pi/2, 2*sympy.pi/3, 3*sympy.pi/4, 5*sympy.pi/6])
 
         if difficulty == 1:
             self.equation = sympy.sin(a*x, evaluate=False)
@@ -34,7 +34,7 @@ class Cos(object):
         # difficulty +: h != 1, h is an integer or the reciprocal of one
         a = not_named_yet.randint_no_zero(-2, 2)
         c = random.choice([-5*sympy.pi/6, -3*sympy.pi/4, -2*sympy.pi/3, -sympy.pi/2, -sympy.pi/3, -sympy.pi/4, -sympy.pi/6,
-                                         sympy.pi/6, sympy.pi/4, sympy.pi/3, sympy.pi/2, 2*sympy.pi/3, 3*sympy.pi/4, 5*sympy.pi/6, sympy.pi])
+                                         sympy.pi/6, sympy.pi/4, sympy.pi/3, sympy.pi/2, 2*sympy.pi/3, 3*sympy.pi/4, 5*sympy.pi/6])
 
         if difficulty == 1:
             self.equation = sympy.cos(a*x, evaluate=False)
@@ -51,7 +51,7 @@ class Tan(object):
         # difficulty +: h != 1, h is an integer or the reciprocal of one
         a = not_named_yet.randint_no_zero(-2, 2)
         c = random.choice([-5*sympy.pi/6, -3*sympy.pi/4, -2*sympy.pi/3, -sympy.pi/2, -sympy.pi/3, -sympy.pi/4, -sympy.pi/6,
-                                         sympy.pi/6, sympy.pi/4, sympy.pi/3, sympy.pi/2, 2*sympy.pi/3, 3*sympy.pi/4, 5*sympy.pi/6, sympy.pi])
+                                         sympy.pi/6, sympy.pi/4, sympy.pi/3, sympy.pi/2, 2*sympy.pi/3, 3*sympy.pi/4, 5*sympy.pi/6])
 
         if difficulty == 1:
             self.equation = sympy.tan(a*x, evaluate=False)  # prevents automatic transformation to cotangent in some cases
