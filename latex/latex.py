@@ -95,7 +95,7 @@ class Part(object):
         return total_string
 
     def _question_lines(self, depth, num_lines):
-        total_string = (r'\>' * depth + r'\linefill' + latex_newline()) * num_lines
+        total_string = (r'\>' * (depth + 2) + r'\linefill' + latex_newline()) * num_lines
 
         return total_string + '\n'
 
