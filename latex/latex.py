@@ -2,6 +2,10 @@ def latex_newline():
     return r' \\ ' + '\n'
 
 
+def latex_endline():
+    return r' \\ '
+
+
 def document_class(f):
     f.write(r'\documentclass[a4paper, 12pt]{article}' + '\n\n')
 
@@ -62,7 +66,7 @@ class Part(object):
             total_string = obj._question_part(part_symbol)
 
         if obj.question_statement != '':
-            total_string += obj.question_statement + latex_newline()
+            total_string += obj.question_statement + latex_newline() + '\n'
 
         if obj.num_lines > 0:
             total_string += obj._question_lines(depth, obj.num_lines)
@@ -88,7 +92,7 @@ class Part(object):
             total_string = obj._question_part(part_symbol)
 
         if obj.solution_statement != '':
-            total_string += obj.solution_statement + latex_newline()
+            total_string += obj.solution_statement + latex_newline() + '\n'
         for i in obj.children:
             total_string += obj.solution_traversal_to_latex(i, depth + 1)
 

@@ -1,8 +1,8 @@
-
 import sympy
 import random
 from sympy.abc import *
 from maths import all_functions, not_named_yet, simplify
+import questions
 
 
 class SimpleInverse(object):
@@ -58,20 +58,21 @@ class SimpleInverse(object):
 
     def question_statement(self):
         if random.choice([True, False]):
-            self._num_lines, self._marks = 6, 2  # the question won't involve finding the domain
+            self.num_lines, self.num_marks = 6, 2  # the question won't involve finding the domain
             question_statement = r'''Let $f:%s \rightarrow R, f(x) = %s$. Find the rule and
                                     domain of the inverse function $f^{-1}.$''' % (sympy.latex(self.domain), sympy.latex(self.equation))
         else:
-            self._num_lines, self._marks = 7, 3
+            self.num_lines, self.num_marks = 7, 3
             question_statement = r'''Let $f:%s \rightarrow R$, where $f(x) = %s$. Find $f^{-1}$,
                                     the inverse function of $f$.''' % (sympy.latex(self.domain), sympy.latex(self.equation))
 
         return question_statement
 
     def solution_statement(self):
-        solution = ''
-        if self._num_lines == 7:
-            solution += r'$d_{f^{-1}} = r_{f} = %s$' % sympy.latex(self.inverse_domain)
+        solution = []
+        if self.num_lines == 7:
+            solution += [r'$d_{f^{-1}} = r_{f} = %s$' % sympy.latex(self.inverse_domain)]
 
-        solution += r'$f^{-1}(x) = %s$' % sympy.latex(self.inverse)
-        return solution
+        solution += [r'$f^{-1}(x) = %s$' % sympy.latex(self.inverse)]
+
+        return questions.to_string(solution)

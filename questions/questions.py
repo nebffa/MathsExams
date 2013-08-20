@@ -67,3 +67,11 @@ def _write_question(f, question_tree):
     question_tree.write_question(f)
     question_tree.write_solution(f)
     latex.end(f)
+
+
+def to_string(lines):
+    for i in range(len(lines)):
+        if i != len(lines) - 1:
+            lines[i] += latex.latex_newline()
+
+    return ''.join(lines)

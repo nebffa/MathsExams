@@ -64,7 +64,6 @@ class PiecewiseProbDensityFunction(object):
             self.domain = domains.integer_domain()
             self.equation = z * (x - self.domain.left) * (x - self.domain.right)
 
-
             area = self.equation.integrate((x, self.domain.left, self.domain.right))
             self.value = sympy.solve(area - 1)[0]
             self.equation = self.equation.subs({z: self.value})
