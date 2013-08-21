@@ -33,3 +33,12 @@ def relation_to_interval(relation):
         return sympy.Interval(-sympy.oo, relation.rhs, True, True)
     elif relation.rel_op == '<=':
         return sympy.Interval(-sympy.oo, relation.rhs, True, False)
+
+
+def partition(number):
+    answer = set()
+    answer.add((number, ))
+    for x in range(1, number):
+        for y in partition(number - x):
+            answer.add(tuple(sorted((x, ) + y)))
+    return answer
