@@ -24,18 +24,27 @@ def new_commands(f):
     f.write('\leavevmode\n')
     f.write('\leaders\hrule\hskip\dimexpr\\textwidth -\@tempdima\mbox{}}\n\n')
 
+
 def set_tabs(f):
     f.write(r'\= \tab \tab \= \tab \tab \= \\' + '\n')
+
 
 def begin(f):
     f.write(r'\begin{document}' + '\n')
     f.write(r'\begin{tabbing}' + '\n\n')
 
 
-def end(f):
+def begin_tex_document(f):
+    document_class(f)
+    packages(f)
+    new_commands(f)
+    begin(f)
+    set_tabs(f)
+
+
+def end_tex_document(f):
     f.write('\end{tabbing}\n')
     f.write('\end{document}\n\n')
-    f.close()
 
 
 class Part(object):
