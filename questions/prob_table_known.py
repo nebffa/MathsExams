@@ -1,10 +1,13 @@
-import sympy
 import random
-import pickle
+import sympy
+from sympy import GreaterThan, LessThan, StrictGreaterThan, StrictLessThan
 from sympy.abc import *
 from maths import not_named_yet
-from latex.table import probability_table
 from maths.names import first_names
+from maths.latex import latex, expressions
+from maths.latex.table import probability_table
+from maths.probability.discrete import prob_table
+import operator
 
 
 class ProbTableKnown(object):
@@ -20,21 +23,21 @@ class ProbTableKnown(object):
         random.shuffle(partition)
         partition = [i * 0.1 for i in partition]
 
-
         self.prob_table = dict(zip(options, partition))
+        self.first_name = random.choice(first_names.names)
 
-    def write_question(self):
-        self.name = random.choice(first_names.names)
+    def write_question(self):        
 
+        question_contexts = {
+                'green_traffic_lights': '''When {0} drives to work each morning they pass a number of intersections with traffic lights. The number X of 
+                            traffic lights that are green when {0} is driving to work is a random variable with probability distribution given by''',
+                'telephone_calls': '''Every day, the number X of telephone calls that {0} receives at work is a random variable with probability 
+                            distribution given by''',
+                'free_marshmallows': '''Every day, {0} goes to her local cafe for lunch and orders a hot chocolate. The number X of free marshmallows 
+                            that are included with the hot chocolate is a random variable with probability distribution given by'''}
 
-        traffic_lights = '''When {0} drives to work each morning they pass a number of intersections with traffic lights. The number X of 
-                            traffic lights that are green when {0} is driving to work is a random variable with probability distribution given by'''
-        telephone_calls = '''Every thursday, the number X of telephone calls that {0} receives at work is a random variable with probability 
-                            distribution given by'''
-        marshmallows = '''Every tuesday, {0} goes to her local cafe for lunch and orders a hot chocolate. The number X of free marshmallows that are 
-                            included with the hot chocolate is a random variable with probability distribution given by'''
-
-        text = random.choice([traffic_lights, telephone_calls, marshmallows]).format(self.name)
+        self._question_context = random.choice(question_contexts)
+        text = question_contexts[self._question_context].format(self.first_name)
         table = probability_table(self.prob_table)
 
         return text + table
@@ -43,36 +46,192 @@ class ProbTableKnown(object):
         return ''
 
 
-class Property():
+class Property(object):
     def __init__(self, part):
         assert isinstance(part, ProbTableKnown)
         
-        self.question_type == random.choice(['mean', 'variance', 'mode'])
-        self.prob_table = part.prob_table
+        self._question_type == random.choice(['mean', 'variance', 'mode'])
+        self._prob_table = part.prob_table
+        self._working = {}
 
-        if self.question_type == 'mean':
+        if self._question_type == 'mean':
             self.num_lines, self.marks = 4, 2
 
-            self.answer = sum([k*v for k, v in self.prob_table.items()])
-        elif self.question_type == 'variance':
+            self._working['E_x'] = prob_table.expectation_x(self._prob_table)
+            self.answer = self._working['E_x']
+        elif self._question_type == 'variance':
             self.num_lines, self.marks = 7, 3
 
-            expecation_x = sum([k*v for k, v in self.prob_table.items()])
-            expectation_x_squared = sum([k**2*v for k, v in self.prob_table.items()])
+            self._working['E_x'] = prob_table.expectation_x(self._prob_table)
+            self._working['E_x_sq'] = prob_table.expectation_x(self._prob_table, power=2)
 
-            self.answer = expectation_x_squared - expecation_x**2
-        elif self.question_type == 'mode':
+            self.answer = self._working['E_x_sq'] - self._working['E_x']**2
+        elif self._question_type == 'mode':
             self.num_lines, self.marks = 2, 1
-            self.answer = max(self.prob_table.iterkeys(), key=lambda key: self.prob_table[key])
+
+            self.answer = prob_table.mode(self._prob_table)
 
     def write_question(self):
-        if self.question_type == 'mean':
+        if self._question_type == 'mean':
             return r'Find $E(X)$, the mean of X.'
-        elif self.question_type == 'variance':
+        elif self._question_type == 'variance':
             return r'Find $Var(X)$, the mean of X.'
-        elif self.question_type == 'mode':
+        elif self._question_type == 'mode':
             return r'Find the mode of X.'
 
+    @latex.join_newlines
     def write_solution(self):
+        
+        if self._question_type == 'mean':
+            line_1 = r'$E(X) = \sum\limits_{i=1}^{n} x_{i} * Pr(X = x_{i}) = %s = %s'
+            line_2 = r'$= ' + expressions.discrete_expectation_x(self._prob_table) + r' = %s$' % self.answer
+            lines = [line_1, line_2]
 
+        elif self._question_type == 'variance':
+            line_1 = r'$Var(X) = E(X^2) - (E(X))^2$'
+            line_2 = r'$= [{0}] - [{1}]$'.format(expressions.discrete_expectation_x_squared(self._prob_table), 
+                                                 expressions.discrete_expectation_x(self._prob_table))
+
+            line_3 = r'$= {0} - {1} = {2}$'.format(self._working['E_x_sq'], self._working['E_x']**2, self._working['E_x_sq'] - self._working['E_x']**2)
+
+            lines = [line_1, line_2, line_3]
+
+        elif self._question_type == 'mode':
+            lines = [r'$= {0}$'.format(discrete.mode(self.prob_table))]
             
+        return lines
+
+
+class Multinomial(object):
+    def __init__(self, part):
+        assert isinstance(part, ProbTableKnown)
+
+        self.question_type = random.choice(['one_x', 'any_x'])
+        self._prob_table = part.prob_table
+        self._question_context = part.question_context
+        self._first_name = part.first_name
+
+        self._working = {}
+
+        if self.question_type == 'one_x':
+            self.num_lines, self.num_marks = 4, 1
+
+            self._question_params['x_value'] = random.choice(self._prob_table)
+            self._question_params['n_days'] = random.randint(3, 4)
+
+        elif self.question_type == 'any_x':
+            self.num_lines, self.num_marks = 5, 2
+
+            self._question_params['n_days'] = random.randint(2, 3)
+
+    def write_question(self):
+        if self.question_type == 'one_x':
+            return r'''What is the probability that the number of {0} {1} gets on each of 
+                        {2} consecutive days is {3}?'''.format(self._question_context, self._first_name, 
+                                                                self._question_params['n_days'], self._question_params['x_value'])
+
+        elif self.question_type == 'any_x':
+            return r'''What is the probability that the number of {0} {1} gets is the same on each 
+                                    of {2} consecutive days?'''.format(self._question_context, self._first_name, self._question_params['n_days'])
+
+    @latex.join_newlines
+    def write_solution(self):
+        if self.question_type == 'one_x':
+            return r'''$Pr(X = {0} {1} days in a row) = {2}^{1} = {3}.$'''.format(self._question_params['x_value'],
+                                                                self._question_params['n_days'],
+                                                                self._prob_table[self._question_params['x_value']],
+                                                                self._prob_table[self._question_params['x_value']] ** self._question_params['n_days'])
+
+        elif self.question_type == 'any_x':
+            sum_of_probs = ' + '.join([r'''Pr(X = {0})^{1}$'''.format(k, self._question_params['n_days']) for k in self._prob_table])
+            line_1 = r'''$Pr(X is the same number {0} days in a row) = {1}$'''.format(self._question_params['n_days'], sum_of_probs)
+
+            sum_of_probs = ' + '.join(['{0}^{1}'.format(v, self._question_params['n_days']) for v in self._prob_table.itervalues()])
+            answer = sum(v**self._question_params['n_days'] for v in self._prob_table.itervalues())
+            line_2 = r'''$= {0} = {1}$'''.format(sum_of_probs, answer)
+
+            return [line_1, line_2]
+
+
+class Conditional(object):
+    def __init__(self, part):
+        assert isinstance(part, ProbTableKnown)
+
+        self.num_lines, self.num_marks = 4, 2
+
+        self._prob_table = part.prob_table
+
+        self._question_params = {}
+
+        # if we have a conditional probability: 
+        #       Pr(X > 1 | X <= 3)
+        # I then refer to 3 as the conditional major, i.e. the section of the universe we are limited to
+        # and 1 as the conditional minor, i.e. the section of the now-limited universe we are calculating a probability for
+        self._question_params['conditional_major_rel_op'] = random.choice([GreaterThan, LessThan])
+        self._question_params['conditional_minor_rel_op'] = random.choice([GreaterThan, LessThan, StrictGreaterThan, StrictLessThan])
+        if self._question_params['conditional_major_rel_op'] == GreaterThan:
+            self._question_params['conditional_major'] = min(self._prob_table) + 1
+            self._question_params['conditional_minor'] = random.randint(min(self._prob_table) + 1, max(self._prob_table))
+        else:
+            self._question_params['conditional_major'] = max(self._prob_table) - 1
+            self._question_params['conditional_minor'] = random.randint(min(self._prob_table), max(self._prob_table) - 2)
+
+        major_domain = [k for k in self._prob_table if self._question_params['conditional_major_rel_op'](k, self._question_params['conditional_major'])]
+        minor_domain = [k for k in major_domain if self._question_params['conditional_minor_rel_op'](k, self._question_params['conditional_minor'])]
+
+        self._question_params['pr_major'] = sum(self._prob_table[k] for k in major_domain)
+        self._question_params['pr_minor'] = sum(self._prob_table[k] for k in minor_domain)
+
+    def write_question(self):
+        return r'''Find $Pr(X {0} {1} | X {2} {3})$'''.format(sympy.latex(self._question_params['relational_operator']),
+                                                                self._question_params['conditional_minor'],
+                                                                '>=' if self._question_params['conditional_major_side'] else '<=',
+                                                                self._question_params['conditional_major'])
+
+    @latex.join_newlines
+    def write_solution(self):
+        line_1 = r'''$Pr(X {0} {1} | X {2} {3}) = \dfrac{Pr(X {0} {1} \cap X {2} {3})}{Pr(X {2} {3})}$'''.format(
+                                                                sympy.latex(self._question_params['relational_operator']),
+                                                                self._question_params['conditional_minor'],
+                                                                '>=' if self._question_params['conditional_major_side'] else '<=',
+                                                                self._question_params['conditional_major'])
+
+        line_2 = r'''$= \dfrac{{0}}{{1}}$ = {2}$'''.format(self._question_params['pr_minor'], self._question_params['pr_major'], 
+                            self._question_params['pr_minor'] / self._question_params['pr_major'])
+
+        return [line_1, line_2]
+
+
+class Cumulative(object):
+    def __init__(self, part):
+        assert isinstance(part, ProbTableKnown)
+
+        self.num_lines, self.num_marks = 5, 3
+
+        self._prob_table = part.prob_table
+        self._question_type = part.question_type
+        self._first_name = part.first_name
+
+        self._question_params = {}
+
+        self._question_params['n_days'] = 2
+        # take the target cumulative target to be near E(X)*n_days. 
+        self._question_params['total'] = random.randint(-1, 1) + int(prob_table.expectation_x(self.prob_table) * self._question_params['n_days'])
+        self._answer, self._valid_permutations = prob_table.prob_sum(self._prob_table, total=self._question_params['total'], 
+                                                                        n_trials=self._question_params['n_days'], return_type='prob_and_perms')
+
+    def write_question(self):
+        return r'''{0} receives {1} on {2} consecutive days. What is the probability that {0} receives a total of {3} {1} over these 
+                {2} days?'''.format(self._first_name, self._question_type, self._question_params['n_days'], self._question_params['total'])
+
+    @latex.join_newlines
+    def write_solution(self):
+        sum_large_xs = ' + '.join(['X_{0}'.format(d + 1) for d in range(self._question_params['n_days'])])
+        sum_permutations_symbolic = ' + '.join([[' * '.join('Pr(X = {0})'.format(value)) for value in perm] for perm in self._valid_permutations])
+        line_1 = r'''$Pr({0}) = {1}$'''.format(sum_large_xs, sum_permutations_symbolic)
+
+        sum_permutations_numeric = ' + '.join([reduce(operator.mul, [prob_table[i] for i in perm]) for perm in self._valid_permutations])
+        line_2 = r'''$= {0}$'''.format(sum_permutations_numeric)
+        line_3 = r'''$= {0}$'''.format(self._answer)
+
+        return [line_1, line_2, line_3]

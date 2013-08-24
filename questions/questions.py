@@ -62,11 +62,11 @@ def _write_question(f, question_tree):
     latex.document_class(f)
     latex.packages(f)
     latex.new_commands(f)
-    latex.begin(f)
+    latex.begin_tex_document(f)
     latex.set_tabs(f)
     question_tree.write_question(f)
     question_tree.write_solution(f)
-    latex.end(f)
+    latex.end_tex_document(f)
 
 
 def to_string(lines):
