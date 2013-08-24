@@ -1,3 +1,16 @@
+from functools import wraps
+
+
+def join_newlines(fn):
+    def factory(fn):
+        @wraps
+        def decorator():
+            return latex_newline().join(fn)
+
+        return decorator
+    return factory
+
+
 def latex_newline():
     return r' \\ ' + '\n'
 
