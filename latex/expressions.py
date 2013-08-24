@@ -17,3 +17,13 @@ def integral_intermediate_eval(lb, ub, expr, var=x):
         return r'\left[%s - (%s)\right]' % (sympy.latex(left), sympy.latex(right))
     else:
         return r'\left[%s - %s\right]' % (sympy.latex(left), sympy.latex(right))
+
+
+def discrete_expectation_x_squared(prob_table):
+    # prob_table will come in the form of a dict
+    return ' + '.join(['%s^2 * %s' % (k, v) for k, v in prob_table.iteritems()])
+
+
+def discrete_expectation_x(prob_table):
+    # prob_table will come in the form of a dict
+    return ' + '.join(['%s * %s' % (k, v) for k, v in prob_table.iteritems()])
