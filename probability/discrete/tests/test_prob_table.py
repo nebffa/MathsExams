@@ -12,11 +12,7 @@ def test_expectation_x():
 
 
 def test_mode():
-    test_prob_table = {0: 0.1, 1: 0.3, 2: 0.2, 3: 0.1, 4: 0.3}
     alt_prob_table = {0: 0.1, 1: 0.3, 2: 0.2, 3: 0.2, 4: 0.2}
-    
-    with pytest.raises(ValueError):
-        prob_table.mode(test_prob_table)
 
     assert prob_table.mode(alt_prob_table) == 1
 

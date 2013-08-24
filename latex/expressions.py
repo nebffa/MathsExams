@@ -1,5 +1,6 @@
 import sympy
 from maths.symbols import *
+import sympy
 
 def integral(lb, ub, expr, var=x):
     return r'\displaystyle\int^{%s}_{%s} %s\ d%s' % (ub, lb, sympy.latex(expr), sympy.latex(var))
@@ -21,9 +22,9 @@ def integral_intermediate_eval(lb, ub, expr, var=x):
 
 def discrete_expectation_x_squared(prob_table):
     # prob_table will come in the form of a dict
-    return ' + '.join(['%s^2 * %s' % (k, v) for k, v in prob_table.iteritems()])
+    return ' + '.join([r'%s^2 \times %s' % (k, sympy.latex(v)) for k, v in prob_table.iteritems()])
 
 
 def discrete_expectation_x(prob_table):
     # prob_table will come in the form of a dict
-    return ' + '.join(['%s * %s' % (k, v) for k, v in prob_table.iteritems()])
+    return ' + '.join([r'%s \times %s' % (k, sympy.latex(v)) for k, v in prob_table.iteritems()])

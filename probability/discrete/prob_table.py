@@ -17,9 +17,23 @@ def mode(prob_table):
     mode_key = max(prob_table.iterkeys(), key=lambda key: prob_table[key])
 
     if len([v for v in prob_table.itervalues() if v == prob_table[mode_key]]) > 1:
-        raise ValueError('More than 1 mode: {0}'.format(prob_table))
+        # ensure there is only one mode
+        make_one_mode(prob_table)
 
     return mode_key
+
+
+def make_one_mode(prob_table):
+    mode = max(prob_table.itervalues())
+
+    max_keys = [k for k, v in prob_table.iteritems() if v == mode]
+
+    designated_mode_key = random.choice(max_keys)
+
+    for key in max_keys:
+        if key != designated_mode_key:
+            prob_table[key] -= 0.05
+            prob_table[designated_mode_key] += 0.05
 
 
 def prob_sum(prob_table, total, n_trials):

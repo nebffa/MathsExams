@@ -27,6 +27,7 @@ def packages(f):
     f.write('\usepackage{amsmath}\n')  # used for \left and \right which are for absolute values
     f.write('\usepackage{amssymb}\n')
     f.write('\usepackage{mathptmx}\n')
+    f.write('\usepackage{tabularx}\n')
     f.write('\usepackage[margin=1cm]{geometry}\n\n')
 
 
@@ -138,7 +139,7 @@ class QuestionTree(object):
         #self.data = {'part_number': part_no, 'statement': stmt, 'num_lines': num_lines}
         self.root = Part(part_number, question_statement, solution_statement, num_lines)
 
-    def add_part(self, tree_location1, question_statement='', solution_statement='', num_lines=0, tree_location2=None):
+    def add_part(self, tree_location1, question_statement='', solution_statement='', num_lines=0, num_marks=0, tree_location2=None):
         if tree_location2 is None:
             self.root.add_child(tree_location1, question_statement, solution_statement, num_lines)
         else:

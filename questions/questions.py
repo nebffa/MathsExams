@@ -38,7 +38,7 @@ def add_part(question_tree, tree_location1, tree_location2=None, part=None):
 
 def test_question(question_obj):
     """ Test whether a question's latex is compilable to a PDF.
-
+        TO BE DEPRECATED SOON in favour of test_question_new
     """ 
 
     question_tree = new_question(question_number=1, part=question_obj)
@@ -52,6 +52,19 @@ def test_question(question_obj):
     #    #os.remove('test.pdf')
     #except:
     #    raise IOError('Could not compile .tex file')
+
+
+def test_question_new(question_tree):
+    """ Test whether a question's latex is compilable to a PDF.
+
+    """ 
+
+    f = open('test.tex', 'w')
+    _write_question(f, question_tree)
+    f.close()
+
+    tex_to_pdf.make_pdf('test')
+
 
 
 def _write_question(f, question_tree):

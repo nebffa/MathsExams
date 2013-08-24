@@ -1,5 +1,7 @@
 import pickle
+import os
 
 
-with open('first_names.csv', 'r') as f:
+first_names_path = r'C:\Users\Ben\Desktop\Dropbox\maths\names\first_names.pickle'
+with open(first_names_path, 'r') as f:
     names = pickle.load(f)
