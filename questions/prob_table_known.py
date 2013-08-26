@@ -8,6 +8,7 @@ from maths.latex import latex, expressions
 from maths.latex.table import probability_table
 from maths.probability.discrete import prob_table
 import operator
+from collections import OrderedDict
 
 
 class ProbTableKnown(object):
@@ -23,7 +24,7 @@ class ProbTableKnown(object):
         random.shuffle(partition)
         partition = [sympy.Rational(i, 10) for i in partition]
 
-        self.prob_table = dict(zip(options, partition))
+        self.prob_table = OrderedDict(zip(options, partition))
         self.first_name = random.choice(first_names.names)
 
     def question_statement(self):        

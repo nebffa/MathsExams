@@ -35,10 +35,22 @@ def relation_to_interval(relation):
         return sympy.Interval(-sympy.oo, relation.rhs, True, False)
 
 
-def partition(number):
+def partition(number, include_zero=False):
+    if include_zero:
+        base = 0
+    else:
+        base = 1
+
     answer = set()
     answer.add((number, ))
-    for x in range(1, number):
+    for x in range(base, number):
         for y in partition(number - x):
             answer.add(tuple(sorted((x, ) + y)))
     return answer
+
+
+
+
+
+
+

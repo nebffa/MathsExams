@@ -1,13 +1,13 @@
 import random
 import sympy
-from sympy.abc import *
+from maths.symbols import *
 from maths import not_named_yet
 
 coefficients_bound = 5
 
 
-def request_linear(difficulty):
-    return Linear(difficulty)
+def request_linear(difficulty, var=x):
+    return Linear(difficulty, var)
 
 
 class Linear(object):
@@ -27,7 +27,10 @@ class Linear(object):
 
     """
 
-    def __init__(self, difficulty):
+    def __init__(self, difficulty, var=None):
+
+        if var is None:
+            var = x
 
         if difficulty == 1:
             c = 0
@@ -45,7 +48,8 @@ class Linear(object):
         else:
             raise ValueError('You have supplied an invalid difficulty level! Choose between 1, 2 or 3.')
 
-        self.equation = m * x + c
+        self.equation = m * var + c
+
         self.domain = sympy.Interval(-sympy.oo, sympy.oo, True, True)
         self.range = sympy.Interval(-sympy.oo, sympy.oo, True, True)
 

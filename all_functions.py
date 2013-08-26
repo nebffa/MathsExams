@@ -3,6 +3,7 @@ import sympy
 from maths.polynomials import linear, quadratic, absolute_value, hyperbola
 from maths.logs_exps import log, exp
 from maths.trig import trig
+from maths.symbols import *
 
 
 def random_function(linear_difficulty=random.randint(1, 2),
@@ -78,8 +79,8 @@ def inverse(function):  # requires future work as more things are included
         return solutions[0].replace(y, x)
 
 
-def request_linear(difficulty):  # we use this as a wrapper, unlike the other functions, since we often call request_linear to make other functions
-    return linear.request_linear(difficulty)
+def request_linear(difficulty, var=x):  
+    return linear.request_linear(difficulty, var)
 
 
 def request_quadratic(difficulty):
