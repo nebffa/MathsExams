@@ -22,12 +22,12 @@ def integral_intermediate_eval(lb, ub, expr, var=x):
 
 def discrete_expectation_x_squared(prob_table):
     # prob_table will come in the form of a dict
-    return ' + '.join([r'%s^2 \times %s' % (k, sympy.latex(v)) for k, v in prob_table.iteritems()])
+    return ' + '.join([r'%s^2 \times %s' % (k, sympy.latex(v)) for k, v in prob_table.items()])
 
 
 def discrete_expectation_x(prob_table):
     # prob_table will come in the form of a dict
-    return ' + '.join([r'%s \times %s' % (k, sympy.latex(v)) for k, v in prob_table.iteritems()])
+    return ' + '.join([r'%s \times %s' % (k, sympy.latex(v)) for k, v in prob_table.items()])
 
 def quadratic_formula(quadratic, var=x):
     match = quadratic.match(x0*var**2 + x1*var + x2)

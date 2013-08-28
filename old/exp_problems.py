@@ -24,5 +24,5 @@ class QuadraticLookalike(object):
                 break
                 
 g = QuadraticLookalike(5)
-print g.equation
-print g.solutions
+print(g.equation)
+print(g.solutions)

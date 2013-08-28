@@ -15,7 +15,7 @@ class SimpleTrigSolve(object):
         # 2011 Q3b: Solve the equation sin(2x + pi/3) = 1/2 for x in [0, pi] [12 lines] [2 marks]
 
         trig_function = sympy.tan(-x - 2*sympy.pi/3)
-        print trig_function
+        print(trig_function)
         self.function_type = all_functions.detect_expr_type(trig_function)
 
         if self.function_type == sympy.cot:  # because some tans get changed to cots internally, we want to get a value for tan
@@ -96,6 +96,6 @@ def all_solutions(trig_function, domain):
 
 
 y = SimpleTrigSolve()
-print y.equation
-print y.value
-print y.domain
+print(y.equation)
+print(y.value)
+print(y.domain)

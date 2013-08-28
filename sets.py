@@ -26,6 +26,6 @@ def transform_set(x, expr, sympy_set):
         return sympy.Interval(sympy.Min(left, right), sympy.Max(left, right),
                               sympy_set.left_open, sympy_set.right_open)
     if isinstance(sympy_set, sympy.FiniteSet):
-        return sympy.FiniteSet(map(f, sympy_set))
+        return sympy.FiniteSet(list(map(f, sympy_set)))
 
 

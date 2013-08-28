@@ -1,16 +1,3 @@
-from functools import wraps
-
-
-def join_newlines(fn):
-    def factory(fn):
-        @wraps
-        def decorator():
-            return latex_newline().join(fn)
-
-        return decorator
-    return factory
-
-
 def latex_newline():
     return r' \\ ' + '\n'
 
@@ -20,23 +7,23 @@ def latex_endline():
 
 
 def document_class(f):
-    f.write(r'\documentclass[a4paper, 12pt]{article}' + '\n\n')
+    f.write(r'\documentclass[a4paper, 12pt]{article}' + '' + '\n\n')
 
 
 def packages(f):
-    f.write('\usepackage{amsmath}\n')  # used for \left and \right which are for absolute values
-    f.write('\usepackage{amssymb}\n')
-    f.write('\usepackage{mathptmx}\n')
-    f.write('\usepackage{tabularx}\n')
-    f.write('\usepackage[margin=1cm]{geometry}\n\n')
+    f.write(r'\usepackage{amsmath}' + '\n')  # used for \left and \right which are for absolute values
+    f.write(r'\usepackage{amssymb}' + '\n')
+    f.write(r'\usepackage{mathptmx}' + '\n')
+    f.write(r'\usepackage{tabularx}' + '\n')
+    f.write(r'\usepackage[margin=1cm]{geometry}' + '\n')
 
 
 def new_commands(f):
-    f.write(r'\newcommand{\tab}{\hspace*{1em}}' + '\n')
-    f.write('\makeatletter\n')
-    f.write('\def\linefill{%\n')
-    f.write('\leavevmode\n')
-    f.write('\leaders\hrule\hskip\dimexpr\\textwidth -\@tempdima\mbox{}}\n\n')
+    f.write(r'\newcommand{\tab}{\hspace*{1em}}' + '' + '\n')
+    f.write(r'\makeatletter\n')
+    f.write(r'\def\linefill{%\n')
+    f.write(r'\leavevmode\n')
+    f.write(r'\leaders\hrule\hskip\dimexpr\\textwidth -\@tempdima\mbox{}}' + '\n')
 
 
 def set_tabs(f):
@@ -57,8 +44,8 @@ def begin_tex_document(f):
 
 
 def end_tex_document(f):
-    f.write('\end{tabbing}\n')
-    f.write('\end{document}\n\n')
+    f.write('\end{tabbing}' + '\n')
+    f.write('\end{document}' + '\n')
 
 
 class Part(object):
@@ -127,10 +114,10 @@ class Part(object):
         return total_string + '\n'
 
     def _question_heading(self):
-        return r'\textbf{Question %d}' % self.part_number + latex_newline()
+        return r'\textbf{{Question {0}}}'.format(self.part_number) + latex_newline()
 
     def _question_part(self, part_symbol):
-        return r'\textbf{%s.} \tab\=' % part_symbol
+        return r'\textbf{{{0}.}} \tab\='.format(part_symbol)
 
 
 # TODO: needs work to incorporate num_marks in the latex output

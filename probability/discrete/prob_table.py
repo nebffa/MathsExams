@@ -2,6 +2,7 @@ import sympy
 import random
 import itertools
 import operator
+from functools import reduce
 
 
 def expectation_x(prob_table, power=1):
@@ -9,14 +10,14 @@ def expectation_x(prob_table, power=1):
 
     By default, the mean of X is returned, but higher order expectations can be specified using power.'''
 
-    return sum([k**power*v for k, v in prob_table.iteritems()])
+    return sum([k**power*v for k, v in prob_table.items()])
 
 
 def mode(prob_table):
     ''' Return the mode of the probability table'''
-    mode_key = max(prob_table.iterkeys(), key=lambda key: prob_table[key])
+    mode_key = max(iter(prob_table.keys()), key=lambda key: prob_table[key])
 
-    if len([v for v in prob_table.itervalues() if v == prob_table[mode_key]]) > 1:
+    if len([v for v in prob_table.values() if v == prob_table[mode_key]]) > 1:
         # ensure there is only one mode
         make_one_mode(prob_table)
 
@@ -24,9 +25,9 @@ def mode(prob_table):
 
 
 def make_one_mode(prob_table):
-    mode = max(prob_table.itervalues())
+    mode = max(prob_table.values())
 
-    max_keys = [k for k, v in prob_table.iteritems() if v == mode]
+    max_keys = [k for k, v in prob_table.items() if v == mode]
 
     designated_mode_key = random.choice(max_keys)
 

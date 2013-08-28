@@ -52,7 +52,7 @@ class TriangularPrism(object):
         
         
 y = TriangularPrism()
-print y.surface_area_l
-print y.min_d
-print y.min_l
-print y.min_surface_area
+print(y.surface_area_l)
+print(y.min_d)
+print(y.min_l)
+print(y.min_surface_area)

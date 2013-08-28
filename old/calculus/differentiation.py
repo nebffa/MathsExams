@@ -173,5 +173,5 @@ class Tangent(object):
             self.stationary_x_value = sympy.solve(self.equation.diff(x), x)[0]
             
 y = Tangent()
-print y.equation
-print y.stationary_x_value
+print(y.equation)
+print(y.stationary_x_value)

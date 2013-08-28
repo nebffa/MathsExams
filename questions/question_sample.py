@@ -1,6 +1,6 @@
-import prob_table_unknown
+from . import prob_table_unknown
 from maths.latex import latex
-import questions
+from . import questions
 
 
 with open('question_sample.tex', 'w') as f:

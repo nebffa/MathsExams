@@ -1,7 +1,7 @@
 from maths.latex import latex
-import questions
-import functions
-import simple_integral
+from . import questions
+from . import functions
+from . import simple_integral
 
 
 with open('exam.tex', 'w') as f:

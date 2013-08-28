@@ -47,7 +47,7 @@ def canonise_log(equation):
             invert = False
 
     else:  # for debugging - wtf kind of c-c-c-class is it???
-        print total_interior, type(total_interior)
+        print(total_interior, type(total_interior))
 
     if invert:
         return -sympy.log((1 / total_interior).together(), evaluate=False) / terms[0].as_coeff_Mul()[0].q

@@ -5,9 +5,9 @@ from sympy import latex
 def probability_table(prob_table):
 
     try:
-        values = ' & '.join([latex(float(value)) for value in prob_table.itervalues()])
+        values = ' & '.join([latex(float(value)) for value in prob_table.values()])
     except:
-        values = ' & '.join([r'${0}$'.format(latex(value.together())) for value in prob_table.itervalues()])
+        values = ' & '.join([r'${0}$'.format(latex(value.together())) for value in prob_table.values()])
 
     return r'''
         \begin{{tabularx}}{{\textwidth}}{{ {0} }}
@@ -18,7 +18,7 @@ def probability_table(prob_table):
             \hline
         \end{{tabularx}}'''.format('|' + 'X|' * (len(prob_table) + 1),
                                     'x',
-                                    ' & '.join([latex(key) for key in prob_table.keys()]),
+                                    ' & '.join([latex(key) for key in list(prob_table.keys())]),
                                     r'Pr(X = $x_{i}$)',
                                     values
                                 )

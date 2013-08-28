@@ -25,10 +25,10 @@ class cdf(object):
             if self.integral_lower_bound < self.integral_middle_bound < self.integral_upper_bound:
                 break
     
-        print self.equation
-        print self.integral_lower_bound, self.equation.subs(x, self.integral_lower_bound)
-        print self.integral_middle_bound, self.equation.subs(x, self.integral_middle_bound)
-        print self.integral_upper_bound, self.equation.subs(x, self.integral_upper_bound)
+        print(self.equation)
+        print(self.integral_lower_bound, self.equation.subs(x, self.integral_lower_bound))
+        print(self.integral_middle_bound, self.equation.subs(x, self.integral_middle_bound))
+        print(self.integral_upper_bound, self.equation.subs(x, self.integral_upper_bound))
     
     
 y = cdf()

@@ -6,6 +6,7 @@ import itertools
 import math
 from maths import not_named_yet
 from sympy.abc import *
+from functools import reduce
 
 coefficients_bound = 5
 
@@ -179,7 +180,7 @@ class Trig(object):
 
                 for solution in intermediate_solutions:
                     if not equation.subs({x: solution}) == 0:
-                        print equation.subs({x: solution})  # for debuggings's sake
+                        print(equation.subs({x: solution}))  # for debuggings's sake
                         raise ArithmeticError("Some random error when I'm new to writing errors..")
 
                 equations.append(equation)
@@ -363,7 +364,7 @@ def domain_remove_asymptotes(interval, asymptotes_general_equation):
     elif isinstance(intermediate_interval.right, sympy.Rational):
         right_bound = int(math.floor(intermediate_interval.right))
 
-    untransformed_asymptotes = range(left_bound, right_bound + 1)
+    untransformed_asymptotes = list(range(left_bound, right_bound + 1))
     asymptotes = [i * match[x0] + match[x1] for i in untransformed_asymptotes]
 
     # now we have the original interval, as well as all asymptotes that we need to exclude - let's make the

@@ -86,5 +86,5 @@ class Area(object): # SO FAR HAS BEEN ONE OF 3 POSSIBILITIES!!! NOT SURE HOW TO 
             
         self.area = self.equation.integrate((x, self.lower_bound, self.upper_bound))
         
-print Area().area
+print(Area().area)
         

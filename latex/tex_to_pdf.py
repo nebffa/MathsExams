@@ -5,7 +5,7 @@ from subprocess import call
 def silentremove(filename):
     try:
         os.remove(filename)
-    except OSError, e: # this would be "except OSError as e:" in python 3.x
+    except OSError as e: # this would be "except OSError as e:" in python 3.x
         if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
             raise # re-raise exception if a different error occured
 
@@ -16,8 +16,8 @@ def make_pdf(tex_filename):
 
     dirname = os.path.dirname(os.path.abspath(tex_filename + '.tex'))
     full_path = os.path.join(dirname, tex_filename + '.tex')
-    print dirname
-    print full_path
+    print(dirname)
+    print(full_path)
 
     call(['pdftex', '-halt-on-error', full_path])
     

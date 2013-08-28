@@ -8,7 +8,7 @@ def randint_no_zero(low, high):
 
 
 def randint(low, high, exclude=[]):
-    nums = range(low, high + 1)
+    nums = list(range(low, high + 1))
 
     for num in exclude:
         nums.remove(num)

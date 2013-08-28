@@ -1,6 +1,6 @@
 from sympy import *
 import os
-import all_functions
+from . import all_functions
 
 def clear():
     os.system('cls')

@@ -9,6 +9,7 @@ from maths.latex.table import probability_table
 from maths.probability.discrete import prob_table
 import operator
 from collections import OrderedDict
+from functools import reduce
 
 
 class ProbTableKnown(object):
@@ -16,7 +17,7 @@ class ProbTableKnown(object):
         self.num_lines = 0
         self.num_marks = 0
 
-        options = range(random.randint(4, 5))
+        options = list(range(random.randint(4, 5)))
 
         partition = random.choice([i for i in not_named_yet.partition(10) if len(i) == len(options)])
         partition = list(partition)
@@ -24,7 +25,7 @@ class ProbTableKnown(object):
         random.shuffle(partition)
         partition = [sympy.Rational(i, 10) for i in partition]
 
-        self.prob_table = OrderedDict(zip(options, partition))
+        self.prob_table = OrderedDict(list(zip(options, partition)))
         self.first_name = random.choice(first_names.names)
 
     def question_statement(self):        
@@ -37,7 +38,7 @@ class ProbTableKnown(object):
                 'free marshmallows': '''Every day, {0} goes to her local cafe for lunch and orders a hot chocolate. The number X of free marshmallows 
                             that are included with the hot chocolate is a random variable with probability distribution given by'''}
 
-        self.question_context = random.choice(question_contexts.keys())
+        self.question_context = random.choice(list(question_contexts.keys()))
         text = question_contexts[self.question_context].format(self.first_name)
         table = probability_table(self.prob_table)
 
@@ -120,7 +121,7 @@ class Multinomial(object):
         if self.question_type == 'one_x':
             self.num_lines, self.num_marks = 4, 1
 
-            self._question_params['x_value'] = random.choice(self._prob_table.keys())
+            self._question_params['x_value'] = random.choice(list(self._prob_table.keys()))
             self._question_params['n_days'] = 3
 
         elif self.question_type == 'any_x':
@@ -149,8 +150,8 @@ class Multinomial(object):
             sum_of_probs = ' + '.join([r'''Pr(X = {0})^{1}'''.format(k, self._question_params['n_days']) for k in self._prob_table])
             line_1 = r'''$Pr(X$ is the same number {0} days in a row$) = {1}$'''.format(self._question_params['n_days'], sum_of_probs)
 
-            sum_of_probs = ' + '.join(['({0})^{1}'.format(sympy.latex(v), self._question_params['n_days']) for v in self._prob_table.itervalues()])
-            answer = sum(v**self._question_params['n_days'] for v in self._prob_table.itervalues())
+            sum_of_probs = ' + '.join(['({0})^{1}'.format(sympy.latex(v), self._question_params['n_days']) for v in self._prob_table.values()])
+            answer = sum(v**self._question_params['n_days'] for v in self._prob_table.values())
             line_2 = r'''$= {0} = {1}$'''.format(sum_of_probs, sympy.latex(answer))
 
             return latex.latex_newline().join([line_1, line_2])

@@ -14,7 +14,7 @@ class ProbTableUnknown(object):
         self.num_lines, self.num_marks = 12, 3
 
         lb = random.randint(-2, -1)
-        keys = range(lb, lb + 4)
+        keys = list(range(lb, lb + 4))
 
         self._question_params = {}
 
@@ -74,7 +74,7 @@ class ProbTableUnknown(object):
                 values = [partition[0]*k**2/match[x0].q + partition[1]*k/match[x1].q + sympy.Rational(partition[2], match[x2].q) for partition in partitions]
                 break
 
-        self._question_params['prob_table'] = OrderedDict(zip(keys, values))
+        self._question_params['prob_table'] = OrderedDict(list(zip(keys, values)))
 
     def question_statement(self):        
         table = probability_table(self._question_params['prob_table'])
@@ -84,9 +84,9 @@ class ProbTableUnknown(object):
 
     def solution_statement(self):
         line_1 = r'''$E(X) = \sum\limits_{{i=1}}^{{n}} x_{{i}} \times Pr(X = x_{{i}}) = {0} = 1$'''.format(
-                sympy.latex(sum(self._question_params['prob_table'].itervalues())))
+                sympy.latex(sum(self._question_params['prob_table'].values())))
 
-        quadratic = sum(self._question_params['prob_table'].itervalues()) - 1
+        quadratic = sum(self._question_params['prob_table'].values()) - 1
         line_2 = r'''${0} = 0$'''.format(sympy.latex(quadratic))
 
         quadratic *= self._question_params['quadratic_shrinkage_factor']
@@ -103,11 +103,11 @@ class ProbTableUnknown(object):
     def sanity_check(self):
 
         # check the answer gives positive probabilities
-        for value in self._question_params['prob_table'].itervalues():
+        for value in self._question_params['prob_table'].values():
             if value.subs({k: self._question_params['answer']}) < 0:
                 raise ValueError('This answer (the value of k) is giving negative values in the probability table.')
 
-        quadratic = sum(self._question_params['prob_table'].itervalues())
+        quadratic = sum(self._question_params['prob_table'].values())
 
         for solution in self._question_params['quadratic_solutions']:
            if quadratic.subs({k: solution}) != 1:

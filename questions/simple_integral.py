@@ -27,7 +27,7 @@ class SimpleDefiniteIntegral(object):
         elif function_type == 'exp':
             self.equation = sympy.exp(x) + c
 
-            possible_x_values = range(1, 5)
+            possible_x_values = list(range(1, 5))
 
         self.boundary = all_functions.choose_bounds(possible_x_values)
         self.answer = self.equation.integrate((x, self.boundary[0], self.boundary[1]))
@@ -61,10 +61,10 @@ class DefiniteIntegralEquality(object):
 
         if random.randint(0, 1):  # go left
             bound = int(vertical_asymptote)
-            possible_x_values = range(bound - 5, bound if (bound != vertical_asymptote) else bound - 1)
+            possible_x_values = list(range(bound - 5, bound if (bound != vertical_asymptote) else bound - 1))
         else:
             bound = int(vertical_asymptote) + 1
-            possible_x_values = range(bound if (bound != vertical_asymptote) else bound + 1, bound + 5)
+            possible_x_values = list(range(bound if (bound != vertical_asymptote) else bound + 1, bound + 5))
 
         self.boundary = all_functions.choose_bounds(possible_x_values)
 
