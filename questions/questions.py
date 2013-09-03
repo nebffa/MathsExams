@@ -1,32 +1,25 @@
-from maths.latex import latex, tex_to_pdf, questions
+from maths.latex import latex, tex_to_pdf
 
-
+'''
 def test_question(question_obj):
     """ Test whether a question's latex is compilable to a PDF.
         TO BE DEPRECATED SOON in favour of test_question_new
     """ 
 
     question_tree = questions.QuestionTree(question_number=1, part=question_obj)
-    f = open('test.tex', 'w')
-    _write_question(f, question_tree)
-    f.close()
+    with open('test.text', 'w') as f:
+        _write_question(f, question_tree)
 
-    tex_to_pdf.make_pdf('test')
-    #try:
-    #    tex_to_pdf.make_pdf('test')
-    #    #os.remove('test.pdf')
-    #except:
-    #    raise IOError('Could not compile .tex file')
+    tex_to_pdf.make_pdf('test')'''
 
 
-def test_question_new(question_tree):
+def test_question(question_tree):
     """ Test whether a question's latex is compilable to a PDF.
 
     """ 
 
-    f = open('test.tex', 'w')
-    _write_question(f, question_tree)
-    f.close()
+    with open('test.tex', 'w') as f:
+        _write_question(f, question_tree)
 
     tex_to_pdf.make_pdf('test')
 

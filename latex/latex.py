@@ -46,15 +46,3 @@ def begin_tex_document(f):
 def end_tex_document(f):
     f.write('\end{tabbing}' + '\n')
     f.write('\end{document}' + '\n')
-
-
-# a class to feed in question data, and ultimately have it print the question as latex
-# note that each line indicates a new line of the printed latex
-# note that any text in round parentheses denotes my comments
-# question template is:
-# line1: Question {question_number}
-# line2: {question_statement}
-# line3: {letter}. {subpart_question_statement}  (a new sub-part)
-# line4: {roman_numeral}. {subsubpart_question_statement} (a new sub-sub-part)
-# line5: questionum_lines (to 0, 1 or 2 levels of indentation depending on if we have parts and subparts)
-# (repeat lines 3-5 until the question is finished)

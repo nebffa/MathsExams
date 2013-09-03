@@ -17,4 +17,4 @@ def test_Antiderivative():
     question.add_part(tree_location1=3, part=q_c)
     question.add_part(tree_location1=4, part=q_d)
 
-    questions.test_question_new(question)
+    questions.test_question(question)
