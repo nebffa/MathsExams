@@ -2,6 +2,7 @@ import sympy
 import random
 from sympy.abc import *
 from maths import all_functions, solutions_printing, not_named_yet
+from maths.latex import expressions
 
 
 class SimpleDefiniteIntegral(object):
@@ -33,13 +34,14 @@ class SimpleDefiniteIntegral(object):
         self.answer = self.equation.integrate((x, self.boundary[0], self.boundary[1]))
 
     def question_statement(self):
-        question_statement = r'Evaluate $\displaystyle\int_{%d}^{%d} %s\ dx$.' % (self.boundary[0], self.boundary[1], sympy.latex(self.equation))
+        question_statement = r'Evaluate ${0}$.'.format(expressions.integral(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation))
 
         return question_statement
 
     def solution_statement(self):
-        line_1 = r'$\displaystyle\int^{%d}_{%d} %s\ dx = \left[%s\right]_{%d}^{%d}$' % (self.boundary[1], self.boundary[0], sympy.latex(self.equation),
-                                                                                    sympy.latex(self.equation.integrate()), self.boundary[1], self.boundary[0])
+        line_1 = r'${0} = {1}$'.format(expressions.integral(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation),
+                                        expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation.integrate()))
+
         line_2 = r'$= ' + solutions_printing.integral_working(self.equation, x, self.boundary[0], self.boundary[1]) + r'$'
         line_3 = r'$= ' + sympy.latex(self.answer) + r'$'
 

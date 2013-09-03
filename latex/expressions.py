@@ -3,11 +3,11 @@ from maths.symbols import *
 
 
 def integral(lb, ub, expr, var=x):
-    return r'\displaystyle\int^{%s}_{%s} %s\ d%s' % (ub, lb, sympy.latex(expr), sympy.latex(var))
+    return r'\displaystyle\int^{{{0}}}_{{{1}}} {2}\ d{3}'.format(ub, lb, sympy.latex(expr), sympy.latex(var))
 
 
 def integral_intermediate(lb, ub, expr):
-    return r'\left[%s\right]^{%s}_{%s}' % (sympy.latex(expr), ub, lb)
+    return r'\left[{0}\right]^{{{1}}}_{{{2}}}'.format(sympy.latex(expr), ub, lb)
 
 
 def integral_intermediate_eval(lb, ub, expr, var=x):
@@ -15,19 +15,19 @@ def integral_intermediate_eval(lb, ub, expr, var=x):
     right = expr.subs({var: lb})
 
     if right.could_extract_minus_sign():
-        return r'\left[%s - (%s)\right]' % (sympy.latex(left), sympy.latex(right))
+        return r'\left[{0} - ({1})\right]'.format(sympy.latex(left), sympy.latex(right))
     else:
-        return r'\left[%s - %s\right]' % (sympy.latex(left), sympy.latex(right))
+        return r'\left[{0} - {1}\right]'.format(sympy.latex(left), sympy.latex(right))
 
 
 def discrete_expectation_x_squared(prob_table):
     # prob_table will come in the form of a dict
-    return ' + '.join([r'%s^2 \times %s' % (k, sympy.latex(v)) for k, v in prob_table.items()])
+    return ' + '.join([r'{0}^2 \times {1}'.format(k, sympy.latex(v)) for k, v in prob_table.items()])
 
 
 def discrete_expectation_x(prob_table):
     # prob_table will come in the form of a dict
-    return ' + '.join([r'%s \times %s' % (k, sympy.latex(v)) for k, v in prob_table.items()])
+    return ' + '.join([r'{0} \times {1}'.format(k, sympy.latex(v)) for k, v in prob_table.items()])
 
 def quadratic_formula(quadratic, var=x):
     match = quadratic.match(x0*var**2 + x1*var + x2)
