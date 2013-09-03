@@ -20,10 +20,10 @@ def packages(f):
 
 def new_commands(f):
     f.write(r'\newcommand{\tab}{\hspace*{1em}}' + '' + '\n')
-    f.write(r'\makeatletter\n')
-    f.write(r'\def\linefill{%\n')
-    f.write(r'\leavevmode\n')
-    f.write(r'\leaders\hrule\hskip\dimexpr\\textwidth -\@tempdima\mbox{}}' + '\n')
+    f.write(r'\makeatletter' + '\n')
+    f.write(r'\def\linefill{%' + '\n')
+    f.write(r'\leavevmode' + '\n')
+    f.write(r'\leaders\hrule\hskip\dimexpr\textwidth -\@tempdima\mbox{}}' + '\n')
 
 
 def set_tabs(f):
