@@ -4,7 +4,7 @@ from sympy.abc import *
 from maths import all_functions
 
 
-class Antiderivative(object):
+class Antiderivative:
     def __init__(self):
 
         # there is no correlation between function type and marks assigned, so we have to choose between
@@ -61,3 +61,6 @@ class Antiderivative(object):
         total_string += r'The constant $c$ is not necessary. It can be any real number, including zero.'
 
         return total_string
+
+    def sanity_check(self):
+        pass

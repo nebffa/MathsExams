@@ -1,24 +1,24 @@
 from maths.latex import latex, questions
-from maths.questions import functions
-from maths.questions import simple_integral
+from maths.parts import simple_inverse
+from maths.parts import simple_definite_integral
 
 
 with open('exam.tex', 'w') as f:
     latex.begin_tex_document(f)
 
-    q = functions.SimpleInverse()
+    q = simple_inverse.SimpleInverse()
     question = questions.QuestionTree(1, q)
     question.write_question(f)
     question.write_solution(f)
 
 
-    q = simple_integral.SimpleDefiniteIntegral()
+    q = simple_definite_integral.SimpleDefiniteIntegral()
     question = questions.QuestionTree(2, q)
     question.write_question(f)
     question.write_solution(f)
 
 
-    q = simple_integral.DefiniteIntegralEquality()
+    q = simple_definite_integral.DefiniteIntegralEquality()
     question = questions.QuestionTree(3, q)
     question.write_question(f)
     question.write_solution(f)

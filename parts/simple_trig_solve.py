@@ -82,20 +82,3 @@ def all_solutions(trig_function, domain):
     for solution in general_solutions:
         lower = sympy.solve(solution > domain.left)
         upper = sympy.solve(solution < domain.right)
-
-
-
-
-
-
-
-
-
-
-
-
-
-y = SimpleTrigSolve()
-print(y.equation)
-print(y.value)
-print(y.domain)

@@ -2,7 +2,7 @@ import sympy
 import random
 from sympy.abc import *
 from maths import all_functions, not_named_yet, simplify
-from . import questions
+from maths.latex import latex
 
 
 class SimpleInverse(object):
@@ -75,4 +75,4 @@ class SimpleInverse(object):
 
         solution += [r'$f^{-1}(x) = %s$' % sympy.latex(self.inverse)]
 
-        return questions.to_string(solution)
+        return latex.latex_newline().join(solution)

@@ -1,7 +1,7 @@
 from maths.latex import latex, tex_to_pdf
 
 
-def test_question(question_tree):
+def question_tester(question_tree):
     """ Test whether a question's latex is compilable to a PDF.
 
     """ 

@@ -1,8 +1,9 @@
-from maths.questions import questions, prob_table_known
+from maths.parts import prob_table_known
+from .question_tester import question_tester
 from maths.latex.questions import QuestionTree
 
 
-def test_Antiderivative():
+def test_ProbTableKnown():
 
     q = prob_table_known.ProbTableKnown()
     question = QuestionTree(question_number=1, part=q)
@@ -17,4 +18,4 @@ def test_Antiderivative():
     question.add_part(tree_location1=3, part=q_c)
     question.add_part(tree_location1=4, part=q_d)
 
-    questions.test_question(question)
+    question_tester(question)
