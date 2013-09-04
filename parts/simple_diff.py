@@ -132,7 +132,7 @@ class SimpleDiffEval(object):
                 self.x_value = sympy.Rational(1, right_inner_function.coeff(x)) * sympy.E ** random.randint(1, 3)
             elif right_outer_function == sympy.exp:
                 # with something like x**3 * e^x using x = 3, we'd get large answers. we restrict x values based on the index of x
-                self.x_value = random.randint(-3 / index, 3 / index)
+                self.x_value = random.randint(-3 // index, 3 // index)
 
         elif self.__function_type == 'quotient':
             # 2009 1b: y = cos(x) / (2x + 2), a = pi

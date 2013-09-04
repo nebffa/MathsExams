@@ -11,6 +11,7 @@ class WordedDefiniteIntegral(object):
         # 2008 Q5 [8 lines] [3 marks]
 
         self._question_params = {}
+        self.num_lines, self.num_marks = 8, 3
 
 
         while True:
