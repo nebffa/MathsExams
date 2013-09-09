@@ -4,9 +4,9 @@ import sympy
 discretes = (int, sympy.Rational)
 
 
-def parse_absolute_value_args(**kwargs):
+def parse_absolute_value(**kwargs):
     spec = {
-        'turning_points':           {
+        'turning_point':           {
                                 'location': None,
                             },
         'x_intercepts':             {
@@ -30,7 +30,7 @@ def parse_absolute_value_args(**kwargs):
 
         key = key.lower()
         if re.search(TURNING_POINT, key) and re.search(LOCATION, key):
-            spec['turning_points']['location'] = value
+            spec['turning_point']['location'] = value
         elif re.search(X_INTS, key):
             spec['x_intercepts']['location'] = value
         elif re.search(GRADIENT, key):
@@ -43,7 +43,45 @@ def parse_absolute_value_args(**kwargs):
     return spec
 
 
-def parse_cubic_args(**kwargs):
+def parse_hyperbola(**kwargs):
+    spec = {
+        'x_asymptote': None,
+        'y_asymptote': None,
+
+        'x_intercepts':             {
+                                'location': None,
+                            },
+
+        'direction': None
+    }
+
+    # regular expressions
+    ASYMPTOTE = r'asymp'
+    HORIZONTAL = r'horiz'
+    VERTICAL = r'vert'
+    #X_INTS = r'x[ _]int'
+    #LOCATION = r'loc'
+    #GRADIENT = r'grad'
+    DIRECTION = r'direction'
+
+    for key, value in kwargs.items():
+        if not isinstance(value, (discretes, sympy.Interval)):
+            raise ValueError('The supplied value: {0} is not a valid specifier.'.format(value))
+
+        key = key.lower()
+        if re.search(ASYMPTOTE, key) and re.search(HORIZONTAL, key):
+            spec['x_asymptote'] = value
+        elif re.search(ASYMPTOTE, key) and re.search(VERTICAL, key):
+            spec['y_asymptote'] = value
+        elif re.search(DIRECTION, key):
+            spec['direction'] = value
+        else:
+            raise KeyError('The supplied keyword argument: {0} could not be parsed.'.format(key))
+
+    return spec
+
+
+def parse_cubic(**kwargs):
     spec = {
         'turning_points':            {
                                 'n': None,

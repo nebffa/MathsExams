@@ -9,12 +9,6 @@ import pprint
 discretes = (int, sympy.Rational)
 
 
-def _solve_relation(items, relation):
-    var = relation.atoms(sympy.Symbol).pop()
-
-    return [i for i in items if relation.subs({var: i})]
-
-
 def cubic(spec):
     '''
     An algorithm to be able to request cubics by such things as "x-intercepts > -1".
@@ -264,6 +258,7 @@ def cubic(spec):
 
         return y.subs( dict(zip([k0, k1, k2, k3], constants)) )
 
+
 def absolute_value(spec):
     # y = a * |x - b| + c
     a = range(-3, 4)
@@ -274,23 +269,39 @@ def absolute_value(spec):
     if isinstance(spec['gradient'], discretes):
         a = list(spec['gradient'])
     elif isinstance(spec['gradient'], sympy.Interval):
-        a = solve_relation(a, spec['gradient'])
+        a = [i for i in a if i in spec['gradient']]
 
     # key['direction']    a > 0 or a < 0
-    a = solve_relation(a, spec['direction'])
+    if isinstance(spec['direction'], sympy.Interval):
+        a = [i for i in a if i in spec['direction']]
 
     # key['inflexion_point']
-    if isinstance(spec['inflexion_point']['x'], discretes):
-        b = list( spec['inflexion_point']['x'] )
-    elif isinstance(spec['inflexion_point']['x'], sympy.Interval):
-        b = solve_relation(b, spec['inflexion_point']['x'])
+    if isinstance(spec['turning_point']['location'], tuple):
+        b = list( spec['turning_point']['location'][0] )
+        c = list( spec['turning_point']['location'][1] )
+    elif isinstance(spec['turning_point']['location'], sympy.Interval):
+        b = [i for i in b if i in spec['turning_point']['location'] ]
+
+    master_a, master_b, master_c = a, b, c
+    while True:
+        a, b, c = copy.copy(master_a), copy.copy(master_b), copy.copy(master_c)
+
+        a, b, c = list(a), list(b), list(c)  # ensure we are dealing with lists, not iterables
+        a, b, c = (random.choice(i) for i in (a, b, c))
+        equation = a * sympy.Abs(x - b) + c
+
+        solutions = sympy.solve(equation)
+
+        for solution in solutions:
+            if solution not in spec['x_intercepts']:
+                continue
+
+        if isinstance(spec['direction'], sympy.Interval):
+            if a not in spec['direction']:
+                continue
+
+        return equation
 
 
-    if isinstance(spec['inflexion_point']['y'], discretes):
-        c = list( spec['inflexion_point']['y'] )
-    elif isinstance(spec['inflexion_point']['y'], sympy.Interval):
-        c = solve_relation(c, spec['inflexion_point']['y'])
-
-    a, b, c= (random.choice(i) for i in (a, b, c))
-
-    return a * sympy.Abs(x - b) + c
+def hyperbola(spec):
+    
