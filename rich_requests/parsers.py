@@ -1,16 +1,16 @@
 import re
 import sympy
-import functions
 
 discretes = (int, sympy.Rational)
-
 
 
 def parse_absolute_value_args(**kwargs):
     spec = {
         'turning_points':           {
-                                'x': None,  # could be int, sympy.Rational, or a relation
-                                'y': None   # could be int, sympy.Rational, or a relation
+                                'location': None,
+                            },
+        'x_intercepts':             {
+                                'location': None,
                             },
 
         'gradient': None,      # could be int, sympy.Rational, or a relation
@@ -18,23 +18,24 @@ def parse_absolute_value_args(**kwargs):
     }
 
     # regular expressions
-    TPx = r'[(tp)(ep)][_ ]*x[_ ]*'
-    TPy = r'[(tp)(ep)][_ ]*y[_ ]*'
-    gradient = r'grad'
-    direction = r'direction'
+    TURNING_POINT = r'[(tp)(turn)]'
+    X_INTS = r'x[ _]int'
+    LOCATION = r'loc'
+    GRADIENT = r'grad'
+    DIRECTION = r'direction'
 
     for key, value in kwargs.items():
         if not isinstance(value, (discretes, sympy.Interval)):
             raise ValueError('The supplied value: {0} is not a valid specifier.'.format(value))
 
         key = key.lower()
-        if re.search(TPx, key):
-            spec['turning_points']['x'] = value
-        elif re.search(TPy, key):
-            spec['turning_points']['y'] = value
-        elif re.search(gradient, key):
+        if re.search(TURNING_POINT, key) and re.search(LOCATION, key):
+            spec['turning_points']['location'] = value
+        elif re.search(X_INTS, key):
+            spec['x_intercepts']['location'] = value
+        elif re.search(GRADIENT, key):
             spec['gradient'] = value
-        elif re.search(direction, key):
+        elif re.search(DIRECTION, key):
             spec['direction'] = value
         else:
             raise KeyError('The supplied keyword argument: {0} could not be parsed.'.format(key))
@@ -66,6 +67,7 @@ def parse_cubic_args(**kwargs):
     TURNING_POINT = r'tp'
     INFLEXION_POINT = r'inflex'
     DIRECTION = r'dir'
+    LOCATION = r'loc'
     Y_INT = r'y[ _]int'
     X_INTS = r'x[ _]int'
     NUM = r'num'
@@ -77,13 +79,13 @@ def parse_cubic_args(**kwargs):
         key = key.lower()
         if re.search(TURNING_POINT, key) and re.search(NUM, key):
             spec['turning_points']['n'] = value
-        elif re.search(TURNING_POINT, key):
+        elif re.search(TURNING_POINT, key) and re.search(LOCATION, key):
             spec['turning_points']['locations'] = value
-        elif re.search(INFLEXION_POINT, key):
+        elif re.search(INFLEXION_POINT, key) and re.search(LOCATION, key):
             spec['inflexion_points']['locations'] = value
         elif re.search(X_INTS, key) and re.search(NUM, key):
             spec['x_intercepts']['n'] = value
-        elif re.search(X_INTS, key):
+        elif re.search(X_INTS, key) and re.search(LOCATION, key):
             spec['x_intercepts']['locations'] = value
         elif re.search(Y_INT, key):
             spec['y_intercept'] = value
@@ -93,10 +95,3 @@ def parse_cubic_args(**kwargs):
             raise KeyError('The supplied keyword argument: {0} could not be parsed.'.format(key))
 
     return spec
-
-x = parse_cubic_args(tp_num=2, tp=sympy.Interval(-1, sympy.oo, False, True))
-y = functions.cubic(x)
-
-#print(y)
-#print([i for i in sympy.solve(y) if sympy.ask(sympy.Q.real(i))])
-print([i for i in sympy.solve(y.diff())])
