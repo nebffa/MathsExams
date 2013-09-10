@@ -17,6 +17,3 @@ def hyperbola(**kwargs):
     spec = parsers.parse_hyperbola(**kwargs)
 
     return functions.hyperbola(spec)
-
-#import sympy
-#print( absolute_value(tp_loc=sympy.Interval(0, sympy.oo, True, True)) )

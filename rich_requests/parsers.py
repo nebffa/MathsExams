@@ -45,8 +45,8 @@ def parse_absolute_value(**kwargs):
 
 def parse_hyperbola(**kwargs):
     spec = {
-        'x_asymptote': None,
-        'y_asymptote': None,
+        'h_asymptote': None,
+        'v_asymptote': None,
 
         'x_intercepts':             {
                                 'location': None,
@@ -59,9 +59,6 @@ def parse_hyperbola(**kwargs):
     ASYMPTOTE = r'asymp'
     HORIZONTAL = r'horiz'
     VERTICAL = r'vert'
-    #X_INTS = r'x[ _]int'
-    #LOCATION = r'loc'
-    #GRADIENT = r'grad'
     DIRECTION = r'direction'
 
     for key, value in kwargs.items():
@@ -70,9 +67,9 @@ def parse_hyperbola(**kwargs):
 
         key = key.lower()
         if re.search(ASYMPTOTE, key) and re.search(HORIZONTAL, key):
-            spec['x_asymptote'] = value
+            spec['h_asymptote'] = value
         elif re.search(ASYMPTOTE, key) and re.search(VERTICAL, key):
-            spec['y_asymptote'] = value
+            spec['v_asymptote'] = value
         elif re.search(DIRECTION, key):
             spec['direction'] = value
         else:

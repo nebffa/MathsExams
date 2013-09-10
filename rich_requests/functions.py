@@ -3,8 +3,6 @@ from maths.symbols import *
 from maths import all_functions
 import copy
 
-import pprint
-
 
 discretes = (int, sympy.Rational)
 
@@ -304,4 +302,30 @@ def absolute_value(spec):
 
 
 def hyperbola(spec):
-    
+    a = range(-3, 4)
+    a.remove(0)  # ensure we actually have a hyperbola
+    b = range(-3, 4)
+    c = range(-3, 4)
+
+    information = []
+
+    if isinstance(spec['h_asymptote'], discretes):
+        c = spec['h_asymptote']
+    elif isinstance(spec['h_asymptote'], sympy.Interval):
+        c = [i for i in c if i in spec['h_asymptote'] ]
+
+    if isinstance(spec['v_asymptote'], discretes):
+        b = spec['v_asymptote']
+    elif isinstance(spec['v_asymptote'], sympy.Interval):
+        b = [i for i in c if i in spec['v_asymptote'] ]
+
+    if spec['direction'] is not None:
+        if spec['direction'] == 1:
+            a = [i for i in a if i > 0]
+        else:
+            a = [i for i in a if i < 0]
+
+        
+    a, b, c = (i if isinstance(i, discretes) else random.choice(i) for i in (a, b, c))
+
+    return a / (x - b) + c

@@ -1,6 +1,6 @@
 from maths.latex import latex, questions
 from maths.parts import simple_inverse
-from maths.parts import simple_definite_integral
+from maths.parts import simple_definite_integral, definite_integral_equality
 
 
 with open('exam.tex', 'w') as f:
@@ -18,7 +18,7 @@ with open('exam.tex', 'w') as f:
     question.write_solution(f)
 
 
-    q = simple_definite_integral.DefiniteIntegralEquality()
+    q = definite_integral_equality.DefiniteIntegralEquality()
     question = questions.QuestionTree(3, q)
     question.write_question(f)
     question.write_solution(f)
