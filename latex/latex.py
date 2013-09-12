@@ -15,6 +15,7 @@ def packages(f):
     f.write(r'\usepackage{amssymb}' + '\n')
     f.write(r'\usepackage{mathptmx}' + '\n')
     f.write(r'\usepackage{tabularx}' + '\n')
+    f.write(r'\usepackage{graphicx}' + '\n')
     f.write(r'\usepackage[margin=1cm]{geometry}' + '\n')
 
 
@@ -29,6 +30,9 @@ def new_commands(f):
 def set_tabs(f):
     f.write(r'\= \tab \tab \= \tab \tab \= \\' + '\n')
 
+def add_figure_path(f):
+    f.write(r'\graphicspath{ {figures/} }' + '\n')
+
 
 def begin(f):
     f.write(r'\begin{document}' + '\n')
@@ -41,6 +45,7 @@ def begin_tex_document(f):
     new_commands(f)
     begin(f)
     set_tabs(f)
+    add_figure_path(f)
 
 
 def end_tex_document(f):
