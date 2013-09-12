@@ -18,9 +18,8 @@ def parse_absolute_value(**kwargs):
     }
 
     # regular expressions
-    TURNING_POINT = r'[(tp)(turn)]'
+    TURNING_POINT = r'[(tp)(turn)(ep)(extr)]'
     X_INTS = r'x[ _]int'
-    LOCATION = r'loc'
     GRADIENT = r'grad'
     DIRECTION = r'direction'
 
@@ -29,7 +28,7 @@ def parse_absolute_value(**kwargs):
             raise ValueError('The supplied value: {0} is not a valid specifier.'.format(value))
 
         key = key.lower()
-        if re.search(TURNING_POINT, key) and re.search(LOCATION, key):
+        if re.search(TURNING_POINT, key):
             spec['turning_point']['location'] = value
         elif re.search(X_INTS, key):
             spec['x_intercepts']['location'] = value
@@ -99,7 +98,7 @@ def parse_cubic(**kwargs):
     }
 
     # regular expressions
-    TURNING_POINT = r'tp'
+    TURNING_POINT = r'[(tp)(turn)]'
     INFLEXION_POINT = r'inflex'
     DIRECTION = r'dir'
     LOCATION = r'loc'

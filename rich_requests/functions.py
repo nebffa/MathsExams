@@ -248,7 +248,6 @@ def cubic(spec):
         diff_equation = equation.diff(x)
         if isinstance(spec['turning_points']['locations'], sympy.Interval):
             real_solutions = [sympy.simplify(sympy.radsimp(i)) for i in sympy.solve(diff_equation) if sympy.ask(sympy.Q.real(i)) ]
-            print(real_solutions)
             for solution in real_solutions:
                 if solution.evalf() not in spec['turning_points']['locations']:
                     continue
@@ -302,10 +301,10 @@ def absolute_value(spec):
 
 
 def hyperbola(spec):
-    a = range(-3, 4)
+    a = list(range(-3, 4))
     a.remove(0)  # ensure we actually have a hyperbola
-    b = range(-3, 4)
-    c = range(-3, 4)
+    b = list(range(-3, 4))
+    c = list(range(-3, 4))
 
     information = []
 
