@@ -1,6 +1,8 @@
 import random
 from sympy.abc import *
 import sympy
+import functools
+import operator
 
 
 def randint_no_zero(low, high):
@@ -22,17 +24,6 @@ def add_log_abs(function):
 
 def remove_log_abs(function):
     return function.replace(sympy.Abs(a), a)
-
-
-def relation_to_interval(relation):
-    if relation.rel_op == '>':
-        return sympy.Interval(relation.rhs, sympy.oo, True, True)
-    elif relation.rel_op == '>=':
-        return sympy.Interval(relation.rhs, sympy.oo, False, True)
-    elif relation.rel_op == '<':
-        return sympy.Interval(-sympy.oo, relation.rhs, True, True)
-    elif relation.rel_op == '<=':
-        return sympy.Interval(-sympy.oo, relation.rhs, True, False)
 
 
 def partition(number, include_zero=False):

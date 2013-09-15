@@ -1,5 +1,8 @@
 import sympy
 from sympy import oo
+import functools
+import operator
+from maths.symbols import *
 
 
 def is_monotone_increasing(equation, domain=None):
@@ -82,3 +85,53 @@ def is_monotone_decreasing(equation, domain=None):
         return False
     else:
         return True
+
+
+def maximal_domain(expr, domain=sympy.Interval(-oo, oo)):
+    # detect square roots, logs, tans and reciprocals
+    # i won't implement csc, sec and cot for now
+
+    x_real = sympy.Symbol('x_real', real=True)
+    expr = expr.replace(x, x_real)
+    domains = [domain]
+
+    #tests = [sympy.log, sympy.Pow, sympy.tan] #, sympy.csc, sympy.sec, sympy.cot]
+    find = expr.find(sympy.log)
+    domains += [relation_to_interval( sympy.solve( log.args[0] > 0 ) ) for log in find]
+
+    find = expr.find(sympy.Pow)
+    # check if the index of power is less than 0 - "If Pow.args[1] < 0"
+    # if it is, solve the denominator - "Pow.args[0]" - equal to 0 and take its complement to get the maximal domain
+    domains += [sympy.FiniteSet(sympy.solve( Pow.args[0] )).complement for Pow in find if Pow.args[1] < 0]
+
+
+    #find = expr.find(sympy.tan)
+    #domains = [sympy.FiniteSet(sympy.solve( tan.args[0] - k*pi, x )).complement for tan in find]
+    if expr.find(sympy.tan):
+        raise NotImplementedError("Can't find maximum domains of tans.")
+    if expr.find(sympy.cot):
+        raise NotImplementedError("Can't find maximum domain of cot.")
+    if expr.find(sympy.csc):
+        raise NotImplementedError("Can't find maximum domain of csc.")
+    if expr.find(sympy.sec):
+        raise NotImplementedError("Can't find maximum domain of sec.")
+
+    return functools.reduce(operator.and_, domains)
+
+
+def relation_to_interval(relation):
+    if isinstance(relation, sympy.Or):
+        return functools.reduce(operator.or_, [relation_to_interval(i) for i in relation.args] )
+
+    elif isinstance(relation, sympy.And):
+        return functools.reduce(operator.and_, [relation_to_interval(i) for i in relation.args] )
+
+
+    if relation.rel_op == '>':
+        return sympy.Interval(relation.rhs, sympy.oo, True, True)
+    elif relation.rel_op == '>=':
+        return sympy.Interval(relation.rhs, sympy.oo, False, True)
+    elif relation.rel_op == '<':
+        return sympy.Interval(-sympy.oo, relation.rhs, True, True)
+    elif relation.rel_op == '<=':
+        return sympy.Interval(-sympy.oo, relation.rhs, True, False)
