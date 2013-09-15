@@ -1,12 +1,18 @@
 *.txt
 *.pyc
-*.aux
-*.sty
-*.tex
-*.rar
-*.gz
+
 *.pdf
 *.png
 *.xlsx
 *.log
 *.text
+
+# plot/figure files
+*.eps
+
+# LaTeX junk files
+*.aux
+*.sty
+*.tex
+*.rar
+*.gz
