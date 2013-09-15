@@ -63,7 +63,7 @@ class Part(object):
         return total_string
 
     def _question_lines(self, depth, num_lines):
-        total_string = (r'\>' * (depth + 2) + r'\linefill' + latex.latex_newline()) * num_lines
+        total_string = (r'\tab' * (depth + 2) + r'\hrulefill' + latex.latex_newline()) * num_lines
 
         return total_string + '\n'
 
@@ -71,7 +71,7 @@ class Part(object):
         return r'\textbf{{Question {0}}}'.format(self.part_number) + latex.latex_newline()
 
     def _question_part(self, part_symbol):
-        return r'\textbf{{{0}.}} \tab\='.format(part_symbol)
+        return r'\textbf{{{0}.}} \tab '.format(part_symbol)
 
 
 # TODO: needs work to incorporate num_marks in the latex output
