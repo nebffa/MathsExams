@@ -44,11 +44,11 @@ class Piecewise:
     def question_statement(self):
         path = plot.plot(self.equation, self._question_params['plot_domain'])
 
-        return r'''The graph of the function $f$ is shown, where {0} \\
+        return r'''The graph of the function $f$ is shown, where ${0}$ \\
                         {1}'''.format(sympy.latex(self.equation), plot.latex(path))
         
     def solution_statement(self):
-        pass
+        return ''
 
     def sanity_check(self):
         # check that the middle point does not have the same y-value and same derivative. otherwise that would be an oopsie!!
@@ -118,8 +118,8 @@ class AbsoluteValue:
             cubic_statement = r''
 
         return r'''By referring to the graph of $f$, sketch the graph of the function with rule 
-            $y = {0}$, for ${1}$. {2} {3}'''.format(self._question_params['equation'], 
-                                                    self._question_params['domain'], 
+            $y = {0}$, for ${1}$. {2} {3}'''.format(sympy.latex(self._question_params['equation']), 
+                                                    sympy.latex(self._question_params['domain']), 
                                                     cubic_statement, 
                                                     plot.latex(path))
 

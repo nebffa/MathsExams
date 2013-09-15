@@ -53,7 +53,10 @@ def latex(path):
     Return the latex to include an Encapsulated PostScript (.eps) file as an image.
     '''
 
-    return r'''\includegraphics{{{0}}}'''.format(path.strip('.eps'))
+    relative_path = os.path.relpath(path)
+    latex_friendly_path = relative_path.replace('\\', '/')
+
+    return r'''\\ \includegraphics[scale=0.5]{{{0}}} \\'''.format(latex_friendly_path.strip('.eps'))
 
 
 def _blank_plot(domain):
