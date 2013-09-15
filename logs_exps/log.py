@@ -2,6 +2,7 @@ import sympy
 from sympy.abc import *
 from maths import not_named_yet
 from maths.polynomials.linear import request_linear
+from maths.utils import functions
 
 
 coefficients_bound = 5
@@ -28,5 +29,5 @@ class Log(object):
 
         domain = sympy.solve(interior > 0).args[1]
 
-        self.domain = not_named_yet.relation_to_interval(domain)
+        self.domain = functions.relation_to_interval(domain)
         self.range = sympy.Interval(-sympy.oo, sympy.oo, True, True)
