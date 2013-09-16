@@ -2,7 +2,7 @@ import sympy
 import random
 from sympy.abc import *
 from maths import all_functions, solutions_printing, not_named_yet
-from maths.latex import expressions
+from maths.latex import expressions, latex
 
 
 class SimpleDefiniteIntegral(object):
@@ -42,7 +42,8 @@ class SimpleDefiniteIntegral(object):
         line_1 = r'${0} = {1}$'.format(expressions.integral(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation),
                                         expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation.integrate()))
 
-        line_2 = r'$= ' + solutions_printing.integral_working(self.equation, x, self.boundary[0], self.boundary[1]) + r'$'
+        line_2 = r'$= ' + expressions.integral_intermediate_eval(self.boundary[0], self.boundary[1], self.equation.integrate()) + r'$'
+        #line_2 = r'$= ' + solutions_printing.integral_working(self.equation.integrate(), x, self.boundary[0], self.boundary[1]) + r'$'
         line_3 = r'$= ' + sympy.latex(self.answer) + r'$'
 
-        return line_1 + line_2 + line_3
+        return latex.latex_newline().join([line_1, line_2, line_3])

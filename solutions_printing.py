@@ -3,8 +3,9 @@ import sympy
 
 def substitute(expr, var, value):
     latex = sympy.latex(expr)
+    print(latex)
 
-    latex = latex.replace(str(var), sympy.latex(value))
+    latex = latex.replace(sympy.latex(var), sympy.latex(value))
 
     return latex
 

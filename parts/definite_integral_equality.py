@@ -2,6 +2,7 @@ import sympy
 import random
 from sympy.abc import *
 from maths import all_functions
+from maths.latex import latex, expressions
 
 
 class DefiniteIntegralEquality(object):
@@ -62,8 +63,8 @@ class DefiniteIntegralEquality(object):
                                                                                  sympy.latex(self.equation), sympy.latex(self.integral))
 
     def solution_statement(self):
-        line1 = r'$\displaystyle\int^{%d}_{%d} %s\ dx = \left[%s\right]_{%d}^{%d}$' % (self.boundary[1], self.boundary[0], sympy.latex(self.equation),
-                                                                                       sympy.latex(self.antiderivative), self.boundary[1], self.boundary[0])
+        line1 = r'${0}$'.format(expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation.integrate()))
+
         inner_function = self.antiderivative.replace(a * sympy.log(b), b)
 
         inner_upper = inner_function.subs({x: self.boundary[1]})
@@ -72,8 +73,11 @@ class DefiniteIntegralEquality(object):
         upper_bound = self.antiderivative.replace(sympy.log(a), sympy.log(inner_upper, evaluate=False))
         lower_bound = self.antiderivative.replace(sympy.log(a), sympy.log(inner_lower, evaluate=False))
 
-        line2 = r'$= %s %s %s$' % (sympy.latex(upper_bound), '-' if lower_bound.could_extract_minus_sign() else '+', sympy.latex(abs(lower_bound)))
+        print(self.boundary[0])
+        print(self.boundary[1])
+        print(self.integral)
+        line2 = r'$= {0}$'.format(expressions.integral_intermediate_eval(self.boundary[0], self.boundary[1], self.equation.integrate()))
 
-        line3 = r'$= %s,     \therefore p = %s$' % (sympy.latex(self.integral), sympy.latex(self.p))
+        line3 = r'$= {0}, \, \therefore p = {1}$'.format(sympy.latex(self.equation.integrate((x, self.boundary[0], self.boundary[1]))), sympy.latex(self.p))
 
-        return line1 + line2 + line3
+        return latex.latex_newline().join([line1, line2, line3])

@@ -3,11 +3,11 @@ from maths.symbols import *
 
 
 def integral(lb, ub, expr, var=x):
-    return r'\displaystyle\int^{{{0}}}_{{{1}}} {2}\ d{3}'.format(ub, lb, sympy.latex(expr), sympy.latex(var))
+    return r'\displaystyle\int^{{{0}}}_{{{1}}} {2}\ d{3}'.format(sympy.latex(ub), sympy.latex(lb), sympy.latex(expr), sympy.latex(var))
 
 
 def integral_intermediate(lb, ub, expr):
-    return r'\left[{0}\right]^{{{1}}}_{{{2}}}'.format(sympy.latex(expr), ub, lb)
+    return r'\left[{0}\right]^{{{1}}}_{{{2}}}'.format(sympy.latex(expr), sympy.latex(ub), sympy.latex(lb))
 
 
 def integral_intermediate_eval(lb, ub, expr, var=x):
@@ -15,9 +15,9 @@ def integral_intermediate_eval(lb, ub, expr, var=x):
     right = expr.subs({var: lb})
 
     if right.could_extract_minus_sign():
-        return r'\left[{0} - ({1})\right]'.format(sympy.latex(left), sympy.latex(right))
+        return r'{0} - ({1})'.format(sympy.latex(left), sympy.latex(right))
     else:
-        return r'\left[{0} - {1}\right]'.format(sympy.latex(left), sympy.latex(right))
+        return r'{0} - {1}'.format(sympy.latex(left), sympy.latex(right))
 
 
 def discrete_expectation_x_squared(prob_table):
