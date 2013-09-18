@@ -26,8 +26,9 @@ class Log(object):
 
         a1, a2, a3 = sympy.Wild('a1'), sympy.Wild('a2'), sympy.Wild('a3')
         interior = self.equation.match(a1 * sympy.log(a2) + a3)[a2]
+        interior = interior.replace(x, sympy.Symbol('x', real=True))
 
-        domain = sympy.solve(interior > 0).args[1]
+        domain = sympy.solve(interior > 0)
 
         self.domain = functions.relation_to_interval(domain)
         self.range = sympy.Interval(-sympy.oo, sympy.oo, True, True)
