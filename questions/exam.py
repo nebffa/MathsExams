@@ -17,28 +17,28 @@ with open('exam.tex', 'w') as f:
     latex.begin_tex_document(f)
 
     '''q = simple_inverse.SimpleInverse()
-    question = questions.QuestionTree(1, q)
+    question = questions.QuestionTree(q)
     question.write_question(f)
     question.write_solution(f)
     latex.new_page(f)
 
-
+    
     q = simple_definite_integral.SimpleDefiniteIntegral()
-    question = questions.QuestionTree(2, q)
+    question = questions.QuestionTree(q)
     question.write_question(f)
     question.write_solution(f)
     latex.new_page(f)
 
 
     q = definite_integral_equality.DefiniteIntegralEquality()
-    question = questions.QuestionTree(3, q)
+    question = questions.QuestionTree(q)
     question.write_question(f)
     question.write_solution(f)
-    latex.new_page(f)
+    latex.new_page(f)'''
 
 
     q = piecewise.Piecewise()
-    question = questions.QuestionTree(4, q)
+    question = questions.QuestionTree(q)
     q_sub1 = piecewise.DomainDerivative(q)
     q_sub2 = piecewise.AbsoluteValue(q)
     question.add_part(q_sub1, 1)
@@ -48,18 +48,28 @@ with open('exam.tex', 'w') as f:
     latex.new_page(f)
 
 
-    q = antiderivative.Antiderivative()
-    question = questions.QuestionTree(5, q)
+    '''q = antiderivative.Antiderivative()
+    question = questions.QuestionTree(q)
     question.write_question(f)
     question.write_solution(f)
-    latex.new_page(f)'''
+    latex.new_page(f)
 
 
     q = piecewise_prob_density_function.PiecewiseProbDensityFunction()
-    question = questions.QuestionTree(6, q)
+    question = questions.QuestionTree(q)
     question.write_question(f)
     question.write_solution(f)
-    q.sanity_check()
+    latex.new_page(f)
+
+
+    question = questions.QuestionTree()
+    q_sub1 = simple_diff.SimpleDiff()
+    q_sub2 = simple_diff.SimpleDiffEval(q)
+    question.add_part(q_sub1, 1)
+    question.add_part(q_sub2, 2)
+    question.write_question(f)
+    question.write_solution(f)'''
+
 
 
     latex.end_tex_document(f)

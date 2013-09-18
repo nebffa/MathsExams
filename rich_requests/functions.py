@@ -258,7 +258,7 @@ def cubic(spec):
 
 def absolute_value(spec):
     # y = a * |x - b| + c
-    a = range(-3, 4)
+    a = [i for i in range(-3, 4) if i != 0]
     b = range(-3, 4)
     c = range(-5, 6)
 

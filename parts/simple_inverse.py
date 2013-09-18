@@ -59,6 +59,7 @@ class SimpleInverse(object):
     def question_statement(self):
         if random.choice([True, False]):
             self.num_lines, self.num_marks = 6, 2  # the question won't involve finding the domain
+
             question_statement = r'''Let $f:%s \rightarrow R, f(x) = %s$. Find the rule and
                                     domain of the inverse function $f^{-1}.$''' % (sympy.latex(self.domain), sympy.latex(self.equation))
         else:

@@ -1,6 +1,20 @@
 from maths.latex import latex
 
 
+class DummyPart:
+    def __init__(self):
+        self.num_lines, self.num_marks = 0, 0
+
+    def question_statement(self):
+        return ''
+
+    def solution_statement(self):
+        return ''
+
+    def sanity_check(self):
+        pass
+
+
 class Part(object):
     def __init__(self, part_number, question_statement='', solution_statement='', num_lines=0, num_marks=0):
         self.part_number = part_number
@@ -77,8 +91,11 @@ class Part(object):
 
 # TODO: needs work to incorporate num_marks in the latex output
 class QuestionTree(object):
-    def __init__(self, question_number, part):
-        self.root = Part(question_number, part.question_statement(), part.solution_statement(), part.num_lines, part.num_marks)
+    question_number = 0
+
+    def __init__(self, part=DummyPart()):
+        QuestionTree.question_number += 1
+        self.root = Part(QuestionTree.question_number, part.question_statement(), part.solution_statement(), part.num_lines, part.num_marks)
 
     def add_part(self, part, tree_location1, tree_location2=None):
         if tree_location2 is None:

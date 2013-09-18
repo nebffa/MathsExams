@@ -1,6 +1,7 @@
 import sympy
 import random
 from maths import all_functions, not_named_yet
+from maths.latex import latex
 
 
 # always produces Q1a
@@ -58,52 +59,45 @@ class SimpleDiff(object):
         # write_solution needs to know if we are using y or f(x) in order to modify the solution
         self._question_type = question['type']
         return question['statement'] % equation_text
-        #file.write('\\textbf{Question 1} \\\\ \n')
 
-        #file.write('\\textbf{a.} \\tab\=' + (question['statement'] % equation_text) + " \\\\ \n")
-
-        #file.write('\\\\\n')
-        #for i in range(0, self.num_lines):
-        #    file.write('\> \linefill \\\\\n')
-        #file.write('\\\\\n')
 
     def solution_statement(self):
-        total_string = ''
+        lines = []
         if self._question_type == 'f':
             # look for chain rule candidates and show extra working for the chain rule
             if self.equation.as_base_exp()[1] != 1:
                 u = sympy.Symbol('u')
                 inner_function, exponent = self.equation.as_base_exp()
-                total_string += "Let $f(x) = %s = %s, u = %s$ \\\\ \n" % (sympy.latex(self.equation), sympy.latex(u ** exponent), sympy.latex(inner_function))
-                total_string += "$f'(x) = %s \\times u'$ \\\\ \n" % sympy.latex((u ** exponent).diff())
+                lines.append( r"Let $f(x) = {0} = {1}, u = {2}$".format(sympy.latex(self.equation), sympy.latex(u ** exponent), sympy.latex(inner_function)) )
+                lines.append( r"$f'(x) = \frac{{dy}}{{du}} \times \frac{{du}}{{dx}} = %s \times u'$" % sympy.latex((u ** exponent).diff()) )
 
-            total_string += "$f'(x) = %s$ \\\\ \n" % sympy.latex(self.derivative.factor())
+            lines.append( r"$f'(x) = {0}$".format( sympy.latex(self.derivative.factor()) ) )
 
         elif self._question_type == 'y':
         # look for chain rule candidates and show extra working for the chain rule
             if self.equation.as_base_exp()[1] != 1:
                 u = sympy.Symbol('u')
                 inner_function, exponent = self.equation.as_base_exp()
-                total_string += "Let $y = %s = %s, u = %s$ \\\\ \n" % (sympy.latex(self.equation), sympy.latex(u ** exponent), sympy.latex(inner_function))
-                total_string += "$\\frac{dy}{dx} = %s * u'$ \\\\ \n" % sympy.latex((u ** exponent).diff())
+                lines.append( r'Let $y = {0} = {1}, u = {2}$'.format(sympy.latex(self.equation), sympy.latex(u ** exponent), sympy.latex(inner_function)) )
+                lines.append( r"$\frac{{dy}}{{dx}} = \frac{{dy}}{{du}} \times \frac{{du}}{{dx}} = {0} \times u'$".format( sympy.latex((u ** exponent).diff()) ))
 
-            total_string += "$\\frac{dy}{dx} = %s$ \\\\ \n" % sympy.latex(self.derivative)
+            lines.append( r'$\frac{{dy}}{{dx}} = {0}$'.format( sympy.latex(self.derivative) ) )
 
-        return total_string
+        return latex.latex_newline().join(lines)
 
 
 # always produces Q1b
 class SimpleDiffEval(object):
     # function_type_in_simple_diff is the function type used in the class SimpleDiff. we need to know it so we don't use the same function type
     # since questions 1a and 1b never use the same function type
-    def __init__(self, function_type_in_simple_diff):
+    def __init__(self, part):
         self.num_lines = 5
         self.num_marks = 2
 
         function_types = ['product', 'quotient', 'composite']
         try:
             # it might not be in function_types, in which case it will error
-            function_types.remove(function_type_in_simple_diff)
+            function_types.remove(part.function_type)
         except:
             pass
         self.__function_type = random.choice(function_types)
