@@ -59,6 +59,7 @@ with open('exam.tex', 'w') as f:
     question = questions.QuestionTree(6, q)
     question.write_question(f)
     question.write_solution(f)
+    q.sanity_check()
 
 
     latex.end_tex_document(f)

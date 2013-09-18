@@ -31,7 +31,6 @@ class PiecewiseProbDensityFunction(object):
                     self._question_params['k'] = None
 
                 if self._question_params['k'] is not None:
-                    self._question_params['equation'] = self._question_params['equation'].subs({k: self._question_params['k']})
                     break
 
         elif self.function_type == 'cos':
@@ -47,43 +46,46 @@ class PiecewiseProbDensityFunction(object):
                     self._question_params['k'] = None
 
                 if self._question_params['k'] is not None:
-                    self._question_params['equation'] = self._question_params['equation'].subs({k: self._question_params['k']})
                     break
 
         elif self.function_type == 'linear':
             self.domain = domains.integer_domain()
             m = random.randint(1, 2)
             a = random.randint(7, 12)
-            self._question_params['equation'] = (m*x + z) / a
+            self._question_params['equation'] = (m*x + k) / a
 
             area = self._question_params['equation'].integrate((x, self.domain.left, self.domain.right))
             self._question_params['k'] = sympy.solve(area - 1)[0]
-            self._question_params['equation'] = self._question_params['equation'].subs({z: self._question_params['k']})
 
         elif self.function_type == 'quadratic':
             self.domain = domains.integer_domain()
-            self._question_params['equation'] = z * (x - self.domain.left) * (x - self.domain.right)
+            self._question_params['equation'] = k * (x - self.domain.left) * (x - self.domain.right)
 
             area = self._question_params['equation'].integrate((x, self.domain.left, self.domain.right))
             self._question_params['k'] = sympy.solve(area - 1)[0]
-            self._question_params['equation'] = self._question_params['equation'].subs({z: self._question_params['k']})
 
-        self._question_params['question_equation'] = self._question_params['equation'] * k / self._question_params['k']
 
     def question_statement(self):
-        piecewise = sympy.Piecewise((self._question_params['question_equation'], sympy.And(self.domain.left < x, x < self.domain.right)), (0, True))
+        piecewise = sympy.Piecewise((self._question_params['equation'], sympy.And(self.domain.left < x, x < self.domain.right)), (0, True))
 
         line_1 = r'The function $f(x) = {0}$'.format( expressions.piecewise(piecewise) )
         line_2 = r'is a probability density function for the continuous random variable $X$. Show that $k = {0}$.'.format(sympy.latex(self._question_params['k']))
         return latex.latex_newline().join([line_1, line_2])
 
     def solution_statement(self):
-        line_1 = r'$%s = 1$' % expressions.integral(lb=self.domain.left, ub=self.domain.right, expr=self._question_params['question_equation'])
-        line_2 = r'$%s = %s = %s = 1$' % (
-                                    expressions.integral_intermediate(lb=self.domain.left, ub=self.domain.right, expr=self._question_params['question_equation']),
-                                    expressions.integral_intermediate_eval(lb=self.domain.left, ub=self.domain.right, expr=self._question_params['question_equation']),
-                                    sympy.latex(self._question_params['question_equation'].subs({x: self.domain.right}) - 
-                                            self._question_params['equation'].subs({x: self.domain.left}))
+        line_1 = r'${0} = 1$'.format( expressions.integral(lb=self.domain.left, ub=self.domain.right, expr=self._question_params['equation']) )
+        line_2 = r'${0} = {1} = {2} = 1$'.format(
+                                    expressions.integral_intermediate(lb=self.domain.left, ub=self.domain.right, 
+                                            expr=self._question_params['equation'].integrate(x)),
+                                    expressions.integral_intermediate_eval(lb=self.domain.left, ub=self.domain.right, 
+                                            expr=self._question_params['equation'].integrate(x)),
+                                    sympy.latex(self._question_params['equation'].integrate((x, self.domain.left, self.domain.right)))
                                     )
-        line_3 = r'$\therefore k = %s$' % self._question_params['k']
+        line_3 = r'$\therefore k = {0}$'.format( sympy.latex(self._question_params['k']) )
         return latex.latex_newline().join([line_1, line_2, line_3])
+
+    def sanity_check(self):
+        true_equation = self._question_params['equation'].subs({k: self._question_params['k']})
+
+        if true_equation.integrate((x, self.domain.left, self.domain.right)) != 1:
+            raise RuntimeError(r'equation: {0}, domain: {1}, does not integrate to 1'.format(self._question_params['equation'], self.domain))
