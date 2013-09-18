@@ -64,6 +64,7 @@ class Part(object):
 
     def _question_lines(self, depth, num_lines):
         total_string = (r'\tab' * (depth + 2) + r'\hrulefill' + latex.latex_newline()) * num_lines
+        #total_string = latex.latex_newline().join([r'\tab' * (depth + 2) + r'\hrulefill'] * num_lines)
 
         return total_string + '\n'
 

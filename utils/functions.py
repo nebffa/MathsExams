@@ -120,6 +120,7 @@ def maximal_domain(expr, domain=sympy.Interval(-oo, oo)):
 
 
 def relation_to_interval(relation):
+
     if isinstance(relation, sympy.Or):
         return functools.reduce(operator.or_, [relation_to_interval(i) for i in relation.args] )
 
@@ -128,10 +129,22 @@ def relation_to_interval(relation):
 
 
     if relation.rel_op == '>':
-        return sympy.Interval(relation.rhs, sympy.oo, True, True)
+        if isinstance(relation.lhs, sympy.Symbol):
+            return sympy.Interval(relation.rhs, sympy.oo, True, True)
+        else:
+            return sympy.Interval(-sympy.oo, relation.lhs, True, True)
     elif relation.rel_op == '>=':
-        return sympy.Interval(relation.rhs, sympy.oo, False, True)
+        if isinstance(relation.lhs, sympy.Symbol):
+            return sympy.Interval(relation.rhs, sympy.oo)
+        else:
+            return sympy.Interval(-sympy.oo, relation.lhs)
     elif relation.rel_op == '<':
-        return sympy.Interval(-sympy.oo, relation.rhs, True, True)
+        if isinstance(relation.lhs, sympy.Symbol):
+            return sympy.Interval(-sympy.oo, relation.rhs, True, True)
+        else:
+            return sympy.Interval(relation.lhs, sympy.oo, True, True)
     elif relation.rel_op == '<=':
-        return sympy.Interval(-sympy.oo, relation.rhs, True, False)
+        if isinstance(relation.lhs, sympy.Symbol):
+            return sympy.Interval(-sympy.oo, relation.rhs)
+        else:
+            return sympy.Interval(relation.lhs, sympy.oo)

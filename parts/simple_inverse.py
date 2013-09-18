@@ -71,9 +71,8 @@ class SimpleInverse(object):
     def solution_statement(self):
         solution = []
         if self.num_lines == 6:
-            solution += [r'$d_{f^{-1}} = r_{f} = {0}$'.format(sympy.latex(self.inverse_domain))]
+            solution += [r'$d_{{f^{{-1}}}} = r_{{f}} = {0}$'.format(sympy.latex(self.inverse_domain))]
 
-        solution += [r'$f^{-1}(x) = %s$' % sympy.latex(self.inverse)]
+        solution += [r'$f^{{-1}}(x) = {0}$'.format(sympy.latex(self.inverse))]
         
-
         return latex.latex_newline().join(solution)

@@ -1,7 +1,8 @@
 import sympy
 import random
 from sympy.abc import *
-from maths import all_functions
+from maths import all_functions, not_named_yet
+from maths.latex import latex
 
 
 class Antiderivative:
@@ -56,11 +57,12 @@ class Antiderivative:
         # sympy integrates things like 1/x as log(x), not log(|x|) (the explanation given to me was that it was due to complex numbers)
 
         proper_antiderivative = self.antiderivative.replace(sympy.log(a), sympy.log(sympy.Abs(a)))
+        constant_of_integration = not_named_yet.randint(-3, 3, exclude=[0])
 
-        total_string = r'$%s + c$' % sympy.latex(proper_antiderivative)
-        total_string += r'The constant $c$ is not necessary. It can be any real number, including zero.'
+        line_1 = r'${0}$'.format(sympy.latex(proper_antiderivative + constant_of_integration))
+        line_2 = r'We arbitrarily choose our constant of integration to be ${0}$. It can be any real number, including zero.'.format(constant_of_integration)
 
-        return total_string
+        return latex.latex_newline().join([line_1, line_2])
 
     def sanity_check(self):
         pass

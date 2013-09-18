@@ -83,7 +83,7 @@ class DomainDerivative:
         return r"""The stationary points of the function are labelled with their coordinates. Write down the domain of the derivative function $f'$."""
 
     def solution_statement(self):
-        return r'''{0}'''.format(self.domain)
+        return r'''${0}$'''.format(sympy.latex(self.domain))
 
     def sanity_check(self):
         pass

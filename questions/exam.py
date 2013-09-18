@@ -16,7 +16,7 @@ from maths.parts import (
 with open('exam.tex', 'w') as f:
     latex.begin_tex_document(f)
 
-    q = simple_inverse.SimpleInverse()
+    '''q = simple_inverse.SimpleInverse()
     question = questions.QuestionTree(1, q)
     question.write_question(f)
     question.write_solution(f)
@@ -28,6 +28,7 @@ with open('exam.tex', 'w') as f:
     question.write_question(f)
     question.write_solution(f)
     latex.new_page(f)
+
 
     q = definite_integral_equality.DefiniteIntegralEquality()
     question = questions.QuestionTree(3, q)
@@ -44,7 +45,20 @@ with open('exam.tex', 'w') as f:
     question.add_part(q_sub2, 2)
     question.write_question(f)
     question.write_solution(f)
+    latex.new_page(f)
 
+
+    q = antiderivative.Antiderivative()
+    question = questions.QuestionTree(5, q)
+    question.write_question(f)
+    question.write_solution(f)
+    latex.new_page(f)'''
+
+
+    q = piecewise_prob_density_function.PiecewiseProbDensityFunction()
+    question = questions.QuestionTree(6, q)
+    question.write_question(f)
+    question.write_solution(f)
 
 
     latex.end_tex_document(f)

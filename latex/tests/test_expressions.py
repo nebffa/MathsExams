@@ -12,5 +12,5 @@ def test_integral_intermediate():
 
 
 def test_integral_intermediate_eval():
-    assert expressions.integral_intermediate_eval(0, 1, x) == r'\left[1 - 0\right]'
-    assert expressions.integral_intermediate_eval(1, 2, -x) == r'\left[-2 - (-1)\right]'
+    assert expressions.integral_intermediate_eval(0, 1, x) == r'1 - 0'
+    assert expressions.integral_intermediate_eval(1, 2, -x) == r'-2 - (-1)'
