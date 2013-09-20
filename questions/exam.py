@@ -16,7 +16,7 @@ from maths.parts import (
 with open('exam.tex', 'w') as f:
     latex.begin_tex_document(f)
 
-    '''q = simple_inverse.SimpleInverse()
+    q = simple_inverse.SimpleInverse()
     question = questions.QuestionTree(q)
     question.write_question(f)
     question.write_solution(f)
@@ -34,7 +34,7 @@ with open('exam.tex', 'w') as f:
     question = questions.QuestionTree(q)
     question.write_question(f)
     question.write_solution(f)
-    latex.new_page(f)'''
+    latex.new_page(f)
 
 
     q = piecewise.Piecewise()
@@ -48,7 +48,7 @@ with open('exam.tex', 'w') as f:
     latex.new_page(f)
 
 
-    '''q = antiderivative.Antiderivative()
+    q = antiderivative.Antiderivative()
     question = questions.QuestionTree(q)
     question.write_question(f)
     question.write_solution(f)
@@ -68,8 +68,15 @@ with open('exam.tex', 'w') as f:
     question.add_part(q_sub1, 1)
     question.add_part(q_sub2, 2)
     question.write_question(f)
-    question.write_solution(f)'''
+    question.write_solution(f)
+    latex.new_page(f)
 
+
+    q = worded_definite_integral.WordedDefiniteIntegral()
+    question = questions.QuestionTree(q)
+    question.write_question(f)
+    question.write_solution(f)
+    latex.new_page(f)
 
 
     latex.end_tex_document(f)

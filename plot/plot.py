@@ -147,7 +147,7 @@ def plot(expr, plot_domain, expr_domain=None):
         for i in range(len(expr.args)):
             numpified = numpify( expr.args[i][0] )
             
-            x_values = numpy.linspace(domains[i], domains[i + 1], num=1000)
+            x_values = numpy.linspace(domains[i], domains[i + 1], num=2000)
             #undefined_points = get_undefined_points(expr.args[i][0])
             #undefined_indices = numpy.where(x_values == undefined_points)
             #x_values = numpy.delete(undefined_indices)
@@ -160,7 +160,7 @@ def plot(expr, plot_domain, expr_domain=None):
     else:
         numpified = numpify(expr)
 
-        x_values = numpy.linspace(expr_domain.left, expr_domain.right, num=1000)
+        x_values = numpy.linspace(expr_domain.left, expr_domain.right, num=2000)
 
         y_values = eval(r'{0}'.format(numpified))
         y_values = asymptote_proof(y_values)
