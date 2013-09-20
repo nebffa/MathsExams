@@ -1,8 +1,9 @@
 import sympy
 import random
-from sympy.abc import *
+from maths.symbols import *
 from maths import all_functions
-from maths.latex import latex, expressions, postprocess
+from maths.latex import latex, expressions
+from maths.utils import noevals
 
 
 class DefiniteIntegralEquality(object):
@@ -31,50 +32,45 @@ class DefiniteIntegralEquality(object):
         # -log(2)/2 + log(6)/2, rather than log(3)/2
         # it turns out that both logs produced always have the same denominator, so to create a single log we only need to know the
         # signs and the arguments
-        a, b, c, d = sympy.Wild('a'), sympy.Wild('b'), sympy.Wild('c'), sympy.Wild('d')
-        self.antiderivative = self.equation.integrate().replace(sympy.log(a), sympy.log(sympy.Abs(a)))
+        self.antiderivative = self.equation.integrate().replace(sympy.log(x0), sympy.log(sympy.Abs(x0)))
         self.integral = self.equation.integrate((x, self.boundary[0], self.boundary[1]))
 
         if len(self.integral.find(sympy.log)) > 1:  # there is more than one log
-            match = self.integral.match(sympy.log(a) / b + sympy.log(c) / d)
-            left_inside = match[a]
-            right_inside = match[c]
+            logs = self.integral.find(sympy.log)
+            left_inside = logs.pop().args[0]
+            right_inside = logs.pop().args[0]
+            denominator = self.integral.args[0].args[0].q
 
-            #def test_same_denominators(left_log, right_log):
-            #    assert left_log.args[0] == right_log.args[0]
-
-            denominator = abs(match[b])
-            if match[b].could_extract_minus_sign():
+            # the denominator of the first log
+            if self.integral.args[0].could_extract_minus_sign():
                 left_inside = 1 / left_inside
-            if match[d].could_extract_minus_sign():
+            # the denominator of the second log
+            if self.integral.args[1].could_extract_minus_sign():
                 right_inside = 1 / right_inside
 
             self.p = left_inside * right_inside
             self.integral = sympy.log(self.p, evaluate=False) / denominator
 
         else:
-            self.p = self.integral.match(sympy.log(a) / b)[a]
+            self.p = self.integral.match(sympy.log(x0) / x1)[x0]
 
         p = sympy.Symbol('p')
-        self.integral = self.integral.replace(sympy.log(a), sympy.log(p))
+        self.integral = self.integral.replace(sympy.log(x0), sympy.log(p))
 
     def question_statement(self):
         return r'Find p given that $\displaystyle\int^{%d}_{%d} %s\ dx = %s$' % (self.boundary[1], self.boundary[0],
                                                                                  sympy.latex(self.equation), sympy.latex(self.integral))
 
     def solution_statement(self):
-        line1 = r'${0}$'.format(expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation.integrate()))
+        line_1 = r'${0}$'.format(expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation.integrate()))
 
-        inner_function = self.antiderivative.replace(a * sympy.log(b), b)
+        complex_proof_noeval = self.equation.integrate().replace(sympy.log(x0), sympy.log(noevals.noevalAbs(x0)))
+        complex_proof = self.equation.integrate().replace(sympy.log(x0), sympy.log(sympy.Abs(x0)))
 
-        inner_upper = inner_function.subs({x: self.boundary[1]})
-        inner_lower = inner_function.subs({x: self.boundary[0]})
+        line_2 = r'$= {0}$'.format(expressions.integral_intermediate_eval(lb=self.boundary[0], ub=self.boundary[1], expr=complex_proof_noeval))
+        line_3 = r'$= {0} = {1}$'.format(
+                            sympy.latex( complex_proof.subs({x: self.boundary[1]}) - complex_proof.subs({x: self.boundary[0]}) ), 
+                            sympy.latex( sympy.logcombine( complex_proof.subs({x: self.boundary[1]}) - complex_proof.subs({x: self.boundary[0]}) ) ))
+        line_4 = r'$\therefore p = {0}.$'.format(sympy.latex(self.p))
 
-        upper_bound = self.antiderivative.replace(sympy.log(a), sympy.log(inner_upper, evaluate=False))
-        lower_bound = self.antiderivative.replace(sympy.log(a), sympy.log(inner_lower, evaluate=False))
-
-        line2 = r'$= {0}$'.format(expressions.integral_intermediate_eval(self.boundary[0], self.boundary[1], self.equation.integrate()))
-
-        line3 = r'$= {0}, \, \therefore p = {1}$'.format(sympy.latex(self.equation.integrate((x, self.boundary[0], self.boundary[1]))), sympy.latex(self.p))
-
-        return postprocess.log( latex.latex_newline().join([line1, line2, line3]) )
+        return latex.latex_newline().join([line_1, line_2, line_3, line_4])

@@ -7,4 +7,4 @@ import pytest
 @pytest.mark.xfail
 def test_SimpleSketch():
     q1 = simple_sketch.SimpleSketch()
-    question_tester(QuestionTree(1, q1))
+    question_tester(QuestionTree(q1))

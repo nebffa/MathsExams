@@ -59,7 +59,7 @@ class Antiderivative:
         proper_antiderivative = self.antiderivative.replace(sympy.log(a), sympy.log(sympy.Abs(a)))
         constant_of_integration = not_named_yet.randint(-3, 3, exclude=[0])
 
-        line_1 = r'${0}$'.format(sympy.latex(proper_antiderivative + constant_of_integration))
+        line_1 = r'${0}$'.format(sympy.latex(proper_antiderivative.factor() + constant_of_integration))
         line_2 = r'We arbitrarily choose our constant of integration to be ${0}$. It can be any real number, including zero.'.format(constant_of_integration)
 
         return latex.latex_newline().join([line_1, line_2])

@@ -5,4 +5,4 @@ from .question_tester import question_tester
 
 def test_ProbTableUnknown():
     q1 = prob_table_unknown.ProbTableUnknown()
-    question_tester(QuestionTree(1, q1))
+    question_tester(QuestionTree(q1))

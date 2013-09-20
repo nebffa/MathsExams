@@ -4,5 +4,5 @@ from maths.latex.questions import QuestionTree
 
 
 def test_Antiderivative():
-    q1 = QuestionTree(part=antiderivative.Antiderivative(), question_number=1)
+    q1 = QuestionTree(part=antiderivative.Antiderivative())
     question_tester(q1)

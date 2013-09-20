@@ -6,7 +6,7 @@ from maths.latex.questions import QuestionTree
 def test_ProbTableKnown():
 
     q = prob_table_known.ProbTableKnown()
-    question = QuestionTree(question_number=1, part=q)
+    question = QuestionTree(part=q)
 
     q_a = prob_table_known.Property(part=q)
     q_b = prob_table_known.Multinomial(part=q)

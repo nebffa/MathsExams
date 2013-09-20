@@ -52,7 +52,7 @@ class PiecewiseProbDensityFunction(object):
             self.domain = domains.integer_domain()
             m = random.randint(1, 2)
             a = random.randint(7, 12)
-            self._question_params['equation'] = (m*x + k) / a
+            self._question_params['equation'] = ((m*x + k) / a).together()
 
             area = self._question_params['equation'].integrate((x, self.domain.left, self.domain.right))
             self._question_params['k'] = sympy.solve(area - 1)[0]

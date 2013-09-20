@@ -7,4 +7,4 @@ import pytest
 @pytest.mark.xfail
 def test_SimpleTrigSolve():
     q1 = simple_trig_solve.SimpleTrigSolve()
-    question_tester(QuestionTree(1, q1))
+    question_tester(QuestionTree(q1))
