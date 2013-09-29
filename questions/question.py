@@ -1,6 +1,5 @@
 from maths.latex import latex, questions
 from maths.parts import (
-                            definite_integral_equality,
                             worded_definite_integral
                         )
 
