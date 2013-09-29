@@ -27,6 +27,7 @@ class Part(object):
     def add_child(self, part_number, question_statement='', solution_statement='', num_lines=0, num_marks=0):
         self.children.append(Part(part_number, question_statement, solution_statement, num_lines, num_marks))
 
+    # doesn't use the enumitem package, many hbox errors
     def question_traversal_to_latex(self, obj, depth):
         total_string = ''
 
@@ -55,6 +56,7 @@ class Part(object):
         return total_string
 
 
+    # does use the enumitem package, few hbox errors
     def new_question_traversal_to_latex(self, obj, depth):
         total_string = r'\item' + '\n'
 
@@ -75,6 +77,7 @@ class Part(object):
         return total_string + '\n'
 
 
+    # does use the enumitem package, few hbox errors
     def new_solution_traversal_to_latex(self, obj, depth):
         total_string = ''
         if depth == 0:
@@ -95,6 +98,7 @@ class Part(object):
         return total_string + '\n'
 
 
+    # doesn't use the enumitem package, many hbox errors
     def solution_traversal_to_latex(self, obj, depth):
         total_string = ''
 
