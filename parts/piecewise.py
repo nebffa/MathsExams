@@ -44,7 +44,7 @@ class Piecewise:
     def question_statement(self):
         path = plot.plot(self.equation, self._question_params['plot_domain'])
 
-        return r'''The graph of the function $f$ is shown, where ${0}$ \\
+        return r'''The graph of the function $f$ is shown, where ${0}$
                         {1}'''.format(sympy.latex(self.equation), plot.latex(path))
         
     def solution_statement(self):

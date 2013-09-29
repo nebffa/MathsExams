@@ -49,6 +49,7 @@ def begin(f):
 
 
 def begin_tex_document(f):
+    f.write(r'\batchmode' + '\n')
     document_class(f)
     f.write('\n')
     packages(f)
@@ -59,6 +60,7 @@ def begin_tex_document(f):
     f.write('\n')
     settings(f)
     f.write('\n')
+    f.write(r'\scrollmode' + '\n')
     begin(f)
     
 
@@ -66,3 +68,4 @@ def begin_tex_document(f):
 def end_tex_document(f):
     f.write('\end{parts}' + '\n')
     f.write('\end{document}' + '\n')
+    f.write(r'\batchmode' + '\n')

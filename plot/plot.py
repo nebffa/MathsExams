@@ -56,7 +56,15 @@ def latex(path):
     relative_path = os.path.relpath(path)
     latex_friendly_path = relative_path.replace('\\', '/')
 
-    return r'''\\ \includegraphics[scale=0.5]{{{0}}} \\'''.format(latex_friendly_path.strip('.eps'))
+
+    return '\n' + r'''\begin{{figure}}[h]
+    \centering
+    \batchmode
+    \includegraphics[scale=0.5]{{{0}}}
+    \scrollmode
+    \end{{figure}}
+    '''.format(latex_friendly_path.strip('.eps')) + '\n'
+    
 
 
 def _blank_plot(domain):

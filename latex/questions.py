@@ -81,15 +81,12 @@ class Part(object):
             total_string += r'\addtocounter{partsi}{-1}' + '\n'
         total_string += r'\item' + '\n'
 
-        if obj.question_statement and depth == 0:
+        if obj.solution_statement and depth == 0:
             total_string += r'$ $\newline' + '\n' + obj.solution_statement + '\n'
-        elif obj.question_statement:
-            total_string += obj.question_statement + '\n'
+        elif obj.solution_statement:
+            total_string += obj.solution_statement + '\n'
         else:
             total_string += r'$ $'
-
-        if obj.num_lines != 0:
-            total_string += r'\fillwithlines{{{0}in}}'.format(obj.num_lines / 4) + '\n'
 
         if obj.children:
             total_string += r'\begin{parts}' + '\n' + '\n'.join(
