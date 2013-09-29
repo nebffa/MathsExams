@@ -76,7 +76,26 @@ class Part(object):
 
 
     def new_solution_traversal_to_latex(self, obj, depth):
-        pass
+        total_string = ''
+        if depth == 0:
+            total_string += r'\addtocounter{partsi}{-1}' + '\n'
+        total_string += r'\item' + '\n'
+
+        if obj.question_statement and depth == 0:
+            total_string += r'$ $\newline' + '\n' + obj.solution_statement + '\n'
+        elif obj.question_statement:
+            total_string += obj.question_statement + '\n'
+        else:
+            total_string += r'$ $'
+
+        if obj.num_lines != 0:
+            total_string += r'\fillwithlines{{{0}in}}'.format(obj.num_lines / 4) + '\n'
+
+        if obj.children:
+            total_string += r'\begin{parts}' + '\n' + '\n'.join(
+                        obj.new_solution_traversal_to_latex(i, depth + 1) for i in obj.children) + r'\end{parts}' + '\n'
+
+        return total_string + '\n'
 
 
     def solution_traversal_to_latex(self, obj, depth):
@@ -133,4 +152,4 @@ class QuestionTree(object):
         f.write(self.root.new_question_traversal_to_latex(self.root, depth=0))
 
     def write_solution(self, f):
-        f.write(self.root.solution_traversal_to_latex(self.root, depth=0))
+        f.write(self.root.new_solution_traversal_to_latex(self.root, depth=0))
