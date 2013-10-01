@@ -7,12 +7,12 @@ However, it is having unintended side effects.
 
 Including the code:
 
-class exp(sympy.exp):
+class exp((sympy.exp):
     @classmethod
     def eval(cls, arg):
         return
 
-in a module like noevals.py, and then subsequently importing noevals has disabled eval in the regular sympy.exp. 
+in a module like noevals.py, and then subsequently importing noevals has disabled eval in the regular (sympy.exp. 
 I am super new to subclassing in general, but I know it's this code because when I delete these 4 lines the problem goes away. 
 How do I retain this subclass without altering the parent's behaviour?
 
@@ -36,6 +36,28 @@ hasn't been done yet.
 
 @ https://groups.google.com/forum/#!topic/sympy/zilEXwN26so
 '''
+
+
+def noevalsub(expr, mapping):
+    a = sympy.Wild('a')
+    noeval_map = (
+        (sympy.Abs, noevalAbs),
+        (sympy.sin, noevalsin),
+        (sympy.cos, noevalcos),
+        (sympy.tan, noevaltan),
+        (sympy.exp, noevalexp),
+        (sympy.log, noevallog),
+        (sympy.Add, noevalAdd),
+        (sympy.Mul, noevalMul),
+        (sympy.Pow, noevalPow)
+    )
+
+    for yeseval, noeval in noeval_map:
+        # yes_eval, no_eval = item
+        print(yeseval(a), noeval(a))
+        expr = expr.subs(yeseval(a), noeval(a))
+    print(expr)
+    return expr.subs(mapping)
 
 
 class noevalAbs(sympy.Abs):
@@ -69,6 +91,30 @@ class noevalexp(sympy.exp):
 
 
 class noevallog(sympy.log):
+    @classmethod
+    def eval(cls, arg):
+        return
+
+
+class noevalAdd(sympy.Add):
+    @classmethod
+    def eval(cls, arg):
+        return
+
+
+class noevalMul(sympy.Mul):
+    @classmethod
+    def eval(cls, arg):
+        return
+
+
+class noevalPow(sympy.Pow):
+    @classmethod
+    def eval(cls, arg):
+        return
+
+
+class noevalInteger(sympy.Integer):
     @classmethod
     def eval(cls, arg):
         return

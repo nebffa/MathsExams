@@ -19,7 +19,7 @@ def enumerator(f):
     # there has to be something more sensible than just choosing 0.87 inches
     f.write(r'\setlist[parts]{label=\textbf{Question \arabic*}, itemindent={0.82in}, leftmargin={0in}, nosep}' + '\n')
     f.write(r'\setlist[parts, 2]{label=\textbf{\alph*.}, itemindent={0.2in}, itemsep=20pt}' + '\n')
-    f.write(r'\setlist[parts, 3]{label=\textbf{\roman*.}, leftmargin=*}' + '\n')
+    f.write(r'\setlist[parts, 3]{label=\textbf{\roman*.}, itemindent={0in}, itemsep=20pt, leftmargin={0.4in}}' + '\n')
 
 
 def packages(f):

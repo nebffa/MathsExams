@@ -56,9 +56,8 @@ class PointTransformation:
         self._qp['transformations'] = transformations.random_transformation(num_transformations=2)
 
     def question_statement(self):
-        return r'''Find the coordinates of the image of the point $({0}, {1})$ {2}.'''.format(
-                    sympy.latex(self._qp['point'][0]), 
-                    sympy.latex(self._qp['point'][1]), 
+        return r'''Find the coordinates of the image of the point ${0}$ {1}.'''.format(
+                    sympy.latex(self._qp['point']), 
                     transformations.print_transformations(self._qp['transformations']) 
                     )
 
@@ -66,14 +65,12 @@ class PointTransformation:
         mapping = transformations.show_mapping(self._qp['transformations'])
         mapped_point = transformations.apply_transformations(self._qp['transformations'], self._qp['point'])
 
-        therefore = r'\therefore ({0}, {1}) \rightarrow ({2}, {3})'.format(
-                        sympy.latex(self._qp['point'][0]), 
-                        sympy.latex(self._qp['point'][1]),
-                        sympy.latex(mapped_point[0]), 
-                        sympy.latex(mapped_point[1])
+        therefore = r'$\therefore {0} \rightarrow {1}$'.format(
+                        sympy.latex(self._qp['point']), 
+                        sympy.latex(mapped_point), 
                         )
 
-        return r'''${0}$ '''.format(mapping) + latex.latex_newline() + therefore
+        return r'''${0}$'''.format(mapping) + latex.latex_newline() + therefore
 
 
 class EquationTransformation:
@@ -88,7 +85,27 @@ class EquationTransformation:
                         transformations.print_transformations(self._qp['transformations']) )
 
     def solution_statement(self):
-        mapping = transformations.show_mapping(self._qp['transformations'])
+        mapping_chain = transformations.show_mapping(self._qp['transformations'])
         mapped_equation = transformations.apply_transformations(self._qp['transformations'], self._qp['equation'])
+        mapping = transformations.overall_transformation(self._qp['transformations'])
+        reversed_mapping = transformations.reverse_mapping(mapping)
 
-        return r'''${0} {1}$'''.format(mapping, sympy.latex(mapped_equation))
+        
+        line_1 = r'${0}$'.format(mapping_chain)
+
+        x_, y_ = sympy.symbols("x' y'")
+        new_coords = (x_, y_)
+        line_2 = r"Let our new ${0}$ coordinates be ${1}$.".format(sympy.latex((x, y)), sympy.latex((x_, y_)))
+        line_3 = r'Hence, ${0} \rightarrow {1}$'.format(sympy.latex(mapping), sympy.latex(new_coords))
+
+
+        reversed_mapping = tuple(i.subs({x: x_, y: y_}) for i in reversed_mapping)        
+        line_4 = r'and ${0} \rightarrow {1}$'.format(sympy.latex((x, y)), sympy.latex(reversed_mapping))
+
+        line_5 = 'Now we apply the mapping to the equation:'
+        line_6 = r'${0} = {1}$'.format(sympy.latex(reversed_mapping[1]), sympy.latex(self._qp['equation'].subs({x: reversed_mapping[0]})) )
+
+        line_7 = r'$y = {0}$'.format(sympy.latex(mapped_equation.apart()))
+
+        lines = line_1, line_2, line_3, line_4, line_5, line_6, line_7
+        return latex.latex_newline().join(lines)

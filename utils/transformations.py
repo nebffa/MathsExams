@@ -78,7 +78,7 @@ def apply_transformations(transformations, thing):
     if isinstance(thing, tuple):  # it's a set of coordinates
         return ( transf[0].subs({x: thing[0]}), transf[1].subs({y: thing[1]}) )
     else:  # it's an expression
-        reversed_transf = _reverse_mapping(transf)
+        reversed_transf = reverse_mapping(transf)
 
         solve_friendly_expr = -y + thing
         transformed = solve_friendly_expr.subs({x: reversed_transf[0], y: reversed_transf[1]})
@@ -116,20 +116,20 @@ def print_transformations(transformations):
 
 
 def show_mapping(transformations):
-    mapping = '(x, y)'
-
     coords = (x, y)
+    mapping = sympy.latex(coords)
+    
     for transf in transformations:
         mapped_coords = _reduce_transformation(transf, coords)
         coords = mapped_coords
 
-        mapping += r' \rightarrow ({0}, {1})'.format(sympy.latex(mapped_coords[0]), sympy.latex(mapped_coords[1]))
+        mapping += r' \rightarrow {0}'.format(sympy.latex(mapped_coords))
         
 
     return mapping
 
 
-def _reverse_mapping(mapping):
+def reverse_mapping(mapping):
 
     maps = []
     temp = sympy.Symbol('temp')
