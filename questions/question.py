@@ -1,17 +1,21 @@
 from maths.latex import latex, questions
 from maths.parts import (
-                            worded_definite_integral
+                            simple_sketch
                         )
 
 
 with open('exam.tex', 'w') as f:
     latex.begin_tex_document(f)
 
-    q = worded_definite_integral.WordedDefiniteIntegral()
-    question = questions.QuestionTree(q)
+    q = simple_sketch.SimpleSketch()
+    question = questions.QuestionTree()
+    question.add_part(q, tree_location1=1)
+    
+    question.add_part(questions.DummyPart(), tree_location1=2)
+    
+    question.add_part(simple_sketch.PointTransformation(q), tree_location1=2)
+    question.add_part(simple_sketch.EquationTransformation(q), tree_location1=2)
     question.write_question(f)
     question.write_solution(f)
-    latex.new_page(f)
-
 
     latex.end_tex_document(f)

@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 import re
 import uuid
 import os
-
+import textwrap
+    
 
 def f7(seq):
     # removes repeating items in lists, preserving order
@@ -56,18 +57,22 @@ def latex(path):
     relative_path = os.path.relpath(path)
     latex_friendly_path = relative_path.replace('\\', '/')
 
-
-    return '\n' + r'''\begin{{figure}}[h]
-    \centering
-    \batchmode
-    \includegraphics[scale=0.5]{{{0}}}
-    \scrollmode
+    # the $ $ text forces the graph to be positioned correctly in the case where there is no other text to be written
+    return '\n' + textwrap.dedent(r'''
+    $ $
+    \begin{{figure}}[h]
+        \centering
+        \batchmode
+        \includegraphics[scale=0.5]{{{0}}}
+        \scrollmode
     \end{{figure}}
-    '''.format(latex_friendly_path.strip('.eps')) + '\n'
+    '''.format(latex_friendly_path.strip('.eps'))) + '\n'
+
+
     
 
 
-def _blank_plot(domain):
+def _blank_plot(domain, ran):
     # make the plot
     fig = plt.figure(1)
     ax = SubplotZero(fig, 111)
@@ -78,7 +83,7 @@ def _blank_plot(domain):
     ax.axvline(linewidth=1.7, color="k")
 
     x_lower, x_upper = int(domain.left), int(domain.right)  # needs to be changed, is just a temporary type changer
-    y_lower, y_upper = -5, 5
+    y_lower, y_upper = int(ran.left), int(ran.right)
 
     # remove tick lines on the axes
     plt.xticks([])
@@ -116,15 +121,15 @@ def _save_plot():
     return path
 
 
-def blank_plot(domain):
-    _blank_plot(domain)
+def blank_plot(domain, ran):
+    _blank_plot(domain, ran)
     path = _save_plot()
 
     return path
 
 
 
-def plot(expr, plot_domain, expr_domain=None):
+def plot(expr, plot_domain, plot_range, expr_domain=None):
     if len(expr.atoms(sympy.Symbol)) != 1:
         raise ValueError(r'The supplied expression, {0}, must rely on only one symbol.'.format(expr))
     else:
@@ -140,7 +145,7 @@ def plot(expr, plot_domain, expr_domain=None):
         raise ValueError('The supplied expr_domain goes to infinity: {0}'.format(plot_domain))
 
 
-    _blank_plot(plot_domain)    
+    _blank_plot(plot_domain, plot_range)    
 
 
     # plot each part of a piecewise individually    
@@ -155,7 +160,7 @@ def plot(expr, plot_domain, expr_domain=None):
         for i in range(len(expr.args)):
             numpified = numpify( expr.args[i][0] )
             
-            x_values = numpy.linspace(domains[i], domains[i + 1], num=2000)
+            x_values = numpy.linspace(domains[i], domains[i + 1], num=5000)
             #undefined_points = get_undefined_points(expr.args[i][0])
             #undefined_indices = numpy.where(x_values == undefined_points)
             #x_values = numpy.delete(undefined_indices)
@@ -168,7 +173,7 @@ def plot(expr, plot_domain, expr_domain=None):
     else:
         numpified = numpify(expr)
 
-        x_values = numpy.linspace(expr_domain.left, expr_domain.right, num=2000)
+        x_values = numpy.linspace(expr_domain.left, expr_domain.right, num=5000)
 
         y_values = eval(r'{0}'.format(numpified))
         y_values = asymptote_proof(y_values)

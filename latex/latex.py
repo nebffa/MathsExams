@@ -36,6 +36,8 @@ def packages(f):
 def settings(f):
     f.write(r'\graphicspath{ {figures/} }' + '\n')
     f.write(r'\setlength{\parindent}{0pt}' + '\n')
+    # force individual question parts to not be spread across two pages
+    f.write(r'\interlinepenalty=10000' + '\n')
 
 
 def new_commands(f):
