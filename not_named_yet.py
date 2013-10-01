@@ -10,6 +10,9 @@ def randint_no_zero(low, high):
 
 
 def randint(low, high, exclude=[]):
+    """ Return a number in the range (low, high), except for the numbers in exclude.
+    """
+
     nums = list(range(low, high + 1))
 
     for num in exclude:

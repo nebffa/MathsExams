@@ -272,7 +272,7 @@ def absolute_value(spec):
     if isinstance(spec['direction'], sympy.Interval):
         a = [i for i in a if i in spec['direction']]
 
-    # key['inflexion_point']
+    # key['turning_point']
     if isinstance(spec['turning_point']['location'], tuple):
         b = list( spec['turning_point']['location'][0] )
         c = list( spec['turning_point']['location'][1] )
