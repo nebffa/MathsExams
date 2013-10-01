@@ -13,9 +13,9 @@ def test_ProbTableKnown():
     q_c = prob_table_known.Conditional(part=q)
     q_d = prob_table_known.Cumulative(part=q)
 
-    question.add_part(tree_location1=1, part=q_a)
-    question.add_part(tree_location1=2, part=q_b)
-    question.add_part(tree_location1=3, part=q_c)
-    question.add_part(tree_location1=4, part=q_d)
+    question.add_part(part=q_a)
+    question.add_part(part=q_b)
+    question.add_part(part=q_c)
+    question.add_part(part=q_d)
 
     question_tester(question)
