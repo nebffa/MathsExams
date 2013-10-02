@@ -23,7 +23,7 @@ class SimpleInverse(object):
             func = all_functions.request_hyperbola(difficulty=3)
             self.equation = func.equation
         elif self.function_type == 'log':
-            # there was no exam question involving a log, but since it's hte inverse of exp which has been used, I thought to include it
+            # there was no exam question involving a log, but since it's the inverse of exp which has been used, I thought to include it
             func = all_functions.request_log(difficulty=3)
             self.equation = func.equation
         elif self.function_type == 'cubic':  # no base class for cubics so I make it here
