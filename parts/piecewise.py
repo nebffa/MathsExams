@@ -39,10 +39,10 @@ class Piecewise:
             function_right = requests.absolute_value(extreme_point=domain_right)        
 
         self.equation = sympy.Piecewise((function_left, x < domain_left.right), (function_right, x >= domain_left.right))
-        self._question_params['plot_domain'] = sympy.Interval(-6, 6)
+        self._question_params['plot_domain'] = self._question_params['plot_range'] = sympy.Interval(-6, 6)
 
     def question_statement(self):
-        path = plot.plot(self.equation, self._question_params['plot_domain'])
+        path = plot.plot(self.equation, self._question_params['plot_domain'], self._question_params['plot_range'])
 
         return r'''The graph of the function $f$ is shown, where ${0}$
                         {1}'''.format(sympy.latex(self.equation), plot.latex(path))
@@ -94,6 +94,7 @@ class AbsoluteValue:
         self.num_lines, self.num_marks = 0, 2
         self._question_params = {}
         self._question_params['plot_domain'] = part._question_params['plot_domain']
+        self._question_params['plot_range'] = part._question_params['plot_range']
 
 
         # find the half of the piecewise that is not already an absolute value
@@ -110,7 +111,7 @@ class AbsoluteValue:
 
 
     def question_statement(self):
-        path = plot.blank_plot(self._question_params['plot_domain'])
+        path = plot.blank_plot(self._question_params['plot_domain'], self._question_params['plot_range'])
 
         if self._question_params['is_cubic']:
             cubic_statement = r'''Label stationary points with their coordinates (do not attempt to find x-axis intercepts).'''
@@ -125,7 +126,8 @@ class AbsoluteValue:
 
 
     def solution_statement(self):
-        path = plot.plot(self._question_params['equation'], self._question_params['plot_domain'], expr_domain=self._question_params['domain'])
+        path = plot.plot(self._question_params['equation'], self._question_params['plot_domain'], self._question_params['plot_range'],
+                            expr_domain=self._question_params['domain'])
 
         return r'''{0}'''.format(plot.latex(path))
 
