@@ -1,12 +1,16 @@
 import sympy
 import random
-from sympy.abc import *
+from maths.symbols import *
 from maths import all_functions, sets
 from maths.trig import trig
+from maths.utils import functions
 
 
 class SimpleTrigSolve(object):
     def __init__(self):
+        self.num_lines, self.num_marks = 8, 2
+
+
         trig_function = all_functions.request_trig(difficulty=random.randint(1, 2)).equation
 
         # 2008 Q3: Solve the equation cos(3x/2) = 1/2 for x in [-pi/2, pi/2] [6 lines] [2 marks]
@@ -23,7 +27,7 @@ class SimpleTrigSolve(object):
         else:
             value = trig.plausible_value_no_zero(self.function_type)
 
-        x0, x1, x2, x3 = sympy.Wild('x0'), sympy.Wild('x1'), sympy.Wild('x2'), sympy.Wild('x3')
+
         match = value.match(x0 / x1)
 
         if random.choice([True, False]):
@@ -37,12 +41,13 @@ class SimpleTrigSolve(object):
         self._equation_interior = match[x1]*x + match[x2]  # for use in writing the solution
         self._equation_coeff = match[x0]
 
+
         self.domain = trig.request_limited_domain(self.equation)
 
     def write_question(self):
-        question_statement = r'Solve the equation %s = %s for x \in %s.'
+        question_statement = r'Solve the equation {0} = {1} for x \in {2}.'
 
-        return question_statement % (sympy.latex(self.equation), sympy.latex(self.value), sympy.latex(self.domain))
+        return question_statement.format(sympy.latex(self.equation), sympy.latex(self.value), sympy.latex(self.domain))
 
     def write_solution(self):
         lines = []
@@ -56,29 +61,44 @@ class SimpleTrigSolve(object):
             lines.append(r'$x \in %s$' % transformed_domain)
 
 
+
 def all_solutions(trig_function, domain):
     # TO DO: complete later. SymPy currently does not support solving inequalities over irrationals
-    assert(isinstance(domain, sympy.Interval) or isinstance(domain, sympy.Union))
 
     if isinstance(domain, sympy.Union):
         return flatten([all_solutions(trig_function, i) for i in domain.args])
 
-    x0, x1, x2= sympy.Wild('x0'), sympy.Wild('x1'), sympy.Wild('x2')
 
     trig_type = all_functions.detect_expr_type(trig_function)
+
     if trig_type in [sympy.sin, sympy.cos, sympy.sec, sympy.csc]:
-        period = 2*sympy.pi
-    elif trig_type in [sympy.sec, sympy.csc]:
-        period = sympy.pi
+        base_period = 2 * sympy.pi
+    else:
+        base_period = sympy.pi
 
-    match = trig_function.match(x0 * trig_type(x1) + x2)
 
-    transformed_domain = sets.transform_set(x, match[x1], domain)
+    trig_interior = trig_function.find(trig_type).pop().args[0]
+    transformed_domain = sets.transform_set(x, trig_interior, domain)
 
-    y, k = sympy.Symbol('y'), sympy.Symbol('k', integer=True)
+
     value_find_function = trig_function.replace(trig_type(x0), trig_type(y))
-    general_solutions = [i + period*k for i in sympy.solve(value_find_function)]
+    base_solutions = sympy.solve(value_find_function)
 
-    for solution in general_solutions:
-        lower = sympy.solve(solution > domain.left)
-        upper = sympy.solve(solution < domain.right)
+
+    k = sympy.Symbol('k', integer=True)
+    general_solutions = [i + base_period*k for i in base_solutions]
+        
+
+    for general_solution in general_solutions:
+        print(general_solution, transformed_domain.left)
+        lower_constraint = sympy.solve(general_solution > transformed_domain.left)
+        upper_constraint = sympy.solve(general_solution < transformed_domain.right)
+
+        interval_one = functions.relation_to_interval(lower_constraint)
+        interval_two = functions.relation_to_interval(upper_constraint)
+
+        solution_space = interval_one & interval_two
+        solutions = [i for i in range(int(y.left), int(y.right + 1))]
+
+        print(solutions)
+
