@@ -1,15 +1,14 @@
 from maths.latex import latex, questions
 from maths.parts import (
-                            simple_inverse
+                            piecewise_prob_density_function
                         )
 
 
 with open('exam.tex', 'w') as f:
     latex.begin_tex_document(f)
 
-    q = simple_inverse.SimpleInverse()
+    q = piecewise_prob_density_function.PiecewiseProbDensityFunction()
     question = questions.QuestionTree(q)
-
 
 
     question.write_question(f)
