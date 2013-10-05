@@ -10,7 +10,7 @@ def question_tester(question_tree):
 
     """ 
 
-    full_path = r'C:\Users\Ben\Desktop\Dropbox\maths\parts\tests'
+    full_path = os.path.split(os.path.abspath(__file__))[0]
     uid = str(uuid.uuid1())
 
     file_name = os.path.join(full_path, 'test' + uid + '.tex')
