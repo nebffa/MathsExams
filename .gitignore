@@ -12,7 +12,6 @@
 
 # LaTeX junk files
 *.aux
-*.sty
 *.tex
 *.rar
 *.gz
