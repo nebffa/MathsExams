@@ -16,3 +16,10 @@
 *.tex
 *.rar
 *.gz
+
+
+# virtualenv dirs
+lib
+share
+bin
+include
