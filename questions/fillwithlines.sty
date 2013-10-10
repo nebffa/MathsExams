@@ -1,0 +1,53 @@
+%--------------------------------------------------------------------
+\makeatletter
+%                            \fillwithlines
+
+
+% \fillwithlines takes one argument, which is either a length or \fill
+% or \stretch{number}, and it fills that much vertical space with
+% horizontal lines that run the length of the current line.  That is,
+% they extend from the current left margin (which depends on whether
+% we're in a question, part, subpart, or subsubpart) to the right
+% margin.
+%
+% The distance between the lines is \linefillheight, whose default value
+% is set with the command
+%
+% \setlength\linefillheight{.25in}
+%
+% This value can be changed by giving a new \setlength command.
+%
+% The thickness of the lines is \linefillthickness, whose default value
+% is set with the command
+%
+% \setlength\linefillthickness{.1pt}
+%
+% This value can be changed by giving a new \setlength command.
+
+
+\newlength\linefillheight
+\newlength\linefillthickness
+\setlength\linefillheight{.25in}
+\setlength\linefillthickness{0.1pt}
+
+\newcommand\linefill{\leavevmode
+    \leaders\hrule height \linefillthickness \hfill\kern\z@}
+
+
+\def\fillwithlines#1{%
+  \begingroup
+  \ifhmode
+    \par
+  \fi
+  \hrule height \z@
+  \nobreak
+  \setbox0=\hbox to \hsize{\hskip \@totalleftmargin
+          \vrule height \linefillheight depth \z@ width \z@
+          \linefill}%
+  % We use \cleaders (rather than \leaders) so that a given
+  % vertical space will always produce the same number of lines
+  % no matter where on the page it happens to start:
+  \cleaders \copy0 \vskip #1 \hbox{}%
+  \endgroup
+}
+\makeatother

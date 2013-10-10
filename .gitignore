@@ -12,7 +12,13 @@
 
 # LaTeX junk files
 *.aux
-*.sty
 *.tex
 *.rar
 *.gz
+
+
+# virtualenv dirs
+lib
+share
+bin
+include

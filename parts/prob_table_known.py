@@ -26,7 +26,7 @@ class ProbTableKnown(object):
         partition = [sympy.Rational(i, 10) for i in partition]
 
         self.prob_table = OrderedDict(list(zip(options, partition)))
-        self.first_name = random.choice(first_names.names)
+        self.first_name = first_names.random_name()
 
     def question_statement(self):        
 
