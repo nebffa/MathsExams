@@ -3,7 +3,7 @@ import sympy
 from sympy import GreaterThan, LessThan, StrictGreaterThan, StrictLessThan
 from sympy.abc import *
 from maths import not_named_yet
-from maths.names import first_names
+from maths.questionmisc import first_names
 from maths.latex import latex, expressions
 from maths.latex.table import probability_table
 from maths.probability.discrete import prob_table
@@ -26,7 +26,7 @@ class ProbTableKnown(object):
         partition = [sympy.Rational(i, 10) for i in partition]
 
         self.prob_table = OrderedDict(list(zip(options, partition)))
-        self.first_name = first_names.random_name()
+        self.first_name = first_names.random_first_name()
 
     def question_statement(self):        
 
