@@ -26,12 +26,13 @@ class MarkovChainBinomial:
         prob_place2_becomes_place2 = 1 - prob_place2_becomes_place1
 
 
+        self._qp['probabilities'] = {
+            (0, 0): prob_place1_becomes_place1,
+            (0, 1): prob_place1_becomes_place2,
+            (1, 0): prob_place2_becomes_place1,
+            (1, 1): prob_place2_becomes_place2
+        }
 
-
-        self._qp['probabilities'] = [
-            [prob_place1_becomes_place1, prob_place2_becomes_place1],
-            [prob_place1_becomes_place2, prob_place2_becomes_place2]
-        ]
 
 
         self._qp['start_state'] = random.randint(0, 1)
@@ -71,7 +72,7 @@ class MarkovChainBinomial:
 
         On any given {0} the cinema {2} goes to depends only on the cinema {2} went to on the previous {0}.
         '''.format(day, first_name, pronoun, self._qp['cinemas'][0], self._qp['cinemas'][1], 
-                    self._qp['probabilities'][1][0], self._qp['probabilities'][0][1])
+                    self._qp['probabilities'][(0, 1)], self._qp['probabilities'][(1, 0)])
 
 
         question = r'''If {0} goes to the {1} one {2}, what is the probability that {0} goes to the {3} on 
@@ -113,9 +114,9 @@ class MarkovChainBinomial:
             numerics = []
             for i in range(len(path)):
                 if i == 0:
-                    transition = self._qp['probabilities'][1 - self._qp['start_state']][1 - path[i]]
+                    transition = self._qp['probabilities'][(self._qp['start_state'], path[i])]
                 else:
-                    transition = self._qp['probabilities'][1 - path[i - 1]][1 - path[i]]
+                    transition = self._qp['probabilities'][(path[i - 1], path[i])]
 
                 numerics.append(transition)
 

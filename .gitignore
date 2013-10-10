@@ -27,3 +27,7 @@ include
 
 # sublime-text files
 maths.sublime-workspace
+
+
+# particular python files
+questions/question.py
