@@ -4,7 +4,7 @@
         {
             "path": "/home/nebffa/Desktop/maths",
             "folder_exclude_patterns": ["bin", "lib", "include"],
-            "file_exclude_patterns": ["__init__.py", "*.pickle"]
+            "file_exclude_patterns": ["__init__.py", "*.pickle", ".gitignore"]
         }
     ],
 
