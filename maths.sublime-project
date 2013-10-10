@@ -1,0 +1,27 @@
+{
+    "folders":
+    [
+        {
+            "path": "/home/nebffa/Desktop/maths",
+            "folder_exclude_patterns": ["bin", "lib", "include"],
+            "file_exclude_patterns": ["__init__.py"]
+        }
+    ],
+
+
+    "settings":
+    {
+    },
+
+
+    "build_systems":
+    [
+        {
+        "name": "Maths",
+        "working_dir": "/home/nebffa/Desktop/maths",
+        "cmd": ["/home/nebffa/Desktop/maths/bin/ipython3", "manage.py", "test"]
+        }
+    ]
+
+
+}
