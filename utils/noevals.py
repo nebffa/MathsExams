@@ -98,23 +98,15 @@ class noevallog(sympy.log):
 
 class noevalAdd(sympy.Add):
     @classmethod
-    def eval(cls, arg):
-        return
+    def flatten(cls, seq):
+        return seq, [], None
 
 
 class noevalMul(sympy.Mul):
     @classmethod
-    def eval(cls, arg):
-        return
+    def flatten(cls, seq):
+        return seq, [], None
 
 
 class noevalPow(sympy.Pow):
-    @classmethod
-    def eval(cls, arg):
-        return
-
-
-class noevalInteger(sympy.Integer):
-    @classmethod
-    def eval(cls, arg):
-        return
+    pass
