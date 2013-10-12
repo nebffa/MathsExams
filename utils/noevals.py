@@ -108,5 +108,18 @@ class noevalMul(sympy.Mul):
         return seq, [], None
 
 
+    '''def as_coeff_Mul(self):
+        return -1, self
+
+    def _keep_coeff(coeff, factors, clear=True, sign=False):
+        print('asd')
+        return 21312
+
+
+y = noevalMul(-2, 3)
+print(dir(y))
+print(y)'''
+
+
 class noevalPow(sympy.Pow):
     pass
