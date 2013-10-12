@@ -12,10 +12,18 @@ class name:
 
 
     def question_statement(self):
-        pass
+        
+
+
+
+        return r'''$$'''
 
 
 
 
     def solution_statement(self):
-        pass
+
+        
+
+
+        return r'''$$'''
