@@ -148,3 +148,23 @@ def relation_to_interval(relation):
             return sympy.Interval(-sympy.oo, relation.rhs)
         else:
             return sympy.Interval(relation.lhs, sympy.oo)
+
+
+def is_convex(expr, x):
+    symbol_used = expr.free_symbols.pop()
+
+    second_deriv = expr.diff().diff().subs({symbol_used: x})
+
+    if second_deriv > 0:
+        return True
+    else:
+        return False
+def is_concave(expr, x):
+    symbol_used = expr.free_symbols.pop()
+
+    second_deriv = expr.diff().diff().subs({symbol_used: x})
+
+    if second_deriv > 0:
+        return False
+    else:
+        return True
