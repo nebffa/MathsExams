@@ -115,7 +115,13 @@ def _blank_plot(domain, ran):
 def _save_plot():
     # save the image and return the path name so the caller can include it in the latex
     uid = uuid.uuid1()
-    path = os.path.join(r'C:\Users\Ben\Desktop\Dropbox\maths\questions\figures', str(uid) + '.eps')
+
+    path = os.getcwd()
+    index = path.find('maths')
+    path = path[0: index + 5]
+
+
+    path = os.path.join(path, 'questions', 'figures', str(uid) + '.eps')
     plt.savefig(path)
 
     return path
