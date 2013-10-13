@@ -26,14 +26,16 @@ class LinearApproximation:
                 self._qp['location'] = 2 ** exponent.q
 
         self._qp['delta'] = not_named_yet.randint(-1, 1, exclude=[0]) * random.randint(5, 9) * decimal.Decimal('0.01')
+        self._qp['new_location'] = self._qp['location'] + self._qp['delta']
 
 
     def question_statement(self):
-        noeval_equation = self._qp['equation'].replace(sympy.Pow, noevals.noevalPow)
+        self._qi = {}
+        self._qi['noeval_equation'] = self._qp['equation'].replace(sympy.Pow, noevals.noevalPow)
 
         return r'''Use the relationship $f(x + h) \approx f(x) + h f'(x)$ for a small positive value of h, 
-                    to find an approximate value for {0}.'''.format( 
-                        noeval_equation.subs( {x: self._qp['location'] + self._qp['delta']}) )
+                    to find an approximate value for ${0}$.'''.format( 
+                        sympy.latex(self._qi['noeval_equation'].subs( {x: self._qp['new_location']}) ))
 
 
 
@@ -52,8 +54,8 @@ class LinearApproximation:
 
         lines += r'''$y = {0}, y' = {1}$'''.format(sympy.latex(self._qp['equation']), sympy.latex(deriv))
         lines += r'''$y({0}) = {1}$'''.format(self._qp['location'], y0)
-        lines += r'''$y'({0}) = {1}$'''.format(self._qp['location'], y0_deriv)
-        lines += r'''$\therefore y({0}) \approx {1} = {2}$'''.format(self._qp['location'] + self._qp['delta'], sympy.latex(intermediate), answer)
+        lines += r'''$y'({0}) = {1}$'''.format(self._qp['location'], sympy.latex(y0_deriv))
+        lines += r'''$\therefore y({0}) \approx {1} = {2}$'''.format(self._qp['new_location'], noevals.latex(intermediate), sympy.latex(answer))
 
         return lines.write()
 
@@ -63,6 +65,7 @@ class LinearApproximationExplain:
         self.num_lines, self.num_marks = 4, 1
 
         self._qp = copy.copy(part._qp)
+        self._qi = copy.copy(part._qi)
 
         self._qp['is_convex'] = functions.is_convex(self._qp['equation'], self._qp['location'])
 
@@ -71,12 +74,10 @@ class LinearApproximationExplain:
     def question_statement(self):
         direction = 'less than' if self._qp['is_convex'] else 'greater than'
 
-        self._qi = {}
-        self._qi['noeval_location'] = self._qp['equation'].replace(sympy.Pow, noevals.noevalPow)
 
 
         return r'''Explain why this approximate value is {0} than the exact value for ${1}$.'''.format(direction,
-                        self._qi['noeval_location'].subs( {x: self._qp['location'] + self._qp['delta']}))
+                        sympy.latex(self._qi['noeval_equation'].subs( {x: self._qp['new_location']})))
 
 
 
@@ -93,8 +94,13 @@ class LinearApproximationExplain:
                         second_deriv_latex, sympy.latex(second_deriv_eval), 'greater than' if second_deriv_eval > 0 else 'less than'
                         )
 
-        lines += r'''Therefore, linear approximation {0}estimates the true value of ${1}$.'''.format(
-                        'under' if self._qp['is_convex'] else 'over', sympy.latex(self._qi['noeval_location']))
+        lines += r'''Therefore, the gradient of ${0}$ {1} as $x$ moves from ${2}$ to ${3}$ and as a result, linear approximation 
+                        {4}estimates the true value of ${5}$'''.format(
+                        sympy.latex(self._qp['equation']), 'increases' if second_deriv_eval > 0 else 'decreases',
+                        self._qp['location'], self._qp['new_location'], 'under' if self._qp['is_convex'] else 'over', 
+                        sympy.latex(self._qi['noeval_equation'].subs({x: self._qp['new_location']}))
+            )
+
 
 
         return lines.write()
