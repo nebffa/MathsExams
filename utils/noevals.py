@@ -2,33 +2,13 @@ import sympy
 from sympy import cache
 from sympy.core.sympify import _sympify
 from sympy.printing.latex import LatexPrinter
+import re
 
 
 
-def noevalsub(expr, mapping):
-    a = sympy.Wild('a')
-    noeval_map = (
-        (sympy.Abs, noevalAbs),
-        (sympy.sin, noevalsin),
-        (sympy.cos, noevalcos),
-        (sympy.tan, noevaltan),
-        (sympy.exp, noevalexp),
-        (sympy.log, noevallog),
-        (sympy.Add, noevalAdd),
-        (sympy.Mul, noevalMul),
-        (sympy.Pow, noevalPow)
-    )
-
-    for yeseval, noeval in noeval_map:
-        # yes_eval, no_eval = item
-        print(yeseval(a), noeval(a))
-        expr = expr.subs(yeseval(a), noeval(a))
-    print(expr)
-    return expr.subs(mapping)
-
-
-class noeval:
+def noevalify(expr):
     pass
+
 
 
 class noevalAbs(sympy.Abs):
@@ -67,24 +47,41 @@ class noevallog(sympy.log):
         return
 
 
-class noevalAdd(sympy.Add, noeval):
+class noevalAdd(sympy.Add):
     @classmethod
     def flatten(cls, seq):
+        for o in seq:
+            if isinstance(o, noevalAdd):
+                seq.remove(o)
+                seq.extend(o.args)
+
         return seq, [], None
 
 
 
 
-class noevalMul(sympy.Mul, noeval):
+class noevalMul(sympy.Mul):
     @classmethod
     def flatten(cls, seq):
+        for o in seq:
+            if isinstance(o, noevalMul):
+                seq.remove(o)
+                seq.extend(o.args)
+
         return seq, [], None
 
 
+class noevalPow(sympy.Pow):
+    @cache.cacheit
+    def __new__(cls, b, e, evaluate=True):
+        b = _sympify(b)
+        e = _sympify(e)
 
-import re
-import sympy
-#import ipdb
+        obj = sympy.Expr.__new__(cls, b, e)
+        obj.is_commutative = (b.is_commutative and e.is_commutative)
+        return obj
+
+
 
 
 class NoEvalLatexPrinter(LatexPrinter):
@@ -200,14 +197,59 @@ def latex(expr, **settings):
     return NoEvalLatexPrinter(settings).doprint(expr)
 
 
-# doesn't work at all
-class noevalPow(sympy.Pow):
-    @cache.cacheit
-    def __new__(cls, b, e, evaluate=True):
-        b = _sympify(b)
-        e = _sympify(e)
 
-        obj = sympy.Expr.__new__(cls, b, e)
-        obj.is_commutative = (b.is_commutative and e.is_commutative)
-        return obj
+def noevalmapping():
+    return {
+        sympy.Abs: noevalAbs,
+        sympy.sin: noevalsin,
+        sympy.cos: noevalcos,
+        sympy.tan: noevaltan,
+        sympy.exp: noevalexp,
+        sympy.log: noevallog,
+        sympy.Add: noevalAdd,
+        sympy.Mul: noevalMul,
+        sympy.Pow: noevalPow
+    }
+
+
+
+def noevalify(expr):
+    a = sympy.Wild('a')
+
+    for evaltype, noevaltype in noevalmapping():
+        expr = expr.subs(evaltype(a), noevaltype(a))
+
+    return expr
+
+
+def noevalsub(expr, substitutions):
+    a = sympy.Wild('a')
+    b = sympy.Wild('b')
+    
+    noevalmap = noevalmapping()
+
+    for yeseval, noeval in noevalmap.items():
+        if yeseval == sympy.Pow:
+
+            expr = expr.replace(yeseval(a, b), (noeval(a, b)))
+
+            expr = expr.replace(noeval(a, 1), yeseval(a, 1))
+
+        else:
+            expr = expr.replace(yeseval, noeval)
+
+    return expr.subs(substitutions)
+
+
+
+a = sympy.Wild('a')
+b = sympy.Wild('b')
+
+x = sympy.Symbol('x')
+y = x**2 + 2
+# print(y.replace(sympy.Pow(a, b), sympy.cos(a)))
+#y = y.replace(sympy.Pow(a), noevalPow(a))
+
+#print(noevalsub(y, {x: 2}))
+
 
