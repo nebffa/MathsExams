@@ -2,8 +2,11 @@ import os
 import textwrap
 
 
-parts_path = r'C:\Users\Ben\Desktop\Dropbox\maths\parts\\'
-tests_path = r'C:\Users\Ben\Desktop\Dropbox\maths\parts\tests'
+
+
+maths_path = os.path.split(os.getcwd())[0]
+parts_path = os.path.join(maths_path, 'parts')
+tests_path = os.path.join(maths_path, 'parts', 'tests')
 
 
 irrelevant_tests_files = ['__init__.py', 'question_tester.py']
@@ -14,9 +17,11 @@ part_files = [filename for filename in os.listdir(parts_path) if filename.endswi
 
 
 for file_string in part_files:
-    # slice [:-3] removes the '.py'
     test_filename = 'test_' + file_string
-    test_class = file_string[:-3].title().replace('_', '')
+
+
+    stripped_extension = os.path.splitext(file_string)[0]
+    test_class = stripped_extension.title().replace('_', '')
 
     if test_filename in test_files:
         continue
@@ -31,7 +36,7 @@ for file_string in part_files:
 
                   def test_{1}():
                       q1 = {0}.{1}()
-                      question_tester(QuestionTree(1, q1))'''.format(file_string[:-3], test_class))
+                      question_tester(QuestionTree(part=q1))'''.format(file_string[:-3], test_class))
 
         f.write(test_content)
 

@@ -1,6 +1,7 @@
 import sympy
 import numpy
 from maths.symbols import *
+from maths import maths_path
 
 from matplotlib.transforms import BlendedGenericTransform
 from mpl_toolkits.axes_grid.axislines import SubplotZero
@@ -54,8 +55,7 @@ def latex(path):
     Return the latex to include an Encapsulated PostScript (.eps) file as an image.
     '''
 
-    relative_path = os.path.relpath(path)
-    latex_friendly_path = relative_path.replace('\\', '/')
+    latex_friendly_path = path.replace('\\', '/')
 
     # the $ $ text forces the graph to be positioned correctly in the case where there is no other text to be written
     return '\n' + textwrap.dedent(r'''
@@ -66,7 +66,7 @@ def latex(path):
         \includegraphics[scale=0.5]{{{0}}}
         \scrollmode
     \end{{figure}}
-    '''.format(latex_friendly_path.strip('.eps'))) + '\n'
+    '''.format(os.path.splitext(latex_friendly_path)[0])) + '\n'
 
 
     
@@ -116,15 +116,11 @@ def _save_plot():
     # save the image and return the path name so the caller can include it in the latex
     uid = uuid.uuid1()
 
-    path = os.getcwd()
-    index = path.find('maths')
-    path = path[0: index + 5]
 
+    plot_path = os.path.join(maths_path.maths_path(), 'questions', 'figures', str(uid) + '.eps')
+    plt.savefig(plot_path)
 
-    path = os.path.join(path, 'questions', 'figures', str(uid) + '.eps')
-    plt.savefig(path)
-
-    return path
+    return plot_path
 
 
 def blank_plot(domain, ran):

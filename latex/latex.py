@@ -1,3 +1,7 @@
+import os
+from maths import maths_path
+
+
 def latex_newline():
     return r' \\ ' + '\n'
 
@@ -23,13 +27,17 @@ def enumerator(f):
 
 
 def packages(f):
+    fillwithlines_path = os.path.join(maths_path.maths_path(), 'questions', 'fillwithlines')
+    latex_friendly_path = fillwithlines_path.replace('\\', '/')
+
+
     f.write(r'\usepackage{amsmath}' + '\n')  # used for \left and \right which are for absolute values
     f.write(r'\usepackage{amssymb}' + '\n')
     f.write(r'\usepackage{mathptmx}' + '\n')
     f.write(r'\usepackage{tabularx}' + '\n')
     f.write(r'\usepackage{graphicx}' + '\n')
     f.write(r'\usepackage{enumitem}' + '\n')
-    f.write(r'\usepackage{fillwithlines}' + '\n')
+    f.write(r'\usepackage{{{0}}}'.format(latex_friendly_path) + '\n')
     f.write(r'\usepackage[margin=2cm]{geometry}' + '\n')
 
 
