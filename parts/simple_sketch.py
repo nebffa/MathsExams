@@ -2,10 +2,10 @@ import sympy
 from sympy.abc import *
 from maths.rich_requests import requests
 from maths.plot import plot
-from maths.utils import transformations
+from maths.utils import transformations, noevals
 import random
 import copy
-from maths.latex import latex
+from maths.latex import latex, solution_lines
 
 
 class SimpleSketch:
@@ -91,21 +91,27 @@ class EquationTransformation:
         reversed_mapping = transformations.reverse_mapping(mapping)
 
         
-        line_1 = r'${0}$'.format(mapping_chain)
+        lines = solution_lines.Lines()
+
+        lines += r'${0}$'.format(mapping_chain)
 
         x_, y_ = sympy.symbols("x' y'")
         new_coords = (x_, y_)
-        line_2 = r"Let our new ${0}$ coordinates be ${1}$.".format(sympy.latex((x, y)), sympy.latex((x_, y_)))
-        line_3 = r'Hence, ${0} \rightarrow {1}$'.format(sympy.latex(mapping), sympy.latex(new_coords))
+        lines += r"Let our new ${0}$ coordinates be ${1}$.".format(sympy.latex((x, y)), sympy.latex((x_, y_)))
 
 
         reversed_mapping = tuple(i.subs({x: x_, y: y_}) for i in reversed_mapping)        
-        line_4 = r'and ${0} \rightarrow {1}$'.format(sympy.latex((x, y)), sympy.latex(reversed_mapping))
+        lines += r'Hence, ${0} \rightarrow {1}$ and ${2} \rightarrow {3}$'.format(sympy.latex(mapping), sympy.latex(new_coords),
+                            sympy.latex((x, y)), sympy.latex(reversed_mapping))
 
-        line_5 = 'Now we apply the mapping to the equation:'
-        line_6 = r'${0} = {1}$'.format(sympy.latex(reversed_mapping[1]), sympy.latex(self._qp['equation'].subs({x: reversed_mapping[0]})) )
 
-        line_7 = r'$y = {0}$'.format(sympy.latex(mapped_equation.apart()))
+        lines += 'Now we apply the mapping to the equation:'
+        noevalmapped_equation = noevals.noevalsub(self._qp['equation'], {x: reversed_mapping[0]})
 
-        lines = line_1, line_2, line_3, line_4, line_5, line_6, line_7
-        return latex.latex_newline().join(lines)
+        lines += r'${0} = {1}$'.format(sympy.latex(reversed_mapping[1]), sympy.latex(noevalmapped_equation))
+
+        lines += r'$y = {0}$'.format(sympy.latex(mapped_equation.apart().subs({x: x_})))
+
+        lines += r'Hence our mapped equation is $y = {0}$.'.format(sympy.latex(mapped_equation.apart()))
+
+        return lines.write()
