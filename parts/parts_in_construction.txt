@@ -1,7 +1,3 @@
-sketch/SimpleSketch  -- needs a little more work on the solution for EquationTransformation, it's related to noevals.noevalAdd/Mul/Pow.
-                        Basically, you can't show intermediate steps of working because Add/Mul/Pow immediately evaluate, and noevals.noeval 
-                        is not working (due to a bug in SymPy)
-
 simple_trig/SimpleTrigSolve  -- computing solutions to the trig functions is not possible at the moment, since SymPy does not support solving
                                 over irrational numbers
 
