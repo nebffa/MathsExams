@@ -5,7 +5,7 @@ from maths.symbols import *
 from maths.latex import expressions, latex
 
 
-class PiecewiseProbDensityFunction(object):
+class PiecewiseProbDensityFunctionUnknown(object):
     def __init__(self):
 
         # 2008 Q4 [7 lines] [2 marks]
