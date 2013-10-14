@@ -4,9 +4,7 @@ sketch/SimpleSketch  -- needs a little more work on the solution for EquationTra
 
 simple_trig/SimpleTrigSolve  -- computing solutions to the trig functions is not possible at the moment, since SymPy does not support solving
                                 over irrational numbers
+
 probability/PiecewiseProbDensityFunction -- find b such that Pr(X <= b) = some_value
 
 WordedDefiniteIntegral - values can be a bit crazy, need to sanity-ise them
-
-LinearApproximation - the question does not display properly due to noevals.noevalPow not working (i.e. it automatically evaluates). Also - calls to sympy.latex
-                        on the noevals functions forces them to evaluate
