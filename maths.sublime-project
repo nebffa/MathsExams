@@ -2,7 +2,7 @@
     "folders":
     [
         {
-            "path": "/home/nebffa/Desktop/maths",
+            "path": "/home/ben/Desktop/maths",
             "folder_exclude_patterns": ["bin", "lib", "include"],
             "file_exclude_patterns": ["__init__.py", "*.pickle"]
         }
@@ -16,12 +16,6 @@
 
     "build_systems":
     [
-    {
-        "name": "Maths",
-        "env": {"PYTHONPATH":"/home/nebffa/Desktop"},
-        "path":"$project_path/bin",
-        "cmd": ["$project_path/bin/python3.3", "-u", "$file"]
-    }
     ]
 
 
