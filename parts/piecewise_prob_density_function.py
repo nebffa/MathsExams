@@ -3,13 +3,16 @@ import random
 from maths import domains
 from maths.symbols import *
 from maths.latex import expressions, latex, solution_lines
+from maths.utils import sensible_values
 import copy
-from piecewise_prob_density_function_unknown import PiecewiseProbDensityFunctionUnknown
+from maths.parts.piecewise_prob_density_function_unknown import PiecewiseProbDensityFunctionUnknown
 
 
 class PiecewiseProbDensityFunction(PiecewiseProbDensityFunctionUnknown):
     def __init__(self):
         super(PiecewiseProbDensityFunction, self).__init__()
+
+        self.num_lines, self.num_marks = 0, 0
 
         self._qp['equation'] = self._qp['equation'].subs({k: self._qp['k']})
 
@@ -17,7 +20,7 @@ class PiecewiseProbDensityFunction(PiecewiseProbDensityFunctionUnknown):
     def question_statement(self):
 
 
-        piecewise = sympy.Piecewise((self._qp['equation'], sympy.And(self.domain.left < x, x < self.domain.right)), (0, True))
+        piecewise = sympy.Piecewise((self._qp['equation'], sympy.And(self._qp['domain'].left <= x, x <= self._qp['domain'].right)), (0, True))
 
         lines = solution_lines.Lines()
 
@@ -33,12 +36,12 @@ class PiecewiseProbDensityFunction(PiecewiseProbDensityFunctionUnknown):
 
 class SimpleInterval:
     def __init__(self, part):
+        self.num_lines, self.num_marks = -1, -1
+
         domain = part._qp['domain']
 
         choices = [domain.left + sympy.Rational(i, 4) * domain.measure for i in [1, 2, 3]]
 
-        print(domain)
-        print(choices)
 
         self._qp = copy.copy(part._qp)
         self._qp['bound'] = random.choice(choices)
@@ -71,15 +74,63 @@ class SimpleInterval:
 
 class Conditional:
     def __init__(self, part):
+        self.num_lines, self.num_marks = 8, 2
+
         self._qp = copy.copy(part._qp)
 
-        
+        two_values = sensible_values.conditional_integral(self._qp['equation'], self._qp['domain'])
+
+
+        self._qp['major_bound'], self._qp['minor_bound'] = two_values
+
+
+        self._qp['major_direction'] = r'\le' if self._qp['minor_bound'] < self._qp['major_bound'] else r'\ge'
+        self._qp['minor_direction'] = random.choice([r'\le', r'\ge'])
     
         
+    def question_statement(self):
+        return r'Find $Pr(X {0} {1} | X {2} {3})$.'.format(self._qp['minor_direction'], sympy.latex(self._qp['minor_bound']),
+                                                            self._qp['major_direction'], sympy.latex(self._qp['major_bound']))
 
 
+    def solution_statement(self):
+        lines = solution_lines.Lines()
 
-parent = PiecewiseProbDensityFunction()
-child = SimpleInterval(parent)
+        minor = r'X {0} {1}'.format(self._qp['minor_direction'], sympy.latex(self._qp['minor_bound']))
+        major = r'X {0} {1}'.format(self._qp['major_direction'], sympy.latex(self._qp['major_bound']))
 
-print(child.solution_statement())   
+
+        lines += r'$Pr({0} | {1}) = {2}$'.format(minor, major, expressions.conditional_probability(minor, major))
+
+        lb = min(self._qp['minor_bound'], self._qp['major_bound'])
+        ub = max(self._qp['minor_bound'], self._qp['major_bound'])
+        top_integral = expressions.integral(lb=lb, ub=ub, expr=self._qp['equation'])
+        top_intermediate = expressions.integral_intermediate(lb=lb, ub=ub, expr=self._qp['equation'].integrate())
+        top_eval = expressions.integral_intermediate_eval(lb=lb, ub=ub, expr=self._qp['equation'].integrate())
+        top_value = self._qp['equation'].integrate((x, lb, ub))
+
+
+        if self._qp['major_direction'] == r'\le':
+            lb = self._qp['domain'].left
+            ub = self._qp['major_bound']
+        else:
+            lb = self._qp['major_bound']
+            ub = self._qp['domain'].right
+
+
+        bottom_integral = expressions.integral(lb=lb, ub=ub, expr=self._qp['equation'])
+        bottom_intermediate = expressions.integral_intermediate(lb=lb, ub=ub, expr=self._qp['equation'].integrate())
+        bottom_eval = expressions.integral_intermediate_eval(lb=lb, ub=ub, expr=self._qp['equation'].integrate())
+        bottom_value = self._qp['equation'].integrate((x, lb, ub))
+
+        lines += r'$= \frac{{ {0} }}{{ {1} }}$'.format(top_integral, bottom_integral)
+
+        lines += r'$= \frac{{ {0} }}{{ {1} }}$'.format(top_intermediate, bottom_intermediate)
+
+        lines += r'$= \frac{{ {0} }}{{ {1} }}$'.format(top_eval, bottom_eval)
+
+        print(self._qp['equation'])
+        print(top_value, bottom_value)
+        lines += r'$= {0}$'.format(sympy.latex(top_value / bottom_value))
+
+        return lines.write()
