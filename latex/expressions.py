@@ -45,7 +45,7 @@ def piecewise(func):
     for expr in func.args:
         if isinstance(expr[1], (sympy.StrictLessThan, sympy.LessThan, sympy.StrictGreaterThan, sympy.GreaterThan, sympy.And, sympy.Or)):
             interval = sympy.latex( functions.relation_to_interval(expr[1]) )
-            lines.append('\t' + r'{0} & \text{{for}}\: {1}'.format(sympy.latex(expr[0]), interval) + '\n')
+            lines.append('\t' + r'{0} & \text{{for}}\: {1} \in {2}'.format(sympy.latex(expr[0]), func.free_symbols.pop(), interval) + '\n')
         else:
             lines.append('\t' + r'{0} & \: \text{{otherwise}}'.format(sympy.latex(expr[0])) + '\n')
 
