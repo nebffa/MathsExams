@@ -71,6 +71,7 @@ def discrete_expectation_x(prob_table):
     # prob_table will come in the form of a dict
     return ' + '.join([r'{0} \times {1}'.format(k, sympy.latex(v)) for k, v in prob_table.items()])
 
+
 def quadratic_formula(quadratic, var=x):
     match = quadratic.match(x0*var**2 + x1*var + x2)
 
@@ -80,3 +81,6 @@ def quadratic_formula(quadratic, var=x):
 
     return r'\dfrac{{-{1} \pm \sqrt{{{1}^2 - 4 \times {0} \times {2}}}}}{{2 \times{0}}}'.format(a, b, c)
 
+
+def conditional_probability(givee, given):
+    return r'\frac{{ Pr({0} \cap {1}) }}{{ Pr({1}) }}'.format(givee, given)
