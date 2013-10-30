@@ -8,9 +8,9 @@ def test_integral():
     
 
 def test_integral_intermediate():
-    assert expressions.integral_intermediate(0, 1, x) == r'\left[x\right]^{1}_{0}'
+    assert expressions.integral_intermediate(0, 1, x) == r'\left[\frac{x^{2}}{2}\right]^{1}_{0}'
 
 
 def test_integral_intermediate_eval():
-    assert expressions.integral_intermediate_eval(0, 1, x) == r'1 - 0'
-    assert expressions.integral_intermediate_eval(1, 2, -x) == r'-2 - (-1)'
+    assert expressions.integral_intermediate_eval(0, 1, x) == r'\frac{1}{2} - 0'
+    assert expressions.integral_intermediate_eval(1, 2, -x**2) == r'- \frac{8}{3} - (- \frac{1}{3})'

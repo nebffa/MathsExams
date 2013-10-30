@@ -2,7 +2,7 @@ import sympy
 import random
 from sympy.abc import *
 from maths import all_functions, solutions_printing, not_named_yet
-from maths.latex import expressions, latex
+from maths.latex import expressions, latex, solution_lines
 
 
 class SimpleDefiniteIntegral(object):
@@ -39,11 +39,19 @@ class SimpleDefiniteIntegral(object):
         return question_statement
 
     def solution_statement(self):
-        line_1 = r'${0} = {1}$'.format(expressions.integral(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation),
-                                        expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation.integrate()))
+        lines = solution_lines.Lines()
 
-        line_2 = r'$= ' + expressions.integral_intermediate_eval(self.boundary[0], self.boundary[1], self.equation.integrate()) + r'$'
-        #line_2 = r'$= ' + solutions_printing.integral_working(self.equation.integrate(), x, self.boundary[0], self.boundary[1]) + r'$'
-        line_3 = r'$= ' + sympy.latex(self.answer) + r'$'
+        lines += r'${0} = {1}$'.format(
+            expressions.integral(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation),
+            expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation)
+        )
 
-        return latex.latex_newline().join([line_1, line_2, line_3])
+        lines += r'$= {0}$'.format(
+            expressions.integral_intermediate_eval(self.boundary[0], self.boundary[1], self.equation)
+        )
+
+        lines += r'$= {0}$'.format(
+            sympy.latex(self.answer)
+        )
+
+        return lines.write()

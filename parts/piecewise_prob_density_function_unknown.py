@@ -2,7 +2,7 @@ import sympy
 import random
 from maths import domains
 from maths.symbols import *
-from maths.latex import expressions, latex
+from maths.latex import expressions, latex, solution_lines
 
 
 class PiecewiseProbDensityFunctionUnknown(object):
@@ -68,21 +68,27 @@ class PiecewiseProbDensityFunctionUnknown(object):
     def question_statement(self):
         piecewise = sympy.Piecewise((self._qp['equation'], sympy.And(self._qp['domain'].left < x, x < self._qp['domain'].right)), (0, True))
 
-        line_1 = r'The function $f(x) = {0}$'.format( expressions.piecewise(piecewise) )
-        line_2 = r'is a probability density function for the continuous random variable $X$. Show that $k = {0}$.'.format(sympy.latex(self._qp['k']))
-        return latex.latex_newline().join([line_1, line_2])
+        lines = solution_lines.Lines()
+
+        lines += r'The function $f(x) = {0}$'.format( expressions.piecewise(piecewise) )
+        lines += r'is a probability density function for the continuous random variable $X$. Show that $k = {0}$.'.format(sympy.latex(self._qp['k']))
+        
+        return lines.write()
 
     def solution_statement(self):
-        line_1 = r'${0} = 1$'.format( expressions.integral(lb=self._qp['domain'].left, ub=self._qp['domain'].right, expr=self._qp['equation']) )
-        line_2 = r'${0} = {1} = {2} = 1$'.format(
+        lines = solution_lines.Lines()
+
+        lines += r'${0} = 1$'.format( expressions.integral(lb=self._qp['domain'].left, ub=self._qp['domain'].right, expr=self._qp['equation']) )
+        lines += r'${0} = {1} = {2} = 1$'.format(
                                     expressions.integral_intermediate(lb=self._qp['domain'].left, ub=self._qp['domain'].right, 
-                                            expr=self._qp['equation'].integrate(x)),
+                                            expr=self._qp['equation']),
                                     expressions.integral_intermediate_eval(lb=self._qp['domain'].left, ub=self._qp['domain'].right, 
-                                            expr=self._qp['equation'].integrate(x)),
+                                            expr=self._qp['equation']),
                                     sympy.latex(self._qp['equation'].integrate((x, self._qp['domain'].left, self._qp['domain'].right)))
                                     )
-        line_3 = r'$\therefore k = {0}$'.format( sympy.latex(self._qp['k']) )
-        return latex.latex_newline().join([line_1, line_2, line_3])
+        lines += r'$\therefore k = {0}$'.format( sympy.latex(self._qp['k']) )
+
+        return lines.write()
 
     def sanity_check(self):
         true_equation = self._qp['equation'].subs({k: self._qp['k']})

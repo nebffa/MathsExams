@@ -2,7 +2,7 @@ import sympy
 import random
 from maths.symbols import *
 from maths import all_functions
-from maths.latex import latex, expressions
+from maths.latex import latex, expressions, solution_lines
 from maths.utils import noevals
 
 
@@ -62,15 +62,16 @@ class DefiniteIntegralEquality(object):
                                                                                  sympy.latex(self.equation), sympy.latex(self.integral))
 
     def solution_statement(self):
-        line_1 = r'${0}$'.format(expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation.integrate()))
+        lines = solution_lines.Lines()
 
-        complex_proof_noeval = self.equation.integrate().replace(sympy.log(x0), sympy.log(noevals.noevalAbs(x0)))
+        lines += r'${0}$'.format(expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation))
+
         complex_proof = self.equation.integrate().replace(sympy.log(x0), sympy.log(sympy.Abs(x0)))
 
-        line_2 = r'$= {0}$'.format(expressions.integral_intermediate_eval(lb=self.boundary[0], ub=self.boundary[1], expr=complex_proof_noeval))
-        line_3 = r'$= {0} = {1}$'.format(
+        lines += r'$= {0}$'.format(expressions.integral_intermediate_eval(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation))
+        lines += r'$= {0} = {1}$'.format(
                             sympy.latex( complex_proof.subs({x: self.boundary[1]}) - complex_proof.subs({x: self.boundary[0]}) ), 
                             sympy.latex( sympy.logcombine( complex_proof.subs({x: self.boundary[1]}) - complex_proof.subs({x: self.boundary[0]}) ) ))
-        line_4 = r'$\therefore p = {0}.$'.format(sympy.latex(self.p))
+        lines += r'$\therefore p = {0}.$'.format(sympy.latex(self.p))
 
-        return latex.latex_newline().join([line_1, line_2, line_3, line_4])
+        return lines.write()

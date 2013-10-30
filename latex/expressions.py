@@ -12,19 +12,23 @@ def integral(lb, ub, expr, var=x):
     return r'\displaystyle\int^{{{0}}}_{{{1}}} {2}\ d{3}'.format(sympy.latex(ub), sympy.latex(lb), sympy.latex(expr), sympy.latex(var))
 
 
-def integral_intermediate(lb, ub, expr):
-    if expr.has(sympy.log):
-        expr = expr.replace(sympy.log(x0), sympy.log(x0, evaluate=False))
+def integral_intermediate(lb, ub, expr, var=x):
+    antideriv = expr.integrate(var)
 
-    return r'\left[{0}\right]^{{{1}}}_{{{2}}}'.format(sympy.latex(expr), sympy.latex(ub), sympy.latex(lb))
+    if antideriv.has(sympy.log):
+        antideriv = antideriv.replace(sympy.log(x0), sympy.log(x0, evaluate=False))
+
+    return r'\left[{0}\right]^{{{1}}}_{{{2}}}'.format(sympy.latex(antideriv), sympy.latex(ub), sympy.latex(lb))
 
 
 def integral_intermediate_eval(lb, ub, expr, var=x):
-    if expr.has(sympy.log):
-        expr = expr.replace(sympy.log(x0), sympy.log(x0, evaluate=False))
+    antideriv = expr.integrate(var)
+
+    if antideriv.has(sympy.log):
+        antideriv = antideriv.replace(sympy.log(x0), sympy.log(x0, evaluate=False))
     
-    left = expr.subs({var: ub})
-    right = expr.subs({var: lb})
+    left = antideriv.subs({var: ub})
+    right = antideriv.subs({var: lb})
 
     if right.could_extract_minus_sign():
         return r'{0} - ({1})'.format(sympy.latex(left), sympy.latex(right))

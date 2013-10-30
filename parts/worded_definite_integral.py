@@ -3,7 +3,7 @@ import random
 from maths import all_functions, not_named_yet
 from maths.symbols import *
 from maths.utils import functions
-from maths.latex import expressions, latex
+from maths.latex import expressions, latex, solution_lines
 
 
 class WordedDefiniteIntegral(object):
@@ -63,44 +63,46 @@ class WordedDefiniteIntegral(object):
         else:
             question_domain = (0, self._question_params['big_letter'])
 
-        lines = []
+        lines = solution_lines.Lines()
         
 
         if below_x_axis:
             signed_equation = -1 * self._question_params['equation']
 
 
-            lines.append( r'Since the curve is below the x-axis, we take the signed area.' )
-            lines.append( r'$= -{0} = {1}$'.format( expressions.integral(lb=question_domain[0],
-                                            ub=question_domain[1],
-                                            expr=self._question_params['equation']),
-                                                    expressions.integral(lb=question_domain[0],
-                                            ub=question_domain[1],
-                                            expr=signed_equation)
-                                                ) 
-                        )
-            lines.append( r'$= {0}$'.format( expressions.integral_intermediate(lb=question_domain[0],
-                                            ub=question_domain[1],
-                                            expr=signed_equation.integrate())) )
+            lines += r'Since the curve is below the x-axis, we take the signed area.'
+            lines += r'$= -{0} = {1}$'.format( 
+                expressions.integral(lb=question_domain[0], ub=question_domain[1], expr=self._question_params['equation']),
+                expressions.integral(lb=question_domain[0], ub=question_domain[1], expr=signed_equation)
+            )
+
+
+            lines += r'$= {0}$'.format( 
+                expressions.integral_intermediate(lb=question_domain[0], ub=question_domain[1], expr=signed_equation)
+            )
             
         else:
-            lines.append( r'${0}$'.format( expressions.integral(lb=question_domain[0],
-                                            ub=question_domain[1],
-                                            expr=self._question_params['equation']) ))
+            lines += r'${0}$'.format( 
+                expressions.integral(lb=question_domain[0], ub=question_domain[1], expr=self._question_params['equation']) 
+            )
 
-            lines.append( r'$= {0}$'.format(expressions.integral_intermediate(lb=question_domain[0], ub=question_domain[1],
-                                                    expr=self._question_params['equation'].integrate() )) )
+            lines += r'$= {0}$'.format(
+                expressions.integral_intermediate(lb=question_domain[0], ub=question_domain[1], expr=self._question_params['equation'])
+            )
 
 
-        lines.append( r'''$= {0} = {1}$'''.format(expressions.integral_intermediate_eval(lb=question_domain[0], 
-                                        ub=question_domain[1],
-                                        expr=self._question_params['equation'].integrate()), sympy.latex(self._question_params['area'])) )
+        lines += r'''$= {0} = {1}$'''.format(
+            expressions.integral_intermediate_eval(lb=question_domain[0], ub=question_domain[1], expr=self._question_params['equation']), 
+            sympy.latex(self._question_params['area'])
+        )
 
         # the value of the big letter is the sum of the ends of the domains (since one of the ends of the domains is 0)
-        lines.append( r'''${0} = {1}$.'''.format(self._question_params['big_letter'], 
-                    sympy.latex(self._question_params['domain'].left + self._question_params['domain'].right)) )
+        lines += r'''${0} = {1}$.'''.format(
+            self._question_params['big_letter'], 
+            sympy.latex(self._question_params['domain'].left + self._question_params['domain'].right)
+        )
         
-        return latex.latex_newline().join(lines)
+        return lines.write()
 
 
     def sanity_check(self):

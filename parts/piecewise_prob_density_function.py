@@ -105,8 +105,8 @@ class Conditional:
         lb = min(self._qp['minor_bound'], self._qp['major_bound'])
         ub = max(self._qp['minor_bound'], self._qp['major_bound'])
         top_integral = expressions.integral(lb=lb, ub=ub, expr=self._qp['equation'])
-        top_intermediate = expressions.integral_intermediate(lb=lb, ub=ub, expr=self._qp['equation'].integrate())
-        top_eval = expressions.integral_intermediate_eval(lb=lb, ub=ub, expr=self._qp['equation'].integrate())
+        top_intermediate = expressions.integral_intermediate(lb=lb, ub=ub, expr=self._qp['equation'])
+        top_eval = expressions.integral_intermediate_eval(lb=lb, ub=ub, expr=self._qp['equation'])
         top_value = self._qp['equation'].integrate((x, lb, ub))
 
 
@@ -119,8 +119,8 @@ class Conditional:
 
 
         bottom_integral = expressions.integral(lb=lb, ub=ub, expr=self._qp['equation'])
-        bottom_intermediate = expressions.integral_intermediate(lb=lb, ub=ub, expr=self._qp['equation'].integrate())
-        bottom_eval = expressions.integral_intermediate_eval(lb=lb, ub=ub, expr=self._qp['equation'].integrate())
+        bottom_intermediate = expressions.integral_intermediate(lb=lb, ub=ub, expr=self._qp['equation'])
+        bottom_eval = expressions.integral_intermediate_eval(lb=lb, ub=ub, expr=self._qp['equation'])
         bottom_value = self._qp['equation'].integrate((x, lb, ub))
 
         lines += r'$= \frac{{ {0} }}{{ {1} }}$'.format(top_integral, bottom_integral)
