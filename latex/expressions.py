@@ -1,6 +1,6 @@
 import sympy
 from maths.symbols import *
-from maths.latex import latex
+from maths.latex import latex, solution_lines
 from maths.utils import functions
 
 
@@ -34,6 +34,14 @@ def integral_intermediate_eval(lb, ub, expr, var=x):
         return r'{0} - ({1})'.format(sympy.latex(left), sympy.latex(right))
     else:
         return r'{0} - {1}'.format(sympy.latex(left), sympy.latex(right))
+
+
+def integral_trifecta(lb, ub, expr, var=x):
+    return (
+        integral(lb, ub, expr, var),
+        integral_intermediate(lb, ub, expr, var),
+        integral_intermediate_eval(lb, ub, expr, var)
+    )
 
 
 def piecewise(func):
@@ -88,3 +96,27 @@ def quadratic_formula(quadratic, var=x):
 
 def conditional_probability(givee, given):
     return r'\frac{{ Pr({0} \cap {1}) }}{{ Pr({1}) }}'.format(givee, given)
+
+
+def shrink_solution_set(expr, domain, expr_equal_to=0, var=x):
+    solutions = sympy.solve(expr - expr_equal_to)
+
+    lines = solution_lines.Lines()
+
+    solutions_text = ', '.join([sympy.latex(i) for i in solutions]) 
+    # HERE IS WHERE I WAS WORKING UP TO
+    lines += r'${0} = {1}$'.format(sympy.latex(var), solutions_text)
+
+    smaller_set_text = ', '.join([sympy.latex(i) for i in solutions if i in domain])
+
+    if isinstance(domain, sympy.Interval) and domain.left == -sympy.oo:
+        domain_text = r'${0} {1} {2}$'.format(sympy.latex(var), r'\le' if domain.right_open else r'\lte', sympy.latex(domain.right))
+    elif isinstance(domain, sympy.Interval) and domain.right == sympy.oo:
+        domain_text = r'${0} {1} {2}$'.format(sympy.latex(var), r'\ge' if domain.right_open else r'\gte', sympy.latex(domain.left))
+    else:
+        domain_text = r'{0} \in {1}'.format(sympy.latex(var), sympy.latex(domain))
+
+
+    lines += r'but ${0}$, so ${1} = {2}$'.format(domain_text, sympy.latex(var), smaller_set_text)
+
+    return lines
