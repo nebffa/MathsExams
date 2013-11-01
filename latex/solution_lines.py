@@ -7,7 +7,11 @@ class Lines:
 
 
     def __add__(self, text):
-        self.lines.append(text)
+        if isinstance(text, str):
+            self.lines.append(text)
+        elif isinstance(text, Lines):
+            self.lines.extend(text.lines)
+
         return self
 
 
