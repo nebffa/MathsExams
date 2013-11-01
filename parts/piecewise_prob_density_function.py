@@ -293,32 +293,3 @@ class Cumulative:
         lines += expressions.shrink_solution_set(left_side, self._qp['domain'], expr_equal_to=right_side, var=self._qi['char'])
 
         return lines.write()
-
-
-# can be used for known and unknown
-class DefiniteIntegral:
-    def __init__(self, part):
-        self._qp = copy.copy(part._qp)
-
-        left = int(math.ceil(self._qp['domain'].left))
-        
-
-        choices = [left + sympy.Rational(1, 2)]
-        while True:
-            cur = choices[-1] + sympy.Rational(1, 2)
-
-            if cur < self._qp['domain'].right:
-                choices.append(cur)
-            else:
-                break
-
-        self._qp['location'] = random.choice(choices)
-        self._qp['direction'] = random.choice(['left', 'right'])
-
-
-    def question_statement(self):
-        pass
-
-
-    def solution_statement(self):
-        return 
