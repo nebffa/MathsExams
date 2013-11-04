@@ -55,7 +55,7 @@ with open('exam.tex', 'w') as f:
     latex.new_page(f)
 
 
-    q = piecewise_prob_density_function.PiecewiseProbDensityFunction()
+    q = piecewise_prob_density_function.PiecewiseProbDensityFunctionKnown()
     question = questions.QuestionTree(q)
     question.write_question(f)
     question.write_solution(f)
