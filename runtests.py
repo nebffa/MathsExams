@@ -2803,7 +2803,7 @@ JYac54OoCxc2dK/NN8Z5punw28Z9xQhDPIhZKaplImYMf6dcDyXiXIRUYMK8n/57V/wPEB/LWQ==
 import sys
 import base64
 import zlib
-import maths_path
+from maths import maths_path
 import os
 import glob
 

@@ -5,8 +5,8 @@ import textwrap
 
 
 maths_path = os.path.split(os.getcwd())[0]
-parts_path = os.path.join(maths_path, 'parts')
-tests_path = os.path.join(maths_path, 'parts', 'tests')
+parts_path = os.path.join(maths_path, 'maths', 'parts')
+tests_path = os.path.join(maths_path, 'maths', 'parts', 'tests')
 
 
 irrelevant_tests_files = ['__init__.py', 'question_tester.py']
