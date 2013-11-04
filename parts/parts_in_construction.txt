@@ -15,3 +15,13 @@ e.g. choose a value in a domain such that an integral from the left side to this
 also what is needed is a solutions_working engine, for showing lines of standard solutions working - 
 e.g. solving 1/2 * cos(pi * a / 2) = -1/4 -- the answers are a = 4/3, 8/3, but we'd like something that parses the input, and solves it against a value
         storing the lines in a Lines() object as it goes (I think?)
+
+
+
+sympy things to work on:
+
+1. 
+x = Symbol('x', real=True)
+solve(Abs(x - 1) - 1) errors
+
+if x = Symbol('x'), it works fine
