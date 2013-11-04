@@ -18,13 +18,13 @@ class SimpleSketch:
         self._qp = {}
         self._qp['plot_domain'] = self._qp['plot_range'] = sympy.Interval(-6, 6)
 
-        self._qp['expr_domain'] = sympy.Interval(random.randint(-5, -3), random.randint(3, 5))
+        self._qp['domain'] = sympy.Interval(random.randint(-5, -3), random.randint(3, 5))
 
 
         if function_type == 'absolute_value':
-            self._qp['equation'] = requests.absolute_value(extreme_point=self._qp['expr_domain'])
+            self._qp['equation'] = requests.absolute_value(extreme_point=self._qp['domain'])
         elif function_type == 'hyperbola':
-            self._qp['equation'] = requests.hyperbola(vertical_asymptote=self._qp['expr_domain'],
+            self._qp['equation'] = requests.hyperbola(vertical_asymptote=self._qp['domain'],
                                             horizontal_asymptote=self._qp['plot_range'])
 
     
@@ -32,12 +32,12 @@ class SimpleSketch:
         path = plot.blank_plot(self._qp['plot_domain'], self._qp['plot_range'])
 
         return r'''Sketch the graph of $f: {0} \rightarrow R, f(x) = {1}$. Label the axes intercepts and endpoints with their coordinates. {2}'''.format(
-                    sympy.latex(self._qp['expr_domain']), sympy.latex(self._qp['equation']), plot.latex(path))
+                    sympy.latex(self._qp['domain']), sympy.latex(self._qp['equation']), plot.latex(path))
 
 
     def solution_statement(self):
         path = plot.plot(self._qp['equation'], self._qp['plot_domain'], self._qp['plot_range'],
-                            expr_domain=self._qp['expr_domain'])
+                            expr_domain=self._qp['domain'])
 
 
         return r'''{0}'''.format(plot.latex(path))
@@ -50,7 +50,7 @@ class PointTransformation:
 
         y_point = sympy.oo
         while y_point in [-sympy.oo, sympy.oo]:
-            x_point = random.choice(range(self._qp['expr_domain'].left, self._qp['expr_domain'].right + 1))
+            x_point = random.choice(range(self._qp['domain'].left, self._qp['domain'].right + 1))
             y_point = self._qp['equation'].subs({x: x_point})
         self._qp['point'] = (x_point, y_point)
         self._qp['transformations'] = transformations.random_transformation(num_transformations=2)

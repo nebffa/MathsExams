@@ -143,6 +143,11 @@ def plot(expr, plot_domain, plot_range, expr_domain=None):
 
     if expr_domain is None:
         expr_domain = plot_domain
+
+    elif isinstance(expr_domain, sympy.Union):
+        for interval in expr_domain.args:
+            if interval.left == -sympy.oo or interval.right == sympy.oo:
+                raise ValueError('The supplied expr_domain goes to infinity: {0}'.format(plot_domain))
     elif expr_domain.left == -sympy.oo or expr_domain.right == sympy.oo:
         raise ValueError('The supplied expr_domain goes to infinity: {0}'.format(plot_domain))
 
@@ -175,7 +180,14 @@ def plot(expr, plot_domain, plot_range, expr_domain=None):
     else:
         numpified = numpify(expr)
 
-        x_values = numpy.linspace(expr_domain.left, expr_domain.right, num=5000)
+        if isinstance(expr_domain, sympy.Union):
+            x_values = numpy.linspace(0, 0, 0)
+            for domain in expr_domain.args:
+                x_values = numpy.append(x_values, numpy.linspace(domain.left, domain.right, num=5000))
+
+
+        elif isinstance(expr_domain, sympy.Interval):
+            x_values = numpy.linspace(expr_domain.left, expr_domain.right, num=5000)
 
         y_values = eval(r'{0}'.format(numpified))
         y_values = asymptote_proof(y_values)
