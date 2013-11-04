@@ -1,5 +1,5 @@
 import sympy
-import trig
+from maths.trig import trig
 import random
 
 class cdf(object):
@@ -29,6 +29,3 @@ class cdf(object):
         print(self.integral_lower_bound, self.equation.subs(x, self.integral_lower_bound))
         print(self.integral_middle_bound, self.equation.subs(x, self.integral_middle_bound))
         print(self.integral_upper_bound, self.equation.subs(x, self.integral_upper_bound))
-    
-    
-y = cdf()
