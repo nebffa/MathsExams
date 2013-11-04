@@ -5,9 +5,17 @@ from sympy.printing.latex import LatexPrinter
 import re
 
 
+def noevalify(expr, include=None):
+    mapping = noevalmapping()
 
-def noevalify(expr):
-    pass
+    for eval_function, noeval_function in mapping.items():
+
+        if include is None:
+            expr = expr.replace(eval_function, noeval_function)
+        elif eval_function in include:
+            expr = expr.replace(eval_function, noeval_function)
+
+    return expr
 
 
 
@@ -213,15 +221,6 @@ def noevalmapping():
 
 
 
-def noevalify(expr):
-    a = sympy.Wild('a')
-
-    for evaltype, noevaltype in noevalmapping():
-        expr = expr.subs(evaltype(a), noevaltype(a))
-
-    return expr
-
-
 def noevalsub(expr, substitutions):
     a = sympy.Wild('a')
     b = sympy.Wild('b')
@@ -239,17 +238,3 @@ def noevalsub(expr, substitutions):
             expr = expr.replace(yeseval, noeval)
 
     return expr.subs(substitutions)
-
-
-
-a = sympy.Wild('a')
-b = sympy.Wild('b')
-
-x = sympy.Symbol('x')
-y = x**2 + 2
-# print(y.replace(sympy.Pow(a, b), sympy.cos(a)))
-#y = y.replace(sympy.Pow(a), noevalPow(a))
-
-#print(noevalsub(y, {x: 2}))
-
-
