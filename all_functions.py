@@ -64,17 +64,24 @@ def random_function_type():
 
 def inverse(function):  # requires future work as more things are included
 
-    solutions = sympy.solve(function - y, x)
+    symbols = function.free_symbols
+
+    if len(symbols) == 1:
+        var = symbols.pop()
+    else:
+        raise ValueError('The function needs to have only one parameter, instead it had these: {0}'.format(symbols))
+
+    solutions = sympy.solve(function - y, var)
 
     if function.as_poly().degree() == 3:
         for solution in solutions:
-            if sympy.ask(sympy.Q.extended_real(solution), sympy.Q.real(y)):
-                return solution.replace(y, x)
+            if sympy.ask(sympy.Q.evartended_real(solution), sympy.Q.real(y)):
+                return solution.replace(y, var)
 
     if len(solutions) > 1:
-        return solutions[1].replace(y, x)
+        return solutions[1].replace(y, var)
     else:
-        return solutions[0].replace(y, x)
+        return solutions[0].replace(y, var)
 
 
 def request_linear(difficulty, var=x):  
