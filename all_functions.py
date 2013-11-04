@@ -63,8 +63,6 @@ def random_function_type():
 
 
 def inverse(function):  # requires future work as more things are included
-    x = sympy.Symbol('x')
-    y = sympy.Symbol('y')
 
     solutions = sympy.solve(function - y, x)
 

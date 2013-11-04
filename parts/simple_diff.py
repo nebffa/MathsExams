@@ -1,11 +1,13 @@
 import sympy
 import random
 from maths import all_functions, not_named_yet
-from maths.latex import latex
+from maths.latex import latex, solution_lines
+from maths.utils import noevals
+from maths.symbols import *
 
 
 # always produces Q1a
-class SimpleDiff(object):
+class SimpleDiff:
     def __init__(self):
         self.num_lines = 5
         self.num_marks = 2
@@ -20,14 +22,14 @@ class SimpleDiff(object):
             inner_function = all_functions.request_linear(difficulty=1).equation
             inner_function = inner_function.replace(lambda expr: expr.is_Symbol, lambda expr: sympy.sqrt(expr))
 
-            x = sympy.Symbol('x')
+
             self.equation = outer_function.replace(x, inner_function)
             self.derivative = sympy.diff(self.equation)
 
         elif self.function_type == 'quadratic':
             # 2008 1a: y = (3x**2 - 5x) ** 5
             # 2012 1a: y = (x**2 - 5x) ** 4
-            x = sympy.Symbol('x')
+
             power_two_coeff = not_named_yet.randint_no_zero(-3, 3)
             power_one_coeff = not_named_yet.randint_no_zero(-5, 5)
             inner_function = power_two_coeff * x ** 2 + power_one_coeff * x
@@ -39,7 +41,7 @@ class SimpleDiff(object):
         elif self.function_type == 'product':
             # 2009 1a: y = x * ln(x)
             # 2010 1a: y = (x ** 3) * e ** (2x)
-            x = sympy.Symbol('x')
+
             left_function = x ** random.randint(1, 3)
             right_outer_function = random.choice([sympy.sin, sympy.cos, sympy.log, sympy.exp])
             right_inner_function = not_named_yet.randint_no_zero(-3, 3) * x
@@ -87,7 +89,7 @@ class SimpleDiff(object):
 
 
 # always produces Q1b
-class SimpleDiffEval(object):
+class SimpleDiffEval:
     # function_type_in_simple_diff is the function type used in the class SimpleDiff. we need to know it so we don't use the same function type
     # since questions 1a and 1b never use the same function type
     def __init__(self, part):
@@ -105,7 +107,6 @@ class SimpleDiffEval(object):
         if self.__function_type == 'product':
             # 2008 1b: y = x * e**(3x), a = 0
             # 2011 1b: y = x**2 * sin(2x), a = pi / 6
-            x = sympy.Symbol('x')
             index = random.randint(1, 3)
             left_function = x ** index
 
@@ -131,7 +132,6 @@ class SimpleDiffEval(object):
         elif self.__function_type == 'quotient':
             # 2009 1b: y = cos(x) / (2x + 2), a = pi
             # 2012 1b: y = x / sin(x), a = pi / 2
-            x = sympy.Symbol('x')
             special_function = random.choice([sympy.cos(x), sympy.sin(x), sympy.exp(x)])
             linear_function = all_functions.request_linear(difficulty=3).equation
 
@@ -159,7 +159,6 @@ class SimpleDiffEval(object):
 
         elif self.__function_type == 'composite':
             # 2010 1b: y = ln(x**2 + 1), a = 2
-            x = sympy.Symbol('x')
 
             # i thought of including sin and cos, but i can't remember ever seeing a question where a quadratic was nested inside
             # of a trig function
@@ -214,31 +213,30 @@ class SimpleDiffEval(object):
 
         self._question_type = question['type']
         return question['statement'] % (equation_text, x_value_text)
-        #file.write('\\textbf{b.} \\tab\=' + question['statement'] % (equation_text, x_value_text) + " \\\\ \n")
-
-        #file.write('\\\\\n')
-        #for i in range(0, self.num_lines):
-        #    file.write('\> \linefill \\\\\n')
-        #file.write('\\\\\n')
-        #file.write('\n')
 
     def solution_statement(self):
         # needs more work at the moment - likely an inbetween step to evaluate every subexpression in f'(x) but not f'(x) itself
-        total_string = "$%s'(x) = %s$ \\\\ \n" % (self._question_type, sympy.latex(self.derivative))
-        x = sympy.Symbol('x')
+
+        lines = solution_lines.Lines()
+        lines += r"${0}'(x) = {1}$".format(self._question_type, sympy.latex(self.derivative))
+
 
         # print extra steps when dealing with trig functions
         if self.equation.find(sympy.sin) or self.equation.find(sympy.cos):
-            a = sympy.Wild('a')
-            no_eval = sympy.latex(self.derivative.replace(sympy.sin(a),
-                                  sympy.sin(a.subs({x: self.x_value}), evaluate=False)).replace(sympy.cos(a),
-                                  sympy.cos(a.subs({x: self.x_value}), evaluate=False)))
-            total_string += "$%s'(%s) = %s$ \\\\ \n" % (self._question_type, sympy.latex(self.x_value), no_eval)
-            total_string += ', '.join(["$%s = %s$" % (sympy.latex(i.
-                       replace(sympy.sin(a), lambda a: sympy.sin(a.subs({x: self.x_value}), evaluate=False)).
-                       replace(sympy.cos(a), lambda a: sympy.cos(a.subs({x: self.x_value}), evaluate=False))
-                       ), sympy.latex(i.subs({x: self.x_value}))) for i in self.derivative.find(lambda expr: expr.is_Function)]) + " \\\\ \n"
 
-        total_string += "$%s'(%s) = %s$ \\\\ \n" % (self._question_type, sympy.latex(self.x_value), sympy.latex(self.answer))
 
-        return total_string
+
+            no_eval = self.derivative.replace(sympy.sin, noevals.noevalsin)
+            no_eval = no_eval.replace(sympy.cos, noevals.noevalcos)
+
+            lines += r"${0}'({1}) = {2}$".format(self._question_type, sympy.latex(self.x_value), sympy.latex(no_eval))
+            lines += ', '.join([r"${0} = {1}$".format(
+                            sympy.latex(noevals.noevalify(i, include=[sympy.sin, sympy.cos]).subs({x: self.x_value})), 
+                            sympy.latex(i.subs({x: self.x_value}))
+                        ) 
+                        for i in self.derivative.find(lambda expr: expr.is_Function)])
+
+        lines += r"${0}'({1}) = {2}$".format(self._question_type, sympy.latex(self.x_value), sympy.latex(self.answer))
+
+        return lines.write()
+

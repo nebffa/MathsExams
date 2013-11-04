@@ -1,8 +1,8 @@
 import sympy
-from sympy.abc import *
 from maths import not_named_yet
 from maths.polynomials.linear import request_linear
 from maths.utils import functions
+from maths.symbols import *
 
 
 coefficients_bound = 5

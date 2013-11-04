@@ -2,7 +2,7 @@ import sympy
 import random
 import gmpy
 from maths import not_named_yet
-from sympy.abc import *
+from maths.symbols import *
 
 coefficients_bound = 5
 

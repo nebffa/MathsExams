@@ -1,11 +1,12 @@
 import sympy
 from maths import not_named_yet
 from maths.polynomials.linear import request_linear
+from maths.symbols import *
 
 
 class Exp(object):
     def __init__(self, difficulty):
-        x = sympy.Symbol('x')
+
 
         a = not_named_yet.randint_no_zero(-3, 2)
         k = not_named_yet.randint_no_zero(-2, 2)

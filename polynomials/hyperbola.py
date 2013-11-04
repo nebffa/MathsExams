@@ -1,5 +1,5 @@
 import sympy
-from sympy.abc import *
+from maths.symbols import *
 from maths import not_named_yet
 from maths.polynomials.linear import request_linear
 
