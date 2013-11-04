@@ -87,38 +87,6 @@ def is_monotone_decreasing(equation, domain=None):
         return True
 
 
-def maximal_domain(expr, domain=sympy.Interval(-oo, oo)):
-    # detect square roots, logs, tans and reciprocals
-    # i won't implement csc, sec and cot for now
-
-    x_real = sympy.Symbol('x_real', real=True)
-    expr = expr.replace(x, x_real)
-    domains = [domain]
-
-    #tests = [sympy.log, sympy.Pow, sympy.tan] #, sympy.csc, sympy.sec, sympy.cot]
-    find = expr.find(sympy.log)
-    domains += [relation_to_interval( sympy.solve( log.args[0] > 0 ) ) for log in find]
-
-    find = expr.find(sympy.Pow)
-    # check if the index of power is less than 0 - "If Pow.args[1] < 0"
-    # if it is, solve the denominator - "Pow.args[0]" - equal to 0 and take its complement to get the maximal domain
-    domains += [sympy.FiniteSet(sympy.solve( Pow.args[0] )).complement for Pow in find if Pow.args[1] < 0]
-
-
-    #find = expr.find(sympy.tan)
-    #domains = [sympy.FiniteSet(sympy.solve( tan.args[0] - k*pi, x )).complement for tan in find]
-    if expr.find(sympy.tan):
-        raise NotImplementedError("Can't find maximum domains of tans.")
-    if expr.find(sympy.cot):
-        raise NotImplementedError("Can't find maximum domain of cot.")
-    if expr.find(sympy.csc):
-        raise NotImplementedError("Can't find maximum domain of csc.")
-    if expr.find(sympy.sec):
-        raise NotImplementedError("Can't find maximum domain of sec.")
-
-    return functools.reduce(operator.and_, domains)
-
-
 def relation_to_interval(relation):
 
     if isinstance(relation, sympy.Or):
@@ -150,21 +118,115 @@ def relation_to_interval(relation):
             return sympy.Interval(relation.lhs, sympy.oo)
 
 
-def is_convex(expr, x):
+def is_convex(expr, location):
     symbol_used = expr.free_symbols.pop()
 
-    second_deriv = expr.diff().diff().subs({symbol_used: x})
+    second_deriv = expr.diff().diff().subs({symbol_used: location})
 
     if second_deriv > 0:
         return True
     else:
         return False
-def is_concave(expr, x):
+
+
+def is_concave(expr, location):
     symbol_used = expr.free_symbols.pop()
 
-    second_deriv = expr.diff().diff().subs({symbol_used: x})
+    second_deriv = expr.diff().diff().subs({symbol_used: location})
 
     if second_deriv > 0:
         return False
     else:
         return True
+
+
+def parse_type(expr):
+    ''' Return which type (or types) an expression is.
+
+    '''
+
+    types = set()
+
+    possible_types = [
+        sympy.exp,
+        sympy.log,
+        sympy.sin,
+        sympy.cos,
+        sympy.tan,
+        sympy.csc,
+        sympy.sec,
+        sympy.cot,
+    ]
+
+
+    for each in possible_types:
+        if expr.find(each):
+            types.add(each)
+
+    if len(types) == 0:
+        types.add(sympy.Poly)
+
+    return types
+
+
+def maximal_domain(expr, domain=sympy.Interval(-oo, oo)):
+    ''' Return the maximal domain of an expression.
+
+    >>> maximal_domain(sympy.log(x**2 - 1))
+    (-oo, -1) U (1, oo)
+
+    >>> maximal_domain(1 / (x**2 - 4))
+    (-oo, -2) U (-2, 2) U (2, oo)
+
+    >>> maximal_domain((x - 2) ** (sympy.Rational(3, 2)))
+    (2, oo)
+    '''
+
+    # 4 possible scenarios:
+    #       1. 1/(a) -- a != 0
+    #       2. sqrt(b) -- b > 0
+    #       3. log(c) -- c > 0
+    #       4. tan(d) -- d != the solutions of tan
+
+    for symbol in expr.free_symbols:
+        if symbol == x:
+            expr = expr.replace(x, sympy.Symbol('x', real=True))
+        else:
+            raise NotImplementedError('only x is currently supported - but that can be easily changed')
+
+
+
+    powers = expr.find(sympy.Pow)
+    # case 1
+    for power in powers:
+        if power.args[1] < 0:
+            denominator = power.args[0]
+
+            solution = sympy.solve(denominator)
+            domain &= -sympy.FiniteSet(solution)
+
+        # case 2
+        if isinstance(power.args[1], sympy.Rational):
+            if power.args[1].q % 2 != 0:
+                continue
+
+            sqrt_interior = power.args[0]
+
+            solution = sympy.solve(sqrt_interior > 0)
+            domain &= relation_to_interval(solution)
+
+
+    # case 3
+    logs = expr.find(sympy.log)
+    for log in logs:
+        interior = log.args[0]
+
+        solution = sympy.solve(interior > 0)    
+        domain &= relation_to_interval(solution)
+
+
+    # case 4
+    if expr.find(sympy.tan) or expr.find(sympy.cot) or expr.find(sympy.sec) or expr.find(sympy.csc):
+        raise NotImplementedError('tan/cot/sec/csc are not supported')
+
+    return domain
