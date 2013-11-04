@@ -259,8 +259,8 @@ def cubic(spec):
 def absolute_value(spec):
     # y = a * |x - b| + c
     a = [i for i in range(-3, 4) if i != 0]
-    b = range(-3, 4)
-    c = range(-5, 6)
+    b = list(range(-3, 4))
+    c = list(range(-5, 6))
 
     # key['gradient']  a = k or a > k or a < k
     if isinstance(spec['gradient'], discretes):
@@ -287,7 +287,8 @@ def absolute_value(spec):
         a, b, c = (random.choice(i) for i in (a, b, c))
         equation = a * sympy.Abs(x - b) + c
 
-        solutions = sympy.solve(equation)
+
+        solutions = sympy.solve(equation)  # fails due to a sympy bug - sympy can't solve Abs(x - 2) - 3, where x is real
 
         for solution in solutions:
             if solution not in spec['x_intercepts']:
