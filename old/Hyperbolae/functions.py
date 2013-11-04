@@ -1,4 +1,4 @@
-import linear
+from maths.polynomials import linear
 import sympy
 import random
 

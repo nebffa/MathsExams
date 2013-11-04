@@ -1,7 +1,7 @@
 import sympy
 import random
-import linear
-import all_functions
+from maths.polynomials import linear
+from maths import all_functions
 
 
 
@@ -171,7 +171,3 @@ class Tangent(object):
 
         if m in self.equation.atoms():
             self.stationary_x_value = sympy.solve(self.equation.diff(x), x)[0]
-            
-y = Tangent()
-print(y.equation)
-print(y.stationary_x_value)

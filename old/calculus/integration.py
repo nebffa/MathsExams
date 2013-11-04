@@ -1,7 +1,7 @@
 import sympy
 import random
-import linear
-import all_functions
+from maths.polynomials import linear
+from maths import all_functions
 
 
 class IndefiniteIntegral(object):
@@ -85,6 +85,4 @@ class Area(object): # SO FAR HAS BEEN ONE OF 3 POSSIBILITIES!!! NOT SURE HOW TO 
                 break
             
         self.area = self.equation.integrate((x, self.lower_bound, self.upper_bound))
-        
-print(Area().area)
         
