@@ -12,5 +12,4 @@ def test_SimpleDiffEval():
     q1 = simple_diff.SimpleDiff()
     q2 = simple_diff.SimpleDiffEval(q1.function_type)
 
-    question_tester(QuestionTree(q1))
     question_tester(QuestionTree(q2))
