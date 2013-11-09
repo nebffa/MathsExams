@@ -13,12 +13,6 @@ class Quadratic(object):
     Keyword arguments:
     difficulty: influences the type of equation generated
 
-        y = Quadratic(1) -- discriminant is 0 and y = ax**2 + bx + c where at least one of b or c is 0
-        y = Quadratic(2) -- a > 0 and discriminant is square
-        y = Quadratic(3) -- a > 0 and discriminant is not square
-        y = Quadratic(4) -- a < 0 and discriminant is square
-        y = Quadratic(5) -- a < 0 and discriminant is not square
-
     Public attributes:
     equation -- the actual equation of the polynomial
     discriminant -- the discriminant of the quadratic
