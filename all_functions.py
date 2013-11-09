@@ -120,15 +120,18 @@ def request_tan(difficulty):
     return trig.Tan(difficulty)
 
 
-def request_trig(difficulty):
+def request_trig(difficulty=None):
     function_type = random.choice(['sin', 'cos', 'tan'])
 
+    if difficulty is None:
+        difficulty = random.randint(1, 2)
+
     if function_type == 'sin':
-        return request_sin(difficulty=random.randint(1, 2))
+        return request_sin(difficulty)
     if function_type == 'cos':
-        return request_cos(difficulty=random.randint(1, 2))
+        return request_cos(difficulty)
     if function_type == 'tan':
-        return request_tan(difficulty=random.randint(1, 2))
+        return request_tan(difficulty)
 
 
 # for use when matching - e.g. say we have y = tan(2*x), we have to do y.match(a*tan(b) + c) - what if we don't know what the trig function is? 
