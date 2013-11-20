@@ -32,7 +32,7 @@ class TrigProperties:
         self._qi['range_or_amplitude'] = random.choice(['range', 'amplitude'])
         self._qi['range_or_amplitude_answer'] = self._qp[self._qi['range_or_amplitude']]
 
-        return r'''State the {0} and period of the function $f, R \rarrow R, f(x) = {1}$'''.format(
+        return r'''State the {0} and period of the function $f, R \rightarrow R, f(x) = {1}$'''.format(
                 self._qi['range_or_amplitude'],
                 self._qp['equation']
             )
