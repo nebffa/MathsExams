@@ -13,7 +13,7 @@ class TrigProperties:
         self._qp = {}
 
         
-        self._qp['amplitude'] = not_named_yet.randint(-4, 4, exclude=[-1, 0, 1])
+        self._qp['amplitude'] = not_named_yet.randint(1, 4)
         trig_type = random.choice([sympy.sin, sympy.cos, sympy.tan])
 
         self._qp['period'] = random.choice([1, sympy.pi]) * sympy.Rational(random.randint(1, 3), random.randint(1, 4))
@@ -34,7 +34,7 @@ class TrigProperties:
 
         return r'''State the {0} and period of the function $f, R \rightarrow R, f(x) = {1}$'''.format(
                 self._qi['range_or_amplitude'],
-                self._qp['equation']
+                sympy.latex(self._qp['equation'])
             )
 
 
