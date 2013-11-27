@@ -37,6 +37,7 @@ def packages(f):
     f.write(r'\usepackage{tabularx}' + '\n')
     f.write(r'\usepackage{graphicx}' + '\n')
     f.write(r'\usepackage{enumitem}' + '\n')
+    f.write(r'\usepackage{mathtools}' + '\n')
     f.write(r'\usepackage{{{0}}}'.format(latex_friendly_path) + '\n')
     f.write(r'\usepackage[margin=2cm]{geometry}' + '\n')
 
