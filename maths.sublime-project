@@ -19,7 +19,7 @@
     {
         "name": "Maths",
         "env": {"PYTHONPATH":"/home/ben/Desktop"},
-        "path":"$project_path/bin",
+        
         "cmd": ["$project_path/bin/python3.3", "-u", "$file"]
     }
     ]
