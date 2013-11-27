@@ -2808,7 +2808,7 @@ import os
 import glob
 
 
-part_tests_path = os.path.join(maths_path.maths_path(), 'parts', 'tests')
+part_tests_path = os.path.join(maths_path.maths_path(), 'debug')
 
 # remove latex files from the last test run
 extensions = ['*.pdf', '*.tex', '*.log', '*.gz', '*.aux']
