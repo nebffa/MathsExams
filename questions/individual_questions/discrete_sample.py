@@ -14,14 +14,17 @@ with open(FILE_NAME, 'w') as f:
     q = discrete_sample.NoReplacement()
     q_a = discrete_sample.SpecificPermutation(q)
     q_b = discrete_sample.Sum(q)
+    q_c = discrete_sample.ConditionalSum(q)
 
 
     question = questions.QuestionTree(q)
     question.add_part(q_a)
     question.add_part(q_b)
+    question.add_part(q_c)
 
 
 try:
+    subprocess.call(['killall', 'evince'])
     question_tester.question_tester(question, view_output=True)
 except Exception as e:
     raise e
