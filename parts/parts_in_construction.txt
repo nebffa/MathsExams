@@ -25,3 +25,6 @@ x = Symbol('x', real=True)
 solve(Abs(x - 1) - 1) errors
 
 if x = Symbol('x'), it works fine
+
+
+not a part, but we need a way to compile the latex without the extra command line argument "-shell-escape" which is needed for including full path graphics
