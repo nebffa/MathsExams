@@ -44,6 +44,16 @@ def integral_trifecta(lb, ub, expr, var=x):
     )
 
 
+def derivative(upper_variable, lower_variable, degree=1):
+    ''' Return a derivative in the form dy/dx or du/dt.
+    '''
+    if degree != 1:
+        return r'\frac{{d^{{{2}}}{0}}}{{d{1}^{{{2}}}}}'.format(upper_variable, lower_variable, degree)        
+    else:
+        return r'\frac{{d{0}}}{{d{1}}}'.format(upper_variable, lower_variable)
+    
+
+
 def piecewise(func):
     ''' 
     Return LaTeX for a piecewise expression. In this case, SymPy's ability to produce good-looking LaTeX is lackluster.
