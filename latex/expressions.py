@@ -130,3 +130,35 @@ def shrink_solution_set(expr, domain, expr_equal_to=0, var=x):
     lines += r'but ${0}$, so ${1} = {2}$'.format(domain_text, sympy.latex(var), smaller_set_text)
 
     return lines
+
+
+def relation(interval_or_relation, var=x):
+    if isinstance(interval_or_relation, (sympy.StrictLessThan, sympy.LessThan, sympy.StrictGreaterThan, sympy.GreaterThan)):
+        interval = functions.relation_to_interval(interval_or_relation)
+    else:
+        interval = interval_or_relation
+
+    if isinstance(interval_or_relation, sympy.Union):
+        raise NotImplementedError('unions are not yet supported')   
+
+
+    if interval.left == -sympy.oo and interval.right == sympy.oo:
+        return r'{0} < {1} < {2}'.format(sympy.latex(-sympy.oo), sympy.latex(var), sympy.latex(sympy.oo))
+    elif interval.left == -sympy.oo:
+        operator = r'<' if interval.right_open else r'\le'
+        return r'{0} {1} {2}'.format(sympy.latex(var), operator, sympy.latex(interval.right))
+    elif interval.right == sympy.oo:
+        operator = r'>' if interval.left_open else r'\ge'
+        return r'{0} {1} {2}'.format(sympy.latex(var), operator, sympy.latex(interval.left))
+    else:
+        left_operator = r'<' if interval.left_open else r'\le'
+        right_operator = r'<' if interval.right_open else r'\le'
+        return r'{0} {1} {2} {3} {4}'.format(
+                    sympy.latex(interval.left),
+                    left_operator,
+                    sympy.latex(var),
+                    right_operator,
+                    sympy.latex(interval.right)
+                )
+
+
