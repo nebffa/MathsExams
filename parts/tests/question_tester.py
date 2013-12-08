@@ -7,7 +7,7 @@ from maths import maths_path
 import glob
 
 
-def question_tester(question_tree, view_output=False):
+def question_tester(questions, view_output=False):
     """ Test whether a question's latex is compilable to a PDF.
 
     """ 
@@ -19,7 +19,14 @@ def question_tester(question_tree, view_output=False):
     file_name = os.path.join(full_path, 'test' + uid + '.tex')
 
     with open(file_name, 'w') as f:
-        _write_question(f, question_tree)
+        latex.begin_tex_document(f)
+        if isinstance(questions, (list, tuple)):
+            for question in questions:
+                _write_question(f, question)
+                latex.new_page(f)
+        else:
+            _write_question(f, questions)
+        latex.end_tex_document(f)
 
 
     # change dir to ../maths/debug so that the byproduct tex compilation files are created there
@@ -67,11 +74,8 @@ def silentremove(filename):
             raise  # re-raise exception if a different error occured
 
 
-def _write_question(f, question_tree):
+def _write_question(f, question):
     """ A helper function to test_question - writes a single question as a standalone .tex file.
     """
-
-    latex.begin_tex_document(f)
-    question_tree.write_question(f)
-    question_tree.write_solution(f)
-    latex.end_tex_document(f)
+    question.write_question(f)
+    question.write_solution(f)
