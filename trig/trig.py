@@ -73,7 +73,7 @@ class Trig(object):
         # difficulty ++: n != 1
         a = 0
         while a == 0:
-            a = random.randint(-coefficients_bound / 2, coefficients_bound / 2)
+            a = random.randint(-coefficients_bound // 2, coefficients_bound // 2)
 
         if difficulty in [1, 2]:
             h = random.sample([1, sympy.pi], 1)[0]
@@ -151,7 +151,8 @@ class Trig(object):
                 if difficulty == 1:
                     trig_value = 0
                 else:
-                    trig_value = random.sample(value_to_radians, 1)[0]
+                    trig_value = random.choice(list(value_to_radians.keys()))
+                    
 
                 equation = a * \
                     {
@@ -190,7 +191,7 @@ class Trig(object):
             self.general_solutions = list(set(itertools.chain.from_iterable(general_solutions)))
 
             solutions = []
-            for j in range(-coefficients_bound / 2, coefficients_bound / 2 + 1):
+            for j in range(-coefficients_bound // 2, coefficients_bound // 2 + 1):
                 for general_solution in self.general_solutions:
                     solutions.append(general_solution.subs({k: j}))
 
