@@ -6,12 +6,25 @@ from maths.trig import trig
 from maths.symbols import *
 
 
-def random_function(linear_difficulty=random.randint(1, 2),
-                    quadratic_difficulty=random.randint(1, 5),
-                    log_difficulty=random.randint(1, 2),
-                    trig_difficulty=random.randint(1, 3),
-                    exp_difficulty=random.randint(1, 3),
-                    exclude=[]):
+def random_function(linear_difficulty=None,
+                    quadratic_difficulty=None,
+                    log_difficulty=None,
+                    trig_difficulty=None,
+                    exp_difficulty=None,
+                    exclude=None):
+
+    if linear_difficulty is None:
+        linear_difficulty = random.randint(1, 2)
+    if quadratic_difficulty is None:
+        quadratic_difficulty = random.randint(1, 3)
+    if log_difficulty is None:
+        log_difficulty = random.randint(1, 2)
+    if trig_difficulty is None:
+        trig_difficulty = random.randint(1, 2)
+    if exp_difficulty is None:
+        exp_difficulty = random.randint(1, 3)
+    if exclude is None:
+        exclude = []
 
     ''' linear_difficulty:
                 1: y = m * x (m != 0)
@@ -30,10 +43,9 @@ def random_function(linear_difficulty=random.randint(1, 2),
                 2: y = a * ln(b * x) + c, b < 0
 
         trig_difficulty: (we can use any of sin, cos or tan but we will use sin)
-                1: y = a * sin([pi * ]x)
-                2: y = a * sin([pi * ]x) + k
-                3: y = a * sin(h * [pi * ]x) + k
-                4: y = a * sin^2(h * [pi * ]x) + k
+                1: y = sin([pi * ]*q*x)
+                2: y = sin([pi * ]*q*x + k)
+
 
         exp_difficulty:
                 1: y = e^(k * x)
@@ -46,20 +58,25 @@ def random_function(linear_difficulty=random.randint(1, 2),
         if function not in exclude:
             break
 
+    if function == 'trig':
+        function = random.choice(['sin', 'cos', 'tan'])
+
     return {
         'linear': linear.Linear(linear_difficulty),
         'quadratic': quadratic.Quadratic(quadratic_difficulty),
         'log': log.Log(log_difficulty),
-        'trig': trig.Trig(trig_difficulty),
+        'sin': trig.Sin(trig_difficulty),
+        'cos': trig.Cos(trig_difficulty),
+        'tan': trig.Tan(trig_difficulty),
         'exp': exp.Exp(exp_difficulty)}[function]
 
 
 def random_function_type():
-    return random.sample([
+    return random.choice([
         sympy.sin, sympy.cos, sympy.tan,
         sympy.log,  # it's the natural log, ln
         sympy.exp,
-        sympy.sqrt], 1)[0]
+        sympy.sqrt])
 
 
 def inverse(function):  # requires future work as more things are included
@@ -137,18 +154,23 @@ def request_trig(difficulty=None):
 # for use when matching - e.g. say we have y = tan(2*x), we have to do y.match(a*tan(b) + c) - what if we don't know what the trig function is? 
 # that's what this function is for
 def detect_expr_type(expr):
-    if expr.has(sympy.cos):
-        return sympy.cos
-    elif expr.has(sympy.sin):
-        return sympy.sin
-    elif expr.has(sympy.tan):
-        return sympy.tan
-    elif expr.has(sympy.cot):
-        return sympy.cot
-    elif expr.has(sympy.sec):
-        return sympy.sec
-    elif expr.has(sympy.csc):
-        return sympy.csc
+    sympy_types = [sympy.cos, sympy.sin, sympy.tan, sympy.cot, sympy.sec, sympy.csc, sympy.log, sympy.exp]
+
+    found_types = 0
+    for sympy_type in sympy_types:
+        if expr.find(sympy_type):
+            found_types += 1
+
+    if found_types > 1:
+        raise ValueError('This expression has more than one type: {0}'.format(expr))
+
+    for sympy_type in sympy_types:
+        if expr.has(sympy_type):
+            return sympy_type
+    else:
+        if expr.is_polynomial():
+            return int(sympy.degree(expr))
+
 
 
 # takes an ordered list of x-values, and selects two values to return as a lower/upper bound pair
