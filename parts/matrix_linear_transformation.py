@@ -74,24 +74,31 @@ class MatrixLinearTransformation:
     def solution_statement(self):
         lines = solution_lines.Lines()
 
-        # e.g. T([x; y]) = [x - 2; y]        
-        lines += r'''$T({0}) = {1}$'''.format(
+        # e.g. T([x; y]) = [x - 2; y] = [x'; y]
+        x_, y_ = sympy.symbols("x' y'")     
+        lines += r'''$T({0}) = {1} = {2}$'''.format(
                     sympy.latex(sympy.Matrix([x, y])),
-                    sympy.latex(sympy.Matrix(self._qp['overall_transformation']))
+                    sympy.latex(sympy.Matrix(self._qp['overall_transformation'])),
+                    sympy.latex(sympy.Matrix([x_, y_]))
                 )
 
+        overall = transformations.overall_transformation(self._qp['transformation'])
+        reverse = transformations.reverse_mapping(overall)
+        lines += r'''${0} = {1}$'''.format(
+                    sympy.latex(sympy.Matrix([x, y])),
+                    sympy.latex(reverse.subs({x: x_, y: y_}))
+                )
+
+
         noevaled = noevals.noevalify(self._qp['equation'])
-        noevaled = noevaled.subs({x: self._qp['overall_transformation'][0]})
-
-
+        noevaled = noevaled.subs({x: reverse[0]})
         # e.g. \therefore y = tan(-x + 3*pi/4) transforms to y = -tan(x/2 - 2 + pi/4)
         lines += r'''$\therefore y = {0}$ transforms to ${1} = {2}$'''.format(
                     sympy.latex(self._qp['equation']),
-                    sympy.latex(self._qp['overall_transformation'][1]),
-                    sympy.latex(noevaled)
+                    sympy.latex(reverse[1].subs({y: y_})),
+                    sympy.latex(noevaled.subs({x: x_}))
                 )
 
-        transformed_equation = transformations.apply_transformations(self._qp['transformation'], self._qp['equation'])
 
         test = noevals.noevalify(self._qp['equation'])
         test = transformations.apply_transformations(self._qp['transformation'], test)
@@ -99,12 +106,13 @@ class MatrixLinearTransformation:
         if test.is_polynomial():
             test = test.expand()
         # e.g. = -tan(2x + pi/4 + 4)
-        lines += r'''$y = {0}$'''.format(
+        lines += r'''The transformed equation is $y = {0}$'''.format(
                     sympy.latex(test)
                 )
 
         a, b, c, d = sympy.symbols('a b c d')
         wildcard = self._qp['wildcard_equation'].subs({a: x0, b: x1, c: x2, d: x3})
+        transformed_equation = transformations.apply_transformations(self._qp['transformation'], self._qp['equation'])
         match = transformed_equation.match(wildcard)
         match = collections.OrderedDict(sorted(match.items()))
 

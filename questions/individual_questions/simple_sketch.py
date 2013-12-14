@@ -1,4 +1,4 @@
-from maths.latex import latex, questions
+from maths.latex import questions
 from maths.parts import (
                             simple_sketch
                         )
@@ -16,8 +16,8 @@ question.add_part(q)
 
 question.add_part()
 
-question.add_part(simple_sketch.PointTransformation(q), tree_location=1)
-question.add_part(simple_sketch.EquationTransformation(q), tree_location=1)
+question.add_part(simple_sketch.PointTransformation(q))
+question.add_part(simple_sketch.EquationTransformation(q))
 
 exam_questions.append(question)
 

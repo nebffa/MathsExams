@@ -88,7 +88,7 @@ class EquationTransformation:
         mapping_chain = transformations.show_mapping(self._qp['transformations'])
         mapping = transformations.overall_transformation(self._qp['transformations'])
         reversed_mapping = transformations.reverse_mapping(mapping)
-        answer = transformations.apply_transformations(reversed_mapping, self._qp['equation'])
+        answer = transformations.apply_transformations(self._qp['transformations'], self._qp['equation'])
 
         
         lines = solution_lines.Lines()

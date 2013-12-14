@@ -2,8 +2,6 @@ import sympy
 import random
 from sympy.abc import *
 from maths import not_named_yet
-import textwrap
-from maths.latex import latex
 
 
 def translation(lb=-5, ub=5, direction_of_change=None):
@@ -40,7 +38,8 @@ def dilation(ub=3, direction_of_change=None):
 
 
 def reflection(direction_of_change=None):
-    direction_of_change = random.choice(['x', 'y'])
+    if direction_of_change is None:
+        direction_of_change = random.choice(['x', 'y'])
 
     matrix = sympy.eye(2)
     if direction_of_change == 'x':
@@ -63,8 +62,8 @@ def overall_transformation(transformations):
             coords += transf
         return coords
 
-    if isinstance(transformations, sympy.Matrix):
-        return transformations
+    if isinstance(transformations, sympy.Matrix):    
+        raise ValueError("Can only pass in a list of transformations.")
     else:
         coords = sympy.Matrix([[x], [y]])
         for transf in transformations:
@@ -88,7 +87,11 @@ def apply_transformations(transformations, thing):
     ''' Transform a point or an expression according to a list of transformations.
     '''
 
-    transf = overall_transformation(transformations)
+    if isinstance(transformations, sympy.Matrix):    
+        raise ValueError("Can only pass in a list of transformations.")
+    else:
+        transf = overall_transformation(transformations)
+    transf = reverse_mapping(transf)
 
     if isinstance(thing, tuple):  # it's a set of coordinates
         return ( transf[0].subs({x: thing[0]}), transf[1].subs({y: thing[1]}) )
@@ -135,7 +138,6 @@ def _print_transformation(transformation):
                     axis=axis,
                     amount=sympy.latex(abs(amount))
                 )
-
 
 
 def print_transformations(transformations):

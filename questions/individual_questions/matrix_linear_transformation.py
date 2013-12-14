@@ -6,7 +6,6 @@ from maths.parts.tests import question_tester
 import subprocess
 
 
-
 exam_questions = []
 q = matrix_linear_transformation.MatrixLinearTransformation()
 exam_questions.append(questions.QuestionTree(q))
