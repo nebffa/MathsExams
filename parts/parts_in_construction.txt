@@ -17,7 +17,14 @@ e.g. solving 1/2 * cos(pi * a / 2) = -1/4 -- the answers are a = 4/3, 8/3, but w
         storing the lines in a Lines() object as it goes (I think?)
 
 
-also need to be able to print noevals. for example, noevalsin prints as "noevalsin" rather than "sin"
+noevals has a couple issues that NEED TO BE FIXED
+1. noevalsin prints as noevalsin, not sin
+2. noevalMul doesn't replace Mul at all in noevalify
+3. NoEvalLatexPrinter is a mess
+
+
+
+rewrite transformations to use matrices for transformations?
 
 
 sympy things to work on:

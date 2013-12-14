@@ -86,9 +86,9 @@ class EquationTransformation:
 
     def solution_statement(self):
         mapping_chain = transformations.show_mapping(self._qp['transformations'])
-        mapped_equation = transformations.apply_transformations(self._qp['transformations'], self._qp['equation'])
         mapping = transformations.overall_transformation(self._qp['transformations'])
         reversed_mapping = transformations.reverse_mapping(mapping)
+        answer = transformations.apply_transformations(reversed_mapping, self._qp['equation'])
 
         
         lines = solution_lines.Lines()
@@ -106,12 +106,10 @@ class EquationTransformation:
 
 
         lines += 'Now we apply the mapping to the equation:'
-        noevalmapped_equation = noevals.noevalsub(self._qp['equation'], {x: reversed_mapping[0]})
 
+        noevalmapped_equation = noevals.noevalsub(self._qp['equation'], {x: reversed_mapping[0]})
         lines += r'${0} = {1}$'.format(sympy.latex(reversed_mapping[1]), sympy.latex(noevalmapped_equation))
 
-        lines += r'$y = {0}$'.format(sympy.latex(mapped_equation.apart().subs({x: x_})))
-
-        lines += r'Hence our mapped equation is $y = {0}$.'.format(sympy.latex(mapped_equation.apart()))
+        lines += r'Hence our mapped equation is $y = {0}$.'.format(sympy.latex(answer.apart()))
 
         return lines.write()

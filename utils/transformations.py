@@ -6,65 +6,80 @@ import textwrap
 from maths.latex import latex
 
 
-def translation(lb=-5, ub=5, axis=None):
+def translation(lb=-5, ub=5, direction_of_change=None):
     amount = not_named_yet.randint(lb, ub, exclude=[0])
     
-    if axis is None:
-        axis = random.choice(['x', 'y'])
+    if direction_of_change is None:
+        direction_of_change = random.choice(['x', 'y'])
 
-    return [{'type': 'translation', 'axis': axis, 'amount': amount}]
+    matrix = sympy.zeros(2, 1)
+    if direction_of_change == 'x':
+        matrix[0] = amount
+    else:
+        matrix[1] = amount
+
+    return matrix
 
 
-def dilation(lb=-3, ub=3, axis=None):
-    amount = not_named_yet.randint(lb, ub, exclude=[-1, 0, 1])
+def dilation(ub=3, direction_of_change=None):
+    amount = not_named_yet.randint(2, ub)
 
     if random.choice([True, False]):
         amount = sympy.Rational(1, amount)
 
-    if axis is None:
-        axis = random.choice(['x', 'y'])
+    if direction_of_change is None:
+        direction_of_change = random.choice(['x', 'y'])
 
-    if amount < 0:
-        transfs = [{'type': 'dilation', 'axis': axis, 'amount': abs(amount)}, {'type': 'reflection', 'axis': axis}]
-        random.shuffle(transfs)
-        return transfs
+    matrix = sympy.eye(2)
+    if direction_of_change == 'x':
+        matrix[0] = amount
     else:
-        return [{'type': 'dilation', 'axis': axis, 'amount': amount}]
-    
+        matrix[3] = amount
+
+    return matrix
 
 
-def reflection(axis=None):
-    axis = random.choice(['x', 'y'])
-    return [{'type': 'reflection', 'axis': axis}]
+def reflection(direction_of_change=None):
+    direction_of_change = random.choice(['x', 'y'])
+
+    matrix = sympy.eye(2)
+    if direction_of_change == 'x':
+        matrix[0] = -1
+    else:
+        matrix[3] = -1
+
+    return matrix
 
 
 
 def overall_transformation(transformations):
     ''' Condense a list of transformations into one combined transformation.
     '''
-    coords = (x, y)
 
-    for transf in transformations:
-        coords = _reduce_transformation(transf, coords)
+    def apply(transf, coords):
+        if transf.shape == (2, 2):
+            coords = transf * coords
+        else:
+            coords += transf
+        return coords
+
+    if isinstance(transformations, sympy.Matrix):
+        return transformations
+    else:
+        coords = sympy.Matrix([[x], [y]])
+        for transf in transformations:
+            coords = apply(transf, coords)
 
     return coords
 
 
 def _reduce_transformation(transformation, coords):
-    coords = list(coords)
-    if transformation['axis'] == 'x':
-        tuple_index = 0
-    else:
-        tuple_index = 1
+    coords = sympy.Matrix(coords)
 
-    if transformation['type'] == 'translation':
-        coords[tuple_index] += transformation['amount']
-    elif transformation['type'] == 'dilation':
-        coords[tuple_index] *= transformation['amount']
-    elif transformation['type'] == 'reflection':
-        coords[tuple_index] *= -1
+    if transformation.shape == (2, 2):
+        coords = transformation * coords
     else:
-        raise KeyError('this transformation is not supported: {0}'.format(transformation['type']))
+        coords += transformation
 
     return tuple(coords)
 
@@ -78,41 +93,54 @@ def apply_transformations(transformations, thing):
     if isinstance(thing, tuple):  # it's a set of coordinates
         return ( transf[0].subs({x: thing[0]}), transf[1].subs({y: thing[1]}) )
     else:  # it's an expression
-        reversed_transf = reverse_mapping(transf)
-
         solve_friendly_expr = -y + thing
-        transformed = solve_friendly_expr.subs({x: reversed_transf[0], y: reversed_transf[1]})
+        transformed = solve_friendly_expr.subs({x: transf[0], y: transf[1]})
         return sympy.solve(transformed, y)[0]
 
 
 def _print_transformation(transformation):
-    if transformation['type'] == 'reflection':
-        if transformation['axis'] == 'x':
-            axis = 'y'
+    if transformation.shape == (2, 2):
+        # reflection
+        if transformation[0] == -1 or transformation[1] == -1:
+            if transformation[0] == -1:  # reflection in the y-axis
+                reflected_in_which_axis = 'y'
+            else:  # reflection in the x-axis
+                reflected_in_which_axis = 'x'
+
+            return r'reflection in the {0}-axis'.format(reflected_in_which_axis)
+
+        # dilation
         else:
+            if transformation[0] != 0:  # dilation from the y-axis
+                dilated_from_which_axis = 'y'
+                amount = transformation[0]
+            else:  # dilation from the x-axis
+                dilated_from_which_axis = 'x'
+                amount = transformation[3]
+
+
+            return r'dilation of factor ${0}$ from the {1}-axis'.format(sympy.latex(amount), dilated_from_which_axis)            
+
+    # translation
+    elif transformation.shape == (2, 1):
+        if transformation[0] != 0:  # translated along the x-axis
             axis = 'x'
-
-        return r'reflection in the {0}-axis'.format(axis)
-
-    elif transformation['type'] == 'dilation':
-        if transformation['axis'] == 'x':
+        else:  # translated along the y-axis
             axis = 'y'
-        else:
-            axis = 'x'
+        amount = sum(transformation)
+        direction = 'positive' if amount > 0 else 'negative'
 
-        return r'dilation of factor ${0}$ from the {1}-axis'.format(sympy.latex(transformation['amount']), axis)            
-
-    elif transformation['type'] == 'translation':
-        direction = 'positive' if (transformation['amount'] > 0) else 'negative'
-
-        return r'translation of ${0}$ in the {1} direction of the {2}-axis'.format(
-                    sympy.latex(abs(transformation['amount'])), direction, transformation['axis'])
+        return r'translation of ${amount}$ in the {direction} direction of the {axis}-axis'.format(
+                    direction=direction,
+                    axis=axis,
+                    amount=sympy.latex(abs(amount))
+                )
 
 
 
 def print_transformations(transformations):
     strings = map(_print_transformation, transformations)
-    return r''' under a ''' + ', followed by a '.join(strings)
+    return r' under a ' + ', followed by a '.join(strings)
 
 
 def show_mapping(transformations):
@@ -130,7 +158,6 @@ def show_mapping(transformations):
 
 
 def reverse_mapping(mapping):
-
     maps = []
     temp = sympy.Symbol('temp')
     for each in mapping:
@@ -139,15 +166,16 @@ def reverse_mapping(mapping):
         the_map = sympy.solve(each - temp, symbol_used)[0]
         maps.append(the_map.replace(temp, symbol_used))
 
-    return tuple(maps)
+
+    return sympy.Matrix(maps)
 
 
 
 def random_transformation(num_transformations):
     if num_transformations == 2:
         return random.choice([
-            translation() + dilation(),
-            dilation() + translation()
-        ])    
+            [translation(), dilation()],
+            [dilation(), translation()]
+        ])
     else:
         raise KeyError(r'Generation of this many (number = {0}) transformations is not supported'.format(num_transformations))
