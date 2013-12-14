@@ -67,7 +67,8 @@ class noevalAdd(sympy.Add):
 
 
 
-
+# the scope of neovals is limited for sure
+# in some situations it is not possible to replace sympy.Mul with noevalMul (e.g. x**2 + 5*x + 2, the 5*x stays as sympy.Mul even after calling noevalify())
 class noevalMul(sympy.Mul):
     @classmethod
     def flatten(cls, seq):
@@ -93,9 +94,6 @@ class noevalPow(sympy.Pow):
 
 
 class NoEvalLatexPrinter(LatexPrinter):
-    
-
-
     def _print_Mul(self, expr):
         coeff, _ = expr.as_coeff_Mul()
         
@@ -201,9 +199,7 @@ class NoEvalLatexPrinter(LatexPrinter):
 
 
 def latex(expr, **settings):
-    #ipdb.set_trace()
     return NoEvalLatexPrinter(settings).doprint(expr)
-
 
 
 def noevalmapping():
@@ -215,10 +211,9 @@ def noevalmapping():
         sympy.exp: noevalexp,
         sympy.log: noevallog,
         sympy.Add: noevalAdd,
-        sympy.Mul: noevalMul,
+        #sympy.Mul: noevalMul,  as long as noevalMul isn't working properly - we can't include it
         sympy.Pow: noevalPow
     }
-
 
 
 def noevalsub(expr, substitutions):
