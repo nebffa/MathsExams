@@ -30,7 +30,14 @@ def integral_intermediate_eval(lb, ub, expr, var=x):
     left = antideriv.subs({var: ub})
     right = antideriv.subs({var: lb})
 
-    if right.could_extract_minus_sign():
+    if isinstance(right, sympy.Add):  # an expression like (-1 + sqrt(3)/2).could_extract_minus_sign() returns False
+        right_leading_term = right.args[0]
+        if right_leading_term.could_extract_minus_sign():
+            return r'{0} - ({1})'.format(sympy.latex(left), sympy.latex(right))
+        else:
+            return r'{0} - {1}'.format(sympy.latex(left), sympy.latex(right))
+
+    elif right.could_extract_minus_sign():
         return r'{0} - ({1})'.format(sympy.latex(left), sympy.latex(right))
     else:
         return r'{0} - {1}'.format(sympy.latex(left), sympy.latex(right))
