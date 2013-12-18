@@ -45,6 +45,9 @@ class HiddenIntegrationByParts:
 
 class Derivative:
     def __init__(self, part):
+        # 2010 Q9a [3 lines] [1 mark]
+        # 2012 Q9b [4 lines] [1 mark]
+
         self.num_lines, self.num_marks = 3, 1
         self._qp = copy.copy(part._qp)
 
@@ -68,6 +71,8 @@ class Derivative:
 
 class Integration:
     def __init__(self, part):
+        # 2010 Q9b [10 lines] [3 marks]
+        # 2012 Q9b [15 lines] [3 marks]
         self.num_lines, self.num_marks = 12, 3
         self._qp = copy.copy(part._qp)
 
