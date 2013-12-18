@@ -2,10 +2,18 @@ import sympy
 import random
 from maths.symbols import *
 import math
+import itertools
 
 
 MAX_INPUT = 5
 MAX_OUTPUT = 30
+
+
+def integral_domain(expr, domain):
+    ''' Return a sensible domain to integrate a function over.
+    '''
+
+    return sorted(_delegate(expr, domain, num=2))
 
 
 def derivative(expr, domain):
@@ -25,7 +33,7 @@ def standard(expr, domain):
 
 
 def conditional_integral(expr, domain):
-    '''    Return two points within the domain (excluding the end-points) on which to perform a conditional integral from one side of the domain.
+    ''' Return two points within the domain (excluding the end-points) on which to perform a conditional integral from one side of the domain.
     '''
 
     modified_domain = sympy.Interval(domain.left, domain.right, True, True)
@@ -44,10 +52,10 @@ def _delegate(expr, domain, num=1):
             return _trig(expr, domain, num)
 
     if expr.find(sympy.log):
-        pass
+        return _log(expr, domain, num)
 
     if expr.find(sympy.exp):
-        pass
+        return _exp(expr, domain, num)
 
     return _polynomial(expr, domain, num)        
 
@@ -74,9 +82,7 @@ def looks_good(value):
 
 
 def _polynomial(expr, domain, num=1):
-
     points = set()
-
 
     for denom in range(1, MAX_INPUT + 1):
         for numerator in range(-MAX_INPUT, MAX_INPUT + 1):
@@ -84,7 +90,6 @@ def _polynomial(expr, domain, num=1):
 
             if frac not in points:
                 points.add(frac)
-
 
     good_choices = []
     for point in points:
@@ -100,13 +105,8 @@ def _polynomial(expr, domain, num=1):
 
     return random.sample(good_choices, num)
 
-
-
-
-
     
 def _trig(expr, domain, num=1):
-
     inner_function = [particle.func for particle in expr.atoms(sympy.Function)][0]
     function = list(expr.atoms(sympy.Function))[0].replace(inner_function(x0), x0)
 
@@ -132,8 +132,23 @@ def _trig(expr, domain, num=1):
 
 
 def _exp(expr, domain, num=1):
-    pass
+    exp_interior = expr.find(sympy.exp).pop().args[0]
+
+    return _polynomial(exp_interior, domain, num)    
 
 
 def _log(expr, domain, num=1):
-    pass
+    log_interior = expr.find(sympy.log).pop().args[0]
+
+    # for now, let's trial this range of powers of "e". 
+    # the main thing is - we can't just take a log and find all powers of "e" that can be found within a domain.
+    # e.g. find all powers of "e" within a domain of (0, 1) for log(x). There are infinite such powers 
+    # e^-1, e^-2, ..., e^-k, ...  all of which are between 0 and 1, so we must restrict this domain
+    viable_solutions = [sympy.E**i for i in range(-5, 6)]
+
+    solutions = [sympy.solve(log_interior - i) for i in viable_solutions]
+
+    # now flatten the solutions
+    solutions = list(itertools.chain(*solutions))
+
+    return random.sample(solutions, num)
