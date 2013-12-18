@@ -17,3 +17,20 @@ class Lines:
 
     def write(self):
         return latex.latex_newline().join(self.lines)
+
+
+
+# this construction can be used to make a multi-line equation with the equals signs aligned, e.g:
+# y = x
+#   = z
+#   = x**3 + 2
+# rather than:
+# y = x
+# = z
+# = x**3 + 2
+"""
+\begin{flalign*}
+x &= y &\\
+&= z &
+\end{flalign*}
+"""
