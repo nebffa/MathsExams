@@ -1,5 +1,5 @@
-from maths.latex import latex, questions
-from maths.parts import (
+from .latex import latex, questions
+from .parts import (
                             antiderivative,
                             definite_integral_equality,
                             piecewise,
@@ -13,7 +13,7 @@ from maths.parts import (
                         )
 
 
-with open('exam.tex', 'w') as f:
+with open('maths/questions/exam.tex', 'w') as f:
     latex.begin_tex_document(f)
 
     q = simple_inverse.SimpleInverse()

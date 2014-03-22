@@ -1,5 +1,5 @@
 import os
-from maths import maths_path
+from .. import maths_path
 
 
 def latex_newline():
