@@ -1,4 +1,4 @@
-from maths.logs_exps import log
+from maths.relations.logarithms import log
 from maths.symbols import *
 import sympy
 
