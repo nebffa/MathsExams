@@ -27,7 +27,7 @@ def enumerator(f):
 
 
 def packages(f):
-    fillwithlines_path = os.path.join(maths_path.maths_path(), 'questions', 'fillwithlines')
+    fillwithlines_path = os.path.join(maths_path.maths_path(), 'exams', 'fillwithlines')
     latex_friendly_path = fillwithlines_path.replace('\\', '/')
 
 

@@ -117,7 +117,7 @@ def _save_plot():
     uid = uuid.uuid1()
 
 
-    plot_path = os.path.join(maths_path.maths_path(), 'questions', 'figures', str(uid) + '.eps')
+    plot_path = os.path.join(maths_path.maths_path(), 'exams', 'figures', str(uid) + '.eps')
     plt.savefig(plot_path)
 
     return plot_path

@@ -5,8 +5,8 @@ import textwrap
 def create_tests():
 
     maths_path = os.path.split(os.getcwd())[0]
-    parts_path = os.path.join(maths_path, 'maths', 'parts')
-    tests_path = os.path.join(maths_path, 'maths', 'parts', 'tests')
+    parts_path = os.path.join(maths_path, 'maths', 'questions')
+    tests_path = os.path.join(maths_path, 'maths', 'questions', 'tests')
 
 
     irrelevant_tests_files = ['__init__.py', 'question_tester.py']
@@ -29,8 +29,8 @@ def create_tests():
         full_path = os.path.join(tests_path, test_filename)
         with open(full_path, 'w') as f:
             test_content = textwrap.dedent('''\
-                                from maths.parts import {0}
-                                from maths.latex.questions import QuestionTree
+                                from maths.questions import {0}
+                                from maths.latex.exams import QuestionTree
                                 from .question_tester import question_tester
 
 
