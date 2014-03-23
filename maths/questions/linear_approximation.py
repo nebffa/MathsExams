@@ -13,8 +13,10 @@ class LinearApproximation:
         self.num_lines, self.num_marks = 7, 4
 
         self._qp = {}
+        self._qi = {}
 
         self._qp['equation'] = random.choice([x**sympy.Rational(1, random.randint(2, 3)), x**random.randint(2, 3)])
+        self._qi['noeval_equation'] = self._qp['equation'].replace(sympy.Pow, noevals.noevalPow)
 
         
         if isinstance(self._qp['equation'], sympy.Pow):
@@ -30,8 +32,6 @@ class LinearApproximation:
 
 
     def question_statement(self):
-        self._qi = {}
-        self._qi['noeval_equation'] = self._qp['equation'].replace(sympy.Pow, noevals.noevalPow)
 
         return r'''Use the relationship $f(x + h) \approx f(x) + h f'(x)$ for a small positive value of h, 
                     to find an approximate value for ${0}$.'''.format( 

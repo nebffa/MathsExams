@@ -28,8 +28,6 @@ class ProbTableKnown(object):
         self.prob_table = OrderedDict(list(zip(options, partition)))
         self.first_name = first_names.random_first_name()
 
-    def question_statement(self):        
-
         question_contexts = {
                 'green traffic lights': '''When {0} drives to work each morning they pass a number of intersections with traffic lights. The number X of 
                             traffic lights that are green when {0} is driving to work is a random variable with probability distribution given by''',
@@ -39,10 +37,13 @@ class ProbTableKnown(object):
                             that are included with the hot chocolate is a random variable with probability distribution given by'''}
 
         self.question_context = random.choice(list(question_contexts.keys()))
-        text = question_contexts[self.question_context].format(self.first_name)
-        table = probability_table(self.prob_table)
 
-        return text + table
+        self._qi = {}
+        self._qi['text'] = question_contexts[self.question_context].format(self.first_name)
+        self._qi['table'] = probability_table(self.prob_table)
+
+    def question_statement(self):        
+        return self._qi['text'] + r'\\' + self._qi['table'] + r'\\'
 
     def solution_statement(self):
         return ''
