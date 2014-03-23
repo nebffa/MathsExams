@@ -24,6 +24,11 @@ bin
 include
 
 
+# pip dirs
+build
+man
+
+
 # sublime-text files
 maths.sublime-workspace
 
