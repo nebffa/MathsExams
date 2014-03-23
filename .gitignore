@@ -30,3 +30,5 @@ maths.sublime-workspace
 
 # particular python files
 questions/question.py
+
+.idea/

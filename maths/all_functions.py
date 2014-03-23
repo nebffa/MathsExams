@@ -1,8 +1,7 @@
+from maths.relations.polynomials import absolute_value, quadratic, linear, hyperbola
+from maths.relations.trigonometry import trig
 import random
-import sympy
-from maths.polynomials import linear, quadratic, absolute_value, hyperbola
 from maths.logs_exps import log, exp
-from maths.trig import trig
 from maths.symbols import *
 
 

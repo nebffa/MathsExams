@@ -1,7 +1,6 @@
-import sympy
 from maths.symbols import *
 from maths import not_named_yet
-from maths.polynomials.linear import request_linear
+from maths.relations.polynomials.linear import request_linear
 
 
 class AbsoluteValue(object):

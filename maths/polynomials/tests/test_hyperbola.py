@@ -1,4 +1,4 @@
-from maths.polynomials import hyperbola
+from maths.relations.polynomials import hyperbola
 from maths.symbols import *
 
 

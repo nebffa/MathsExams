@@ -1,8 +1,7 @@
-import sympy
+from maths.relations.trigonometry import trig
 import random
 from maths.symbols import *
 from maths import all_functions, sets
-from maths.trig import trig
 from maths.utils import functions
 
 

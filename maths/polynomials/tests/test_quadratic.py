@@ -1,6 +1,8 @@
-from maths.polynomials import quadratic
-from maths.symbols import *
 import gmpy
+
+from maths.relations.polynomials import quadratic
+
+from maths.symbols import *
 
 
 def test_difficulty_one():

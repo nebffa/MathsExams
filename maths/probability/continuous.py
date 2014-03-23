@@ -1,5 +1,5 @@
+from maths.relations.trigonometry import trig
 import sympy
-from maths.trig import trig
 import random
 
 class cdf(object):

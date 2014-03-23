@@ -1,4 +1,4 @@
-from maths.trig import trig
+from maths.relations.trigonometry import trig
 from maths.symbols import *
 import sympy
 

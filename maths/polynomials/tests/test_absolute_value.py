@@ -1,4 +1,4 @@
-from maths.polynomials import absolute_value
+from maths.relations.polynomials import absolute_value
 from maths.symbols import *
 from sympy import Abs
 

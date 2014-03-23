@@ -1,4 +1,4 @@
-from maths.polynomials import quadratic
+from maths.relations.polynomials import quadratic
 import sympy
 
 

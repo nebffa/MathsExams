@@ -1,6 +1,6 @@
+from maths.relations.polynomials import linear
 import sympy
 import random
-from maths.polynomials import linear
 from maths import all_functions
 
 

@@ -1,4 +1,4 @@
-from maths.polynomials import linear
+from maths.relations.polynomials import linear
 from maths.symbols import *
 
 

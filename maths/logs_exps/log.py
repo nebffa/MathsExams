@@ -1,6 +1,5 @@
-import sympy
 from maths import not_named_yet
-from maths.polynomials.linear import request_linear
+from maths.relations.polynomials.linear import request_linear
 from maths.utils import functions
 from maths.symbols import *
 
