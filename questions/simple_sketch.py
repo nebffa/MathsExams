@@ -1,11 +1,11 @@
 import sympy
 from sympy.abc import *
-from maths.rich_requests import requests
-from maths.plot import plot
-from maths.utils import transformations, noevals
+from ..rich_requests import requests
+from ..plot import plot
+from ..utils import transformations, noevals
 import random
 import copy
-from maths.latex import latex, solution_lines
+from ..latex import latex, solution_lines
 
 
 class SimpleSketch:

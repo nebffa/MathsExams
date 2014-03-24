@@ -1,9 +1,9 @@
 import sympy
 import random
-from maths import domains
-from maths.symbols import *
-from maths.latex import expressions, latex, solution_lines
-from maths.utils import sensible_values
+from . import domains
+from ..symbols import *
+from ..latex import expressions, latex, solution_lines
+from ..utils import sensible_values
 import copy
 import math
 

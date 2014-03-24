@@ -1,9 +1,9 @@
 import sympy
 import random
 from sympy.abc import *
-from maths.plot import plot
-from maths import all_functions, not_named_yet
-from maths.utils import functions
+from ..plot import plot
+from .. import all_functions, not_named_yet
+from ..utils import functions
 import copy
 
 

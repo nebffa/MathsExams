@@ -4,9 +4,9 @@ import decimal
 import itertools
 import functools
 import operator
-from maths.symbols import *
-from maths.phrasing import days, first_names
-from maths.latex import latex
+from ..symbols import *
+from ..phrasing import days, first_names
+from ..latex import latex
 
 
 class MarkovChainBinomial:

@@ -1,10 +1,10 @@
 import sympy
 import random
 from sympy.abc import *
-from maths.rich_requests import requests
-from maths.plot import plot
-from maths.utils import functions
-from maths.symbols import *
+from ..rich_requests import requests
+from ..plot import plot
+from ..utils import functions
+from ..symbols import *
 
 
 class Piecewise:

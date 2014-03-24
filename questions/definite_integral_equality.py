@@ -1,9 +1,9 @@
 import sympy
 import random
-from maths.symbols import *
-from maths import all_functions
-from maths.latex import latex, expressions, solution_lines
-from maths.utils import noevals
+from ..symbols import *
+from .. import all_functions
+from ..latex import latex, expressions, solution_lines
+from ..utils import noevals
 
 
 class DefiniteIntegralEquality(object):

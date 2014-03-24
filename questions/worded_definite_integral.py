@@ -1,9 +1,9 @@
 import sympy
 import random
-from maths import all_functions, not_named_yet
-from maths.symbols import *
-from maths.utils import functions
-from maths.latex import expressions, latex, solution_lines
+from .. import all_functions, not_named_yet
+from ..symbols import *
+from ..utils import functions
+from ..latex import expressions, latex, solution_lines
 
 
 class WordedDefiniteIntegral(object):

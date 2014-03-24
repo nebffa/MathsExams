@@ -1,9 +1,9 @@
 import sympy
 import random
-from maths import all_functions, not_named_yet
-from maths.symbols import *
-from maths.latex import solution_lines
-from maths.utils import transformations, noevals
+from . import all_functions, not_named_yet
+from ..symbols import *
+from ..latex import solution_lines
+from ..utils import transformations, noevals
 import collections
 
 

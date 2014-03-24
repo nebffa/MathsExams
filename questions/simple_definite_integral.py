@@ -1,8 +1,8 @@
 import sympy
 import random
 from sympy.abc import *
-from maths import all_functions, solutions_printing, not_named_yet
-from maths.latex import expressions, latex, solution_lines
+from .. import all_functions, solutions_printing, not_named_yet
+from ..latex import expressions, latex, solution_lines
 
 
 class SimpleDefiniteIntegral(object):

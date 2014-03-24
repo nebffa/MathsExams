@@ -1,8 +1,8 @@
 import sympy
 import random
-from maths.symbols import *
-from maths.latex import solution_lines, expressions
-from maths.utils import sensible_values
+from ..symbols import *
+from ..latex import solution_lines, expressions
+from ..utils import sensible_values
 import copy
 
 

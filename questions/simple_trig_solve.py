@@ -1,8 +1,8 @@
-from maths.relations.trigonometry import trig
+from ..relations.trigonometry import trig
 import random
-from maths.symbols import *
-from maths import all_functions, sets
-from maths.utils import functions
+from ..symbols import *
+from .. import all_functions, sets
+from ..utils import functions
 
 
 class SimpleTrigSolve(object):

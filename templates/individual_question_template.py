@@ -1,8 +1,8 @@
-from maths.latex import questions
-from maths.parts import (
+from ..latex import questions
+from ..parts import (
                             
                         )
-from maths.parts.tests import question_tester
+from ..questions.tests import question_tester
 import subprocess
 
 

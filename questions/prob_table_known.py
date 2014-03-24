@@ -2,11 +2,11 @@ import random
 import sympy
 from sympy import GreaterThan, LessThan, StrictGreaterThan, StrictLessThan
 from sympy.abc import *
-from maths import not_named_yet
-from maths.phrasing import first_names
-from maths.latex import latex, expressions
-from maths.latex.table import probability_table
-from maths.probability.discrete import prob_table
+from .. import not_named_yet
+from ..phrasing import first_names
+from ..latex import latex, expressions
+from ..latex.table import probability_table
+from ..probability.discrete import prob_table
 import operator
 from collections import OrderedDict
 from functools import reduce

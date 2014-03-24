@@ -1,9 +1,9 @@
 import sympy
 import random
-from maths import all_functions, not_named_yet
-from maths.latex import latex, solution_lines
-from maths.utils import noevals
-from maths.symbols import *
+from .. import all_functions, not_named_yet
+from ..latex import latex, solution_lines
+from ..utils import noevals
+from ..symbols import *
 
 
 # always produces Q1a

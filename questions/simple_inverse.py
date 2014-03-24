@@ -1,8 +1,8 @@
 import sympy
 import random
-from maths import all_functions, not_named_yet, simplify
-from maths.latex import latex
-from maths.symbols import *
+from .. import all_functions, not_named_yet, simplify
+from ..latex import latex
+from ..symbols import *
 
 
 class SimpleInverse(object):

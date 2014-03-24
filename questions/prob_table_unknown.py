@@ -1,9 +1,9 @@
 import random
 import sympy
-from maths.latex.table import probability_table
-from maths.latex import expressions, latex
-from maths import not_named_yet
-from maths.symbols import *
+from ..latex.table import probability_table
+from ..latex import expressions, latex
+from .. import not_named_yet
+from ..symbols import *
 from collections import OrderedDict
 
 

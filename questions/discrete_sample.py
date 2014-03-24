@@ -1,9 +1,9 @@
 import sympy
 import random
 from sympy.abc import *
-from maths import all_functions, not_named_yet
-from maths.latex import solution_lines, expressions
-from maths.phrasing import item_position
+from . import all_functions, not_named_yet
+from ..latex import solution_lines, expressions
+from ..phrasing import item_position
 import copy
 import functools
 import operator

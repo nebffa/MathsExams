@@ -1,9 +1,9 @@
 import sympy
 import random
 from sympy.abc import *
-from maths import not_named_yet
-from maths.latex import solution_lines
-from maths.utils import noevals, functions
+from . import not_named_yet
+from ..latex import solution_lines
+from ..utils import noevals, functions
 import copy
 import decimal
 
