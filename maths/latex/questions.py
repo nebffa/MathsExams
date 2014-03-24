@@ -94,3 +94,9 @@ class QuestionTree(object):
 
     def write_solution(self, f):
         f.write(self.root.new_solution_traversal_to_latex(self.root, depth=0))
+
+    def question_latex(self):
+        return self.root.new_question_traversal_to_latex(self.root, depth=0)
+
+    def solution_latex(self):
+        return self.root.new_solution_traversal_to_latex(self.root, depth=0)
