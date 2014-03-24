@@ -1,9 +1,9 @@
-from maths.relations.polynomials import absolute_value, quadratic, linear, hyperbola
-from maths.relations.trigonometry import trig
-from maths.relations.logarithms import log
-from maths.relations.exponentials import exp
+from .relations.polynomials import absolute_value, quadratic, linear, hyperbola
+from .relations.trigonometry import trig
+from .relations.logarithms import log
+from .relations.exponentials import exp
+from .symbols import *
 import random
-from maths.symbols import *
 
 
 def random_function(linear_difficulty=None,

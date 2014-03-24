@@ -1,7 +1,6 @@
-import sympy
-from maths.symbols import *
-from maths.latex import latex, solution_lines
-from maths.utils import functions
+from ..symbols import *
+from . import latex, solution_lines
+from ..utils import functions
 
 
 def integral(lb, ub, expr, var=x):

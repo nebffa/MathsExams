@@ -1,7 +1,7 @@
 import sympy
 import numpy
-from maths.symbols import *
-from maths import maths_path
+from ..symbols import *
+from .. import maths_path
 
 from matplotlib.transforms import BlendedGenericTransform
 from mpl_toolkits.axes_grid.axislines import SubplotZero

@@ -1,8 +1,8 @@
 import sympy
 import random
+from .. import all_functions, not_named_yet
+from ..latex import latex
 from sympy.abc import *
-from maths import all_functions, not_named_yet
-from maths.latex import latex
 
 
 class Antiderivative:

@@ -1,6 +1,6 @@
 import random
-from maths.symbols import *
-from maths import all_functions
+from ..symbols import *
+from .. import all_functions
 import copy
 
 

@@ -1,4 +1,4 @@
-from maths.rich_requests import parsers, functions
+from . import parsers, functions
 
 
 def absolute_value(**kwargs):

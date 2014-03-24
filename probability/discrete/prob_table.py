@@ -1,4 +1,3 @@
-import sympy
 import random
 import itertools
 import operator

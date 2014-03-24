@@ -1,6 +1,6 @@
-from maths.symbols import *
-from maths import not_named_yet
-from maths.relations.polynomials.linear import request_linear
+from ...symbols import *
+from ... import not_named_yet
+from ...relations.polynomials.linear import request_linear
 
 
 class AbsoluteValue(object):

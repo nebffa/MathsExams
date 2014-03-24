@@ -1,8 +1,6 @@
 import random
-from sympy.abc import *
 import sympy
-import functools
-import operator
+from sympy.abc import *
 
 
 def randint_no_zero(low, high):

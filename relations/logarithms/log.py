@@ -1,7 +1,7 @@
-from maths import not_named_yet
-from maths.relations.polynomials.linear import request_linear
-from maths.utils import functions
-from maths.symbols import *
+from ... import not_named_yet
+from ...relations.polynomials.linear import request_linear
+from ...utils import functions
+from ...symbols import *
 
 
 coefficients_bound = 5

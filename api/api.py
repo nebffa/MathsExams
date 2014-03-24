@@ -1,5 +1,5 @@
-from maths.questions import antiderivative
-from maths.latex import latex, questions
+from ..questions import antiderivative
+from ..latex import latex, questions
 
 
 

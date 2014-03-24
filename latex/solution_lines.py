@@ -1,4 +1,4 @@
-from maths.latex import latex
+from . import latex
 
 
 class Lines:

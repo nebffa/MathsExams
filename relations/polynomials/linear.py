@@ -1,7 +1,7 @@
 import random
 import sympy
-from maths.symbols import *
-from maths import not_named_yet
+from ...symbols import *
+from ... import not_named_yet
 
 coefficients_bound = 5
 

@@ -1,4 +1,4 @@
-from maths.relations.trigonometry import trig
+from ...relations.trigonometry import trig
 import sympy
 import random
 

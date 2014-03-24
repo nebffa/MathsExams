@@ -1,7 +1,7 @@
 import sympy
 import random
 from sympy.abc import *
-from maths import not_named_yet
+from .. import not_named_yet
 
 
 def translation(lb=-5, ub=5, direction_of_change=None):

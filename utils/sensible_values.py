@@ -1,6 +1,6 @@
 import sympy
 import random
-from maths.symbols import *
+from ..symbols import *
 import math
 import itertools
 

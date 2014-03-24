@@ -1,4 +1,3 @@
-import sympy
 
 
 def easy_sub(func, value):

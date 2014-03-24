@@ -2,7 +2,7 @@ import sympy
 from sympy import oo
 import functools
 import operator
-from maths.symbols import *
+from ..symbols import *
 
 
 def is_monotone_increasing(equation, domain=None):

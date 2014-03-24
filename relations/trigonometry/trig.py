@@ -4,8 +4,8 @@ import copy
 import operator
 import itertools
 import math
-from maths import not_named_yet
-from maths.symbols import *
+from ... import not_named_yet
+from ...symbols import *
 from functools import reduce
 
 coefficients_bound = 5
