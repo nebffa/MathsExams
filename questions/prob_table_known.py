@@ -7,12 +7,14 @@ from ..phrasing import first_names
 from ..latex import latex, expressions
 from ..latex.table import probability_table
 from ..probability.discrete import prob_table
+from . import relationships
 import operator
 from collections import OrderedDict
 from functools import reduce
 
 
-class ProbTableKnown(object):
+@relationships.root
+class ProbTableKnown(relationships.QuestionPart):
     def __init__(self):
         self.num_lines = 0
         self.num_marks = 0
@@ -49,7 +51,8 @@ class ProbTableKnown(object):
         return ''
 
 
-class Property(object):
+@relationships.is_child_of(ProbTableKnown)
+class Property(relationships.QuestionPart):
     def __init__(self, part):
         assert isinstance(part, ProbTableKnown)
         
@@ -108,7 +111,8 @@ class Property(object):
         return latex.latex_newline().join(lines)
 
 
-class Multinomial(object):
+@relationships.is_child_of(ProbTableKnown)
+class Multinomial(relationships.QuestionPart):
     def __init__(self, part):
         assert isinstance(part, ProbTableKnown)
 
@@ -158,7 +162,8 @@ class Multinomial(object):
             return latex.latex_newline().join([line_1, line_2])
 
 
-class Conditional(object):
+@relationships.is_child_of(ProbTableKnown)
+class Conditional(relationships.QuestionPart):
     def __init__(self, part):
         assert isinstance(part, ProbTableKnown)
 
@@ -208,7 +213,8 @@ class Conditional(object):
         return latex.latex_newline().join([line_1, line_2])
 
 
-class Cumulative(object):
+@relationships.is_child_of(ProbTableKnown)
+class Cumulative(relationships.QuestionPart):
     def __init__(self, part):
         assert isinstance(part, ProbTableKnown)
 

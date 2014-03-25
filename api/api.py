@@ -1,4 +1,4 @@
-from ..questions import antiderivative
+from ..questions import relationships, prob_table_known
 from ..latex import latex, questions
 
 
@@ -9,6 +9,10 @@ def question():
 
     """
 
-    q = questions.QuestionTree(antiderivative.Antiderivative())
 
-    return q.question_latex()
+
+    tree = relationships.parse_structure(prob_table_known)
+
+
+    return tree.show_question()
+
