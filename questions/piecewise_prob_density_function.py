@@ -1,6 +1,6 @@
 import sympy
 import random
-from . import domains
+from .. import domains
 from ..symbols import *
 from ..latex import expressions, latex, solution_lines
 from ..utils import sensible_values

@@ -1,7 +1,7 @@
 import sympy
 import random
 from sympy.abc import *
-from . import all_functions, not_named_yet
+from .. import all_functions, not_named_yet
 from ..latex import solution_lines, expressions
 from ..utils import functions
 import copy
