@@ -111,24 +111,6 @@ class Tangent(relationships.QuestionPart):
 
 
     @classmethod
-    def storage_paths(cls):
-        """Return the paths that are involved in storing this class' questions.
-        """
-        questions_folder, module_name = os.path.split(__file__)
-
-        indices_folder = os.path.join(questions_folder, 'storage', 'indices')
-        indices_name = '{module_name}_indices'.format(module_name=module_name)
-        indices_path = os.path.join(indices_folder, indices_name)
-
-        data_folder = os.path.join(questions_folder, 'storage', 'data')
-        data_name = '{module_name}_{class_name}'.format(module_name=module_name, class_name=cls.__name__)
-        data_path = os.path.join(data_folder, data_name)
-
-        return indices_path, data_path
-
-
-
-    @classmethod
     def enumerate_questions(cls):
         """Generate all possible question numbers that have student-friendly
         values.

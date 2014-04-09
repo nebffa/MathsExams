@@ -11,6 +11,24 @@ class QuestionPart:
     parent = None
 
 
+    @classmethod
+    def storage_paths(cls):
+        """Return the paths that are involved in storing this class' questions.
+        """
+        class_path = inspect.getfile(cls)
+        questions_folder, module_name = os.path.split(class_path)
+
+        indices_folder = os.path.join(questions_folder, 'storage', 'indices')
+        indices_name = '{module_name}_indices'.format(module_name=module_name)
+        indices_path = os.path.join(indices_folder, indices_name)
+
+        data_folder = os.path.join(questions_folder, 'storage', 'data')
+        data_name = '{module_name}_{class_name}'.format(module_name=module_name, class_name=cls.__name__)
+        data_path = os.path.join(data_folder, data_name)
+
+        return indices_path, data_path
+
+
 def root(cls):
     """A class decorator to specify a question root.
 
