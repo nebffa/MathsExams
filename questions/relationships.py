@@ -30,6 +30,29 @@ class QuestionPart:
 
 
     @classmethod
+    def store_question(cls):
+        """Store all possible question numbers that have student-friendly values.
+        """
+        indices_path, data_path = cls.storage_paths()
+
+        byte_indices = [0]
+        with open(data_path, 'wb') as f:
+            for question in cls.enumerate_questions():
+                pickle.dump(question, f)
+                byte_indices.append(f.tell())
+
+        if os.path.exists(indices_path):
+            with open(indices_path, 'rb') as f:
+                cur_indices = pickle.load(f)
+        else:
+            cur_indices = {}
+
+        cur_indices[cls.__name__] = byte_indices
+        with open(indices_path, 'wb') as f:
+            pickle.dump(cur_indices, f)
+
+
+    @classmethod
     def scan_random_question(cls):
         """Return a random set of valid coefficients for this question.
         """

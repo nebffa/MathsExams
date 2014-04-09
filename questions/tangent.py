@@ -112,35 +112,14 @@ class Tangent(relationships.QuestionPart):
 
     @classmethod
     def enumerate_questions(cls):
-        """Generate all possible question numbers that have student-friendly
-        values.
+        """Generate all possible question numbers that have student-friendly values.
         """
 
-        indices_path, data_path = cls.storage_paths()
-
-
-
-        byte_indices = [0]
-
-        with open(data_path, 'wb') as f:
-            for curve in enumerate_curves():
-                for tangent in enumerate_tangents(curve):
-                    point_of_tangency = (enumerate_tangents.current_x, tangent.subs({x: enumerate_tangents.current_x}))
-                    if is_reasonable_point(point_of_tangency) and is_reasonable_tangent(tangent):
-
-                        pickle.dump({'tangent': tangent, 'curve': curve}, f)
-                        byte_indices.append(f.tell())
-
-
-        if os.path.exists(indices_path):
-            with open(indices_path, 'rb') as f:
-                cur_indices = pickle.load(f)
-        else:
-            cur_indices = {}
-
-        cur_indices[cls.__name__] = byte_indices
-        with open(indices_path, 'wb') as f:
-            pickle.dump(cur_indices, f)
+        for curve in enumerate_curves():
+            for tangent in enumerate_tangents(curve):
+                point_of_tangency = (enumerate_tangents.current_x, tangent.subs({x: enumerate_tangents.current_x}))
+                if is_reasonable_point(point_of_tangency) and is_reasonable_tangent(tangent):
+                    yield {'tangent': tangent, 'curve': curve}
 
 
     def __init__(self):
