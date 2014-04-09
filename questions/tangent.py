@@ -144,8 +144,3 @@ class Tangent(relationships.QuestionPart):
 
 
         return lines.write()
-
-
-Tangent.enumerate_questions()
-#y = Tangent.scan_random_question()
-#print(y)
