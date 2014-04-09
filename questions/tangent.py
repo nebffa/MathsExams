@@ -143,28 +143,6 @@ class Tangent(relationships.QuestionPart):
             pickle.dump(cur_indices, f)
 
 
-    @classmethod
-    def scan_random_question(cls):
-        """Return a random set of valid coefficients for this question.
-        """
-
-        indices_path, data_path = cls.storage_paths()
-
-        with open(indices_path, 'rb') as f:
-            all_indices = pickle.load(f)
-            byte_indices = all_indices[cls.__name__]
-
-        with open(data_path, 'rb') as f:
-            question_number = random.randint(0, len(byte_indices) - 1)
-            first_byte = byte_indices[question_number]
-            last_byte = byte_indices[question_number + 1]
-
-            f.seek(first_byte)
-            pickled_question = f.read(last_byte - first_byte)
-
-        return pickle.loads(pickled_question)
-
-
     def __init__(self):
         self.num_lines, self.num_marks = -1, -1
         self._qp = Tangent.scan_random_question()
