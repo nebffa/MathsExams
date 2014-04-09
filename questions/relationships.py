@@ -1,9 +1,11 @@
 import inspect
+import os
+import pickle
+import random
 
 
 class QuestionPart:
     """Base class for all question parts.
-
     """
     is_root = False
     parent = None
