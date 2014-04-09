@@ -37,3 +37,7 @@ maths.sublime-workspace
 questions/question.py
 
 .idea/
+
+
+# question storage
+questions/storage
