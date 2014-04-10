@@ -13,14 +13,11 @@ class DummyPart:
     def __init__(self):
         self.num_lines, self.num_marks = 0, 0
 
-
     def question_statement(self):
         return ''
 
-
     def solution_statement(self):
         return ''
-
 
     def sanity_check(self):
         pass
@@ -31,7 +28,6 @@ class QuestionPart:
     """
     is_root = False
     parent = None
-
 
     @classmethod
     def storage_paths(cls):
@@ -49,7 +45,6 @@ class QuestionPart:
         data_path = os.path.join(data_folder, data_name)
 
         return indices_path, data_path
-
 
     @classmethod
     def store_question(cls):
@@ -72,7 +67,6 @@ class QuestionPart:
         cur_indices[cls.__name__] = byte_indices
         with open(indices_path, 'wb') as f:
             pickle.dump(cur_indices, f)
-
 
     @classmethod
     def scan_random_question(cls):
@@ -97,7 +91,6 @@ class QuestionPart:
 
 def root(cls):
     """A class decorator to specify a question root.
-
     """
 
     cls.is_root = True
@@ -106,7 +99,6 @@ def root(cls):
 
 def is_child_of(parent):
     """A class decorator to specify a part's parent.
-
     """
 
     def decorator(cls):
@@ -121,6 +113,10 @@ class PartTree:
         self.children = []  # PartTrees of all the subparts
 
     def _find_parent(self, cls):
+        """A helper function for "add_subpart".
+
+        Given the existing question tree, find out where to insert a new part.
+        """
         if cls.parent == self.cls:  # the current node is the parent
             return self
         else:  # check if any of the current node's children is the parent
@@ -131,12 +127,16 @@ class PartTree:
         raise RuntimeError('The class: {0} could not be located in the tree'.format(cls.__name__))
 
     def add_subpart(self, cls):
+        """Add a new class to the tree.
+        """
         child = PartTree(cls)
         parent = self._find_parent(cls)
         parent.children.append(child)
 
-
     def _instantiate_tree(self, depth=0, parent=None):
+        """Traverse the tree and instantiates an object of each class,
+        creating a question for the student to do.
+        """
         if depth == 0:
             self.object = self.cls()
         else:
@@ -145,9 +145,9 @@ class PartTree:
         for child in self.children:
             child._instantiate_tree(depth + 1, self.object)
 
-
-    # does use the enumitem package, few hbox errors
-    def _traversal_to_latex(self, depth=0):
+    def _traversal_to_latex(self, depth=0):  # uses the enumitem package which gives us some hbox errors
+        """Traverse the tree, returning the latex for each instantiated object.
+        """
         total_string = ''
 
         if self.object.question_statement() and depth == 0:
@@ -158,21 +158,25 @@ class PartTree:
             total_string += r'$ $'
 
         if self.children:
-            total_string += ''.join(
-                        i._traversal_to_latex(depth + 1) for i in self.children)
+            total_string += ''.join(i._traversal_to_latex(depth + 1) for i in self.children)
 
         return total_string
 
-
     def show_question(self):
+        """Return a question's latex (assuming the question tree has already been populated).
+        """
         self._instantiate_tree()
         return self._traversal_to_latex()
 
 
 def parse_structure(module):
+    """Parse the question structure based on the relationships of classes in a module.
+
+    Will be evolved over time!!!
+    """
     classes = []
 
-    for name, obj in inspect.getmembers(module):
+    for _, obj in inspect.getmembers(module):
         if inspect.isclass(obj) and issubclass(obj, QuestionPart):  # get all the question parts
             classes.append(obj)
 
@@ -183,6 +187,8 @@ def parse_structure(module):
     root_part = roots[0]
 
     def invalid_part(cls):
+        """Returns false for any class that neither is the question root nor has a parent.
+        """
         if not cls.is_root and cls.parent is None:
             return True
         else:
