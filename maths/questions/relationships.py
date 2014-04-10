@@ -5,14 +5,22 @@ import random
 
 
 class DummyPart:
+    """A dummy question part for when a question should be structured like so:
+        1. (no question text)
+            a. some question
+            b. some other related question
+    """
     def __init__(self):
         self.num_lines, self.num_marks = 0, 0
+
 
     def question_statement(self):
         return ''
 
+
     def solution_statement(self):
         return ''
+
 
     def sanity_check(self):
         pass
