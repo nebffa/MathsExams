@@ -2,7 +2,7 @@
     "folders":
     [
         {
-            "path": "/home/ben/Desktop/maths",
+            "path": "/home/ben/.virtualenvs/maths",
             "folder_exclude_patterns": ["bin", "lib", "include"],
             "file_exclude_patterns": ["__init__.py", "*.pickle"]
         }
@@ -21,7 +21,13 @@
         "env": {"PYTHONPATH":"/home/ben/Desktop"},
         
         "cmd": ["$project_path/bin/python3.3", "-u", "$file"]
+    },
+
+    {
+        "name": "MathsQuestion",
+        "cmd": ["$project_path/bin/python", "$project_path/sublime_run_as_script.py", "$file", "$project_path"]
     }
+
     ]
 
 
