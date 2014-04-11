@@ -1,7 +1,5 @@
 from ...latex import questions
-from ...questions import (
-                            definite_integral_equality
-                        )
+from ...questions import definite_integral_equality
 from ...questions.tests import question_tester
 import subprocess
 

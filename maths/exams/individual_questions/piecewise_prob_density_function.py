@@ -1,31 +1,25 @@
-from maths.latex import latex, questions
-from maths.questions import (
-                            piecewise_prob_density_function
-                        )
+from ...latex import questions
+from ...questions import piecewise_prob_density_function
+from ...questions.tests import question_tester
+import subprocess
 
 
-with open('exam.tex', 'w') as f:
-    latex.begin_tex_document(f)
-
-    q = piecewise_prob_density_function.PiecewiseProbDensityFunctionKnown()
-    question = questions.QuestionTree(q)
-
-    question.add_part(piecewise_prob_density_function.Conditional(q))
-
-    question.add_part(piecewise_prob_density_function.Cumulative(q))
+exam_questions = []
 
 
-    question.write_question(f)
-    latex.new_page(f)
-    question.write_solution(f)
+q = piecewise_prob_density_function.PiecewiseProbDensityFunctionKnown()
+question = questions.QuestionTree(q)
+question.add_part(piecewise_prob_density_function.Conditional(q))
+question.add_part(piecewise_prob_density_function.Cumulative(q))
+exam_questions.append(question)
+
+q = piecewise_prob_density_function.PiecewiseProbDensityFunctionUnknown()
+question = questions.QuestionTree(q)
+exam_questions.append(question)
 
 
-    q = piecewise_prob_density_function.PiecewiseProbDensityFunctionUnknown()
-    question = questions.QuestionTree(q)
-
-
-    question.write_question(f)
-    latex.new_page(f)
-    question.write_solution(f)
-
-    latex.end_tex_document(f)
+try:
+    subprocess.call(['killall', 'evince'])
+    question_tester.question_tester(exam_questions, view_output=True)
+except Exception as e:
+    raise e
