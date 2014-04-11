@@ -1,7 +1,7 @@
 import sympy
 import random
-from ..symbols import *
-from .. import all_functions
+from ..symbols import x0, x1, x
+from .. import all_functions, not_named_yet
 from ..latex import latex, expressions, solution_lines
 from ..utils import noevals
 from . import relationships
@@ -9,71 +9,81 @@ from . import relationships
 
 @relationships.root
 class DefiniteIntegralEquality(object):
+    """
+    Question description
+    ====================
+
+    Given two sides of an equation - a definite integral on one side and an expression
+    in one variable on the other, find the value of that variable.
+
+
+    Real-life instances
+    ===================
+
+    2010 2b: Find p given that int(2, 3, 1/(1-x)) = ln(p) [7 lines] [3 marks]
+    """
+
     def __init__(self):
-        # 2010 2b. Find p given that int(2, 3, 1/(1-x)) = ln(p) [7 lines] [3 marks]
         self.num_lines = 7
         self.num_marks = 3
+
+        self._qp = {}
+
         function = all_functions.request_linear(difficulty=3).equation
 
-        self.equation = 1 / function
+        self._qp['equation'] = 1 / function
 
-        # we can't integrate over a range of a hyperbola that has the vertical asymptote in the middle, that would just be weird
+        # we can't integrate over a range of a hyperbola that has the vertical asymptote in the middle
         # we will only integrate on one side of the hyperbola
         vertical_asymptote = sympy.solve(function)[0]
 
-        if random.randint(0, 1):  # go left
-            bound = int(vertical_asymptote)
-            possible_x_values = list(range(bound - 5, bound if (bound != vertical_asymptote) else bound - 1))
+        if random.randint(0, 1):  # use the side to the left of the asymptote
+            bound = vertical_asymptote.p // vertical_asymptote.q
+
+            possible_x_values = list(range(bound - 5, bound))
         else:
-            bound = int(vertical_asymptote) + 1
-            possible_x_values = list(range(bound if (bound != vertical_asymptote) else bound + 1, bound + 5))
+            bound = vertical_asymptote.p // vertical_asymptote.q + 1
 
-        self.boundary = all_functions.choose_bounds(possible_x_values)
+            possible_x_values = list(range(bound, bound + 5))
 
-        # due to some (in this case) annoying rules of simplify, this step of integration can simplify directly to, for example,
-        # -log(2)/2 + log(6)/2, rather than log(3)/2
-        # it turns out that both logs produced always have the same denominator, so to create a single log we only need to know the
-        # signs and the arguments
-        self.antiderivative = self.equation.integrate().replace(sympy.log(x0), sympy.log(sympy.Abs(x0)))
-        self.integral = self.equation.integrate((x, self.boundary[0], self.boundary[1]))
+        boundary = all_functions.choose_bounds(possible_x_values)
+        self._qp['boundary'] = sympy.Interval(*boundary)
 
-        if len(self.integral.find(sympy.log)) > 1:  # there is more than one log
-            logs = self.integral.find(sympy.log)
-            left_inside = logs.pop().args[0]
-            right_inside = logs.pop().args[0]
-            denominator = self.integral.args[0].args[0].q
+        integral_result = not_named_yet.soft_logcombine(self._qp['equation'].integrate((x, self._qp['boundary'].left, self._qp['boundary'].right)))
 
-            # the denominator of the first log
-            if self.integral.args[0].could_extract_minus_sign():
-                left_inside = 1 / left_inside
-            # the denominator of the second log
-            if self.integral.args[1].could_extract_minus_sign():
-                right_inside = 1 / right_inside
-
-            self.p = left_inside * right_inside
-            self.integral = sympy.log(self.p, evaluate=False) / denominator
-
-        else:
-            self.p = self.integral.match(sympy.log(x0) / x1)[x0]
+        self._qp['answer'] = integral_result.match(sympy.log(x0) / x1)[x0]
 
         p = sympy.Symbol('p')
-        self.integral = self.integral.replace(sympy.log(x0), sympy.log(p))
+        self._qp['variable_expression'] = integral_result.replace(sympy.log(x0), sympy.log(p))
 
     def question_statement(self):
-        return r'Find p given that $\displaystyle\int^{%d}_{%d} %s\ dx = %s$' % (self.boundary[1], self.boundary[0],
-                                                                                 sympy.latex(self.equation), sympy.latex(self.integral))
+        integral = expressions.integral(lb=self._qp['boundary'].left, ub=self._qp['boundary'].right, expr=self._qp['equation'])
+        return r'Find p given that ${integral} = {result}$'.format(
+            integral=integral,
+            result=sympy.latex(self._qp['variable_expression'])
+        )
 
     def solution_statement(self):
         lines = solution_lines.Lines()
 
-        lines += r'${0}$'.format(expressions.integral_intermediate(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation))
+        intermediate = expressions.integral_intermediate(lb=self._qp['boundary'].left, ub=self._qp['boundary'].right, expr=self._qp['equation'])
+        lines += r'${integral_intermediate}$'.format(
+            integral_intermediate=intermediate
+        )
 
-        complex_proof = self.equation.integrate().replace(sympy.log(x0), sympy.log(sympy.Abs(x0)))
+        working = expressions.integral_intermediate_eval(lb=self._qp['boundary'].left, ub=self._qp['boundary'].right, expr=self._qp['equation'])
+        lines += r'$= {integral_working}$'.format(
+            integral_working=working
+        )
 
-        lines += r'$= {0}$'.format(expressions.integral_intermediate_eval(lb=self.boundary[0], ub=self.boundary[1], expr=self.equation))
-        lines += r'$= {0} = {1}$'.format(
-                            sympy.latex( complex_proof.subs({x: self.boundary[1]}) - complex_proof.subs({x: self.boundary[0]}) ), 
-                            sympy.latex( sympy.logcombine( complex_proof.subs({x: self.boundary[1]}) - complex_proof.subs({x: self.boundary[0]}) ) ))
-        lines += r'$\therefore p = {0}.$'.format(sympy.latex(self.p))
+        force_real_numbers = self._qp['equation'].integrate().replace(sympy.log(x0), sympy.log(sympy.Abs(x0)))
+        integral_value = force_real_numbers.subs({x: self._qp['boundary'].right}) - force_real_numbers.subs({x: self._qp['boundary'].left})
+        lines += r'$= {result}$'.format(
+            result=sympy.latex(not_named_yet.soft_logcombine(integral_value))
+        )
+
+        lines += r'$\therefore p = {p_value}.$'.format(
+            p_value=sympy.latex(self._qp['answer'])
+        )
 
         return lines.write()
