@@ -88,6 +88,12 @@ class QuestionPart:
 
         return pickle.loads(pickled_question)
 
+    def question_statement(self):
+        return None
+
+    def solution_statement(self):
+        return None
+
 
 def root(cls):
     """A class decorator to specify a question root.

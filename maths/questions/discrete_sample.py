@@ -12,14 +12,12 @@ import math
 from . import relationships
 
 
-''' There is currently only a version for NoReplacement - Replacement would need some modification as all the classes assume no replacement. 
-'''
-
-
 def sum_probabilities_string(qp, iterable, show_permutations=False):
+    """Return LaTeX to represent a union of probabilities.
+    """
     item_probs = []
     for sequence in iterable:
-        item_prob = '\, \cap \, '.join(['ball_{0} = {1}'.format(item_num + 1, item_value) for item_num, item_value in enumerate(sequence)])
+        item_prob = r'\, \cap \, '.join(['ball_{0} = {1}'.format(item_num + 1, item_value) for item_num, item_value in enumerate(sequence)])
 
         if show_permutations:
             prob = r'Pr({0})'.format(
@@ -36,10 +34,39 @@ def sum_probabilities_string(qp, iterable, show_permutations=False):
     return ' + '.join(item_probs)
 
 
+def list_numbers(items):
+    """Return an English-readable listing of a set of numbers.
+    """
+    head = items[:-1]
+    tail = items[-1]
+
+    head_text = ', '.join([str(i) for i in head])
+    return head_text + ' and ' + str(tail)
+
+
+def union_of_probabilities(probabilities):
+    """Return LaTeX to represent a union of probabilities.
+    """
+    return r'\ \cap \ '.join(probabilities)
+
+
 @relationships.root
 class NoReplacement:
+    """There is currently only a version for NoReplacement - Replacement would need some modification as all the classes assume no replacement.
+
+    Question description
+    ====================
+
+    Random selection of balls from a box, where the balls are not returned to the box.
+
+
+    Real-life instances
+    ===================
+
+    2009 5: Blank slate
+    """
+
     def __init__(self):
-        # 2009 Q5
         self.num_lines, self.num_marks = 0, 0
         self._qp = {}
 
@@ -51,34 +78,38 @@ class NoReplacement:
     def question_statement(self):
         self._qi = {}
 
-        
-        item_numbers = ', '.join( ['${0}$'.format(i + 1) for i in range(self._qp['num_items'])[:-1]]) + ' and ' + '${0}$'.format(self._qp['num_items']) 
+        item_numbers = [i + 1 for i in range(self._qp['num_items'])]
+        item_text = list_numbers(item_numbers)
 
         if self._qp['num_selections'] == 2:
             additional_balls, is_or_are = 'second', 'is'
         elif self._qp['num_selections'] == 3:
             additional_balls, is_or_are = 'second and third', 'are'
 
-
-        return r'''${num_items}$ identical balls are numbered {item_numbers} and put into a box. A ball is randomly drawn from the box, and not returned to the box. 
+        return r'''${num_items}$ identical balls are numbered {item_text} and put into a box. A ball is randomly drawn from the box, and not returned to the box.
                     A {additional_balls} balls {is_or_are} then randomly drawn from the box.'''.format(
                         num_items=self._qp['num_items'],
-                        item_numbers=item_numbers,
+                        item_text=item_text,
                         additional_balls=additional_balls,
                         is_or_are=is_or_are
                     )
 
 
-    def solution_statement(self):
-        lines = solution_lines.Lines()
-        
-        return lines.write()
-
-
 @relationships.is_child_of(NoReplacement)
 class SpecificPermutation:
+    """Question description
+    ====================
+
+    Find the probability that a specific permutation of selections occurs.
+
+
+    Real-life instances
+    ===================
+
+    2009 5a: [4 lines] [1 mark]
+    """
+
     def __init__(self, part):
-        # 2009 Q5a [4 lines] [1 mark]
         self.num_lines, self.num_marks = 4, 1
 
         self._qp = copy.copy(part._qp)
@@ -86,25 +117,31 @@ class SpecificPermutation:
     def question_statement(self):
         self._qp['choices'] = random.sample(self._qp['items'], self._qp['num_selections'])
 
-        
-        values = ', '.join(['${0}$'.format(i) for i in self._qp['choices'][:-1]]) + ' and ' + '${0}$'.format(self._qp['choices'][-1])
+        values_text = list_numbers(self._qp['choices'])
 
-        return r'''Find the probability that the values of the balls are {0}, respectively.'''.format(values)
+        return r'''Find the probability that the values of the balls are {values_text}, respectively.'''.format(values_text=values_text)
 
     def solution_statement(self):
         lines = solution_lines.Lines()
-        
-        symbolic_pr_chain = r'\ \cap \ '.join(['ball_{0} = {1}'.format(index + 1, ball_value) for index, ball_value in enumerate(self._qp['choices'])])
 
-        fractions = [sympy.Rational(1, len(self._qp['items']) - i) for i in range(self._qp['num_selections'])]
-        pr_chain = r' \times '.join([sympy.latex(frac) for frac in fractions])
+        probabilities = ['ball_{ball_number} = {ball_value}'.format(ball_number=index + 1, ball_value=ball_value) for
+            index, ball_value in enumerate(self._qp['choices'])]
+        probabilities_union = union_of_probabilities(probabilities)
+
+        fractions = []
+        for n_already_chosen in range(self._qp['num_selections']):
+            n_items = len(self._qp['items'])
+            probability = sympy.Rational(1, n_items - n_already_chosen)
+            fractions.append(probability)
+
+        probabilities_multiplied = r' \times '.join(map(sympy.latex, fractions))
 
         answer = functools.reduce(operator.mul, fractions)
 
-        lines += r'$Pr({0}) = {1} = {2}$'.format(
-            symbolic_pr_chain,
-            pr_chain,
-            sympy.latex(answer)
+        lines += r'$Pr({probabilities_union}) = {probabilities_multiplied} = {answer}$'.format(
+            probabilities_union=probabilities_union,
+            probabilities_multiplied=probabilities_multiplied,
+            answer=sympy.latex(answer)
         )
 
         return lines.write()
@@ -112,24 +149,40 @@ class SpecificPermutation:
 
 @relationships.is_child_of(NoReplacement)
 class DiscreteSum:
-    TOO_FEW = 3
-    TOO_MANY = 13
-    # this gives us a range between 4 and 12 - 4 is when we have 2 x 2! permutations, 12 is when we have 2 x 3! permutations
 
-    def possible_sums(self):
+    @staticmethod
+    def good_number_of_permutations(num_permutations):
+        """State whether there is too little or too much work for the student to do on this question.
+        """
+        # this gives us a range between 4 and 12 - 4 is when we have 2 x 2! permutations, 12 is when we have 2 x 3! permutations
+        too_few, too_many = 3, 13
+
+        return too_few < num_permutations < too_many
+
+    def appropriate_sums(self):
+        """Return a sum that will make the question worth doing.
+
+        The sum is used in the questions - e.g. "Find the probability that the sum of the numbers on the 3 balls is 10."
+
+        If the sum is too small or too big, then there is too little or too much work for the student to do, respectively.
+
+        Here we work out which sums will be appropriate for the question.
+        """
         # the number of items selected is self._qp['num_selections']. In this comment we call it "n"
-        # the smallest possible sum of n items is the smallest n items - self._qp['items'][:self._qp['num_selections']]
-        # the largest possible sum of n items is the largest n items - self._qp['items'][-self._qp['num_selections']:]
-        sum_options = list(range(sum(self._qp['items'][:self._qp['num_selections']]), sum(self._qp['items'][-self._qp['num_selections']:])))
+        # the smallest possible sum of n items is the smallest n items - self._qp['items'][:n]
+        smallest_set = self._qp['items'][:self_qp['num_selections']]
+        # the largest possible sum of n items is the largest n items - self._qp['items'][-n:]
+        largest_set = self._qp['items'][-self._qp['num_selections']:]
 
-        permutations = list(itertools.permutations(self._qp['items'], self._qp['num_selections']))
+        smallest_sum, largest_sum = sum(smallest_set), sum(largest_set)
+        sum_options = range(smallest_sum, largest_sum)
+
+        possible_ball_selection_orders = list(itertools.permutations(self._qp['items'], self._qp['num_selections']))
         final_sum_options = []
         for possible_sum in sum_options:
-            num_valid_permutations = len(list(filter(lambda perm: sum(perm) == possible_sum, permutations)))
+            num_valid_permutations = len(list(filter(lambda perm: sum(perm) == possible_sum, possible_ball_selection_orders)))
 
-            # for each sum we could choose, see how many valid permutations we will have. If there are neither too few nor too many 
-            # valid permutations, add it to our list of options
-            if DiscreteSum.TOO_FEW < num_valid_permutations < DiscreteSum.TOO_MANY:
+            if DiscreteSum.good_number_of_permutations(num_valid_permutations):
                 final_sum_options.append(possible_sum)
 
         return final_sum_options
@@ -142,7 +195,7 @@ class Sum(DiscreteSum):
         self.num_lines, self.num_marks = 5, 1 
         self._qp = copy.copy(part._qp)
         
-        self._qp['sum'] = random.choice(self.possible_sums())
+        self._qp['sum'] = random.choice(self.appropriate_sums())
 
 
     def question_statement(self):
@@ -184,7 +237,7 @@ class ConditionalSum(DiscreteSum):
         self._qp = copy.copy(part._qp)
         self.num_lines, self.num_marks = (4, 1) if self._qp['num_selections'] == 2 else (5, 2)
 
-        self._qp['sum'] = random.choice(self.possible_sums())
+        self._qp['sum'] = random.choice(self.appropriate_sums())
         self._qp['ball_index'] = random.randint(1, self._qp['num_selections'])
 
         # if we have a sum of 10 and the only way to achieve this sum is by (1, 4, 5) then we can't select a ball value of 2 or 3
