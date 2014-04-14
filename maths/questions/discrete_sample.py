@@ -23,7 +23,7 @@ class NoReplacement(relationships.QuestionPart):
     Real-life instances
     ===================
 
-    2009 5: Blank slate
+    2009 5: [Blank slate]
     """
 
     def __init__(self):
@@ -35,8 +35,6 @@ class NoReplacement(relationships.QuestionPart):
         self._qp['items'] = list(range(1, self._qp['n_items'] + 1))
 
     def question_statement(self):
-        self._qi = {}
-
         item_numbers = [i + 1 for i in range(self._qp['n_items'])]
         item_text = items.list_numbers(item_numbers)
 
@@ -293,8 +291,6 @@ class ConditionalSum(DiscreteSum):
         self._qp['ball_value'] = random.choice(list(valid_ball_values))
 
     def question_statement(self):
-        self._qi = {}
-
         nth_ball = item_position.int_to_nth(self._qp['ball_index'])
 
         return r'Given that the sum of the numbers on the ${n_selections}$ balls is ${sum}$, what is the probability that the \
