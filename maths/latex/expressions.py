@@ -196,3 +196,9 @@ def relation(interval_or_relation, var=x):
             right_operator,
             sympy.latex(interval.right)
         )
+
+
+def union_of_probabilities(probabilities):
+    """Return LaTeX to represent a union of probabilities.
+    """
+    return r'\ \cap \ '.join(probabilities)
