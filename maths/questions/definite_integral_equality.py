@@ -8,7 +8,7 @@ from . import relationships
 
 
 @relationships.root
-class DefiniteIntegralEquality(object):
+class DefiniteIntegralEquality(relationships.QuestionPart):
     """
     Question description
     ====================

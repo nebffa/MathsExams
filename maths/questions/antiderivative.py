@@ -7,7 +7,7 @@ from . import relationships
 
 
 @relationships.root
-class Antiderivative:
+class Antiderivative(relationships.QuestionPart):
     """
     Question description
     ====================
