@@ -105,7 +105,7 @@ class LinearApproximationExplain:
         self._qp['concave_or_convex'] = functions.concave_or_convex(self._qp['equation'], self._qp['location'])
 
     def question_statement(self):
-        direction = 'less than' if self._qp['is_convex'] else 'greater than'
+        direction = 'less than' if self._qp['concave_or_convex'] else 'greater than'
 
         return r'''Explain why this approximate value is {inequality} than the exact value for ${unevaluated_f_of_new_location}$.'''.format(
             inequality=direction,
@@ -136,7 +136,7 @@ class LinearApproximationExplain:
             increases_or_decreases='increases' if second_derivative_at_original_location > 0 else 'decreases',
             location=self._qp['location'],
             new_location=self._qp['new_location'],
-            under_or_over='under' if self._qp['is_convex'] else 'over',
+            under_or_over='under' if self._qp['concave_or_convex'] else 'over',
             unevaluated_f_of_new_location=sympy.latex(self._qi['noeval_equation'].subs({x: self._qp['new_location']}))
         )
 

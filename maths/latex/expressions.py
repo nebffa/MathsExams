@@ -73,7 +73,7 @@ def derivative(upper_variable, lower_variable, degree=1):
         denominator = 'd{lower_variable}^{degree}'.format(degree=degree, lower_variable=lower_variable)
     else:
         numerator = 'd{upper_variable}'.format(upper_variable=upper_variable)
-        denominator = 'd{lower_variable}'.format(upper_variable=upper_variable)
+        denominator = 'd{lower_variable}'.format(lower_variable=lower_variable)
 
     return r'\frac{{{numerator}}}{{{denominator}}}'.format(
         numerator=numerator,
