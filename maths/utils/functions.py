@@ -12,7 +12,7 @@ def is_monotone_increasing(equation, domain=None):
         assert isinstance(domain, sympy.Interval)  # expand these functions to deal with unions later
         # since we look at the behaviour of how the graph changes around turning points, we don't need to look at the turning points
         # on the edge of the domain, e.g. x**2 would be monotone on [0, 1] even though it has a turning point at 0
-        domain = sympy.Interval(domain.left, domain.right, True, True) 
+        domain = sympy.Interval(domain.left, domain.right, True, True)
 
     assert len(equation.free_symbols) == 1
     var = [symbol for symbol in equation.free_symbols][0]
@@ -28,7 +28,6 @@ def is_monotone_increasing(equation, domain=None):
         if x_value + 0.01 in domain:
             if deriv.subs({var: x_value + 0.01}) < 0:
                 return False
-        
 
     # the graph is monotone - but is it increasing? take a point within the domain and check if the graph is increasing
     if domain.left == -oo and domain.right == oo:
@@ -53,7 +52,7 @@ def is_monotone_decreasing(equation, domain=None):
         assert isinstance(domain, sympy.Interval)  # expand these functions to deal with unions later
         # since we look at the behaviour of how the graph changes around turning points, we don't need to look at the turning points
         # on the edge of the domain, e.g. x**2 would be monotone on [0, 1] even though it has a turning point at 0
-        domain = sympy.Interval(domain.left, domain.right, True, True) 
+        domain = sympy.Interval(domain.left, domain.right, True, True)
 
     assert len(equation.free_symbols) == 1
     var = [symbol for symbol in equation.free_symbols][0]
@@ -69,7 +68,6 @@ def is_monotone_decreasing(equation, domain=None):
         if x_value + 0.01 in domain:
             if deriv.subs({var: x_value + 0.01}) > 0:
                 return False
-        
 
     # the graph is monotone - but is it increasing? take a point within the domain and check if the graph is increasing
     if domain.left == -oo and domain.right == oo:
@@ -88,13 +86,10 @@ def is_monotone_decreasing(equation, domain=None):
 
 
 def relation_to_interval(relation):
-
     if isinstance(relation, sympy.Or):
-        return functools.reduce(operator.or_, [relation_to_interval(i) for i in relation.args] )
-
+        return functools.reduce(operator.or_, [relation_to_interval(i) for i in relation.args])
     elif isinstance(relation, sympy.And):
-        return functools.reduce(operator.and_, [relation_to_interval(i) for i in relation.args] )
-
+        return functools.reduce(operator.and_, [relation_to_interval(i) for i in relation.args])
 
     if relation.rel_op == '>':
         if isinstance(relation.lhs, sympy.Symbol):
@@ -119,6 +114,9 @@ def relation_to_interval(relation):
 
 
 def is_convex(expr, location):
+    """State whether an expression is convex at a particular coordinate.
+    """
+
     symbol_used = expr.free_symbols.pop()
 
     second_deriv = expr.diff().diff().subs({symbol_used: location})
@@ -130,6 +128,9 @@ def is_convex(expr, location):
 
 
 def is_concave(expr, location):
+    """State whether an expression is concave at a particular coordinate.
+    """
+
     symbol_used = expr.free_symbols.pop()
 
     second_deriv = expr.diff().diff().subs({symbol_used: location})
@@ -138,6 +139,21 @@ def is_concave(expr, location):
         return False
     else:
         return True
+
+
+def concave_or_convex(expr, location):
+    """State whether an expression is concave or convex at a particular coordinate. If it is neither, raise an error.
+    """
+
+    if is_convex(expr, location):
+        return "convex"
+    elif is_concave(expr, location):
+        return "concave"
+    else:
+        raise ValueError('The expression: {expression} is neither concave nor convex at the location: {location}'.format(
+            expression=expr,
+            location=location)
+        )
 
 
 def parse_type(expr):
@@ -157,7 +173,6 @@ def parse_type(expr):
         sympy.sec,
         sympy.cot,
     ]
-
 
     for each in possible_types:
         if expr.find(each):
@@ -194,8 +209,6 @@ def maximal_domain(expr, domain=sympy.Interval(-oo, oo)):
         else:
             raise NotImplementedError('only x is currently supported - but that can be easily changed')
 
-
-
     powers = expr.find(sympy.Pow)
     # case 1
     for power in powers:
@@ -215,15 +228,13 @@ def maximal_domain(expr, domain=sympy.Interval(-oo, oo)):
             solution = sympy.solve(sqrt_interior > 0)
             domain &= relation_to_interval(solution)
 
-
     # case 3
     logs = expr.find(sympy.log)
     for log in logs:
         interior = log.args[0]
 
-        solution = sympy.solve(interior > 0)    
+        solution = sympy.solve(interior > 0)
         domain &= relation_to_interval(solution)
-
 
     # case 4
     if expr.find(sympy.tan) or expr.find(sympy.cot) or expr.find(sympy.sec) or expr.find(sympy.csc):
