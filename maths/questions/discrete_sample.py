@@ -104,8 +104,9 @@ class SpecificPermutation(relationships.QuestionPart):
         return lines.write()
 
 
-@relationships.is_child_of(NoReplacement)
-class DiscreteSum(relationships.QuestionPart):
+class DiscreteSum():
+    """A helper class to prevent code duplication between Sum and ConditionalSum.
+    """
 
     @staticmethod
     def good_number_of_permutations(num_permutations):
@@ -121,9 +122,6 @@ class DiscreteSum(relationships.QuestionPart):
     def sum_combination_probabilities(combinations):
         """Return LaTeX to represent the sum of the probabilities of selecting particular
         combinations of items.
-
-        >>> sum_combination_probabilities([[2, 5, 6], [3, 4, 6]])
-        3! * Pr(ball_1 = 2 and ball_2 = 5 and ball_3 = 6) + 3! * Pr(ball_1 = 3 and ball_2 = 4 and ball_3 = 6)
         """
 
         probabilities = []
@@ -145,9 +143,6 @@ class DiscreteSum(relationships.QuestionPart):
     def sum_permutation_probabilities(permutations):
         """Return LaTeX to represent the sum of the probabilities of selecting particular
         permutations of items.
-
-        >>> sum_combination_probabilities([[2, 5, 6], [2, 6, 5], [5, 2, 6]])
-        Pr(ball_1 = 2 and ball_2 = 5 and ball_3 = 6) * Pr(ball_1 = 2 and ball_2 = 6 and ball_3 = 5) + Pr(ball_1 = 5 and ball_2 = 2 and ball_3 = 6)
         """
 
         probabilities = []
@@ -207,7 +202,7 @@ class DiscreteSum(relationships.QuestionPart):
 
 
 @relationships.is_child_of(NoReplacement)
-class Sum(DiscreteSum):
+class Sum(relationships.QuestionPart, DiscreteSum):
     """Question description
     ====================
 
@@ -262,7 +257,7 @@ class Sum(DiscreteSum):
 
 
 @relationships.is_child_of(NoReplacement)
-class ConditionalSum(DiscreteSum):
+class ConditionalSum(relationships.QuestionPart, DiscreteSum):
     """Question description
     ====================
 
