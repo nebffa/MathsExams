@@ -13,12 +13,6 @@ class DummyPart:
     def __init__(self):
         self.num_lines, self.num_marks = 0, 0
 
-    def question_statement(self):
-        return ''
-
-    def solution_statement(self):
-        return ''
-
     def sanity_check(self):
         pass
 
@@ -88,12 +82,6 @@ class QuestionPart:
 
         return pickle.loads(pickled_question)
 
-    def question_statement(self):
-        return None
-
-    def solution_statement(self):
-        return None
-
 
 def root(cls):
     """A class decorator to specify a question root.
@@ -151,28 +139,59 @@ class PartTree:
         for child in self.children:
             child._instantiate_tree(depth + 1, self.object)
 
-    def _traversal_to_latex(self, depth=0):  # uses the enumitem package which gives us some hbox errors
+    def _question_traversal_to_latex(self, depth=0):  # uses the enumitem package which gives us some hbox errors
         """Traverse the tree, returning the latex for each instantiated object.
         """
-        total_string = ''
+        total_string = r'\item' + '\n'
 
-        if self.object.question_statement() and depth == 0:
-            total_string += r'<p>{0}</p>'.format(self.object.question_statement())
-        elif self.object.question_statement():
-            total_string += r'<p>{0}</p>'.format(self.object.question_statement())
+        if depth == 0:
+            total_string += '\n'
+
+        if not hasattr(self.object, 'question_statement'):
+            total_string += '$ $'
         else:
-            total_string += r'$ $'
+            total_string += self.object.question_statement() + '\n'
+
+        if self.object.num_lines != 0:
+            total_string += r'\fillwithlines{{{0}in}}'.format(self.object.num_lines / 4) + '\n'
 
         if self.children:
-            total_string += ''.join(i._traversal_to_latex(depth + 1) for i in self.children)
+            total_string += r'\begin{parts}' + '\n' + '\n'.join(
+                i._question_traversal_to_latex(depth + 1) for i in self.children) + r'\end{parts}' + '\n'
 
-        return total_string
+        return total_string + '\n'
+
+    def _solution_traversal_to_latex(self, depth=0):  # uses the enumitem package which gives us some hbox errors
+        """Traverse the tree, returning the latex for each instantiated object.
+        """
+        total_string = r'\item' + '\n'
+
+        if depth == 0:
+            total_string += '\n'
+
+        if not hasattr(self.object, 'solution_statement'):
+            total_string += '$ $'
+        else:
+            total_string += self.object.solution_statement() + '\n'
+
+        if self.children:
+            total_string += r'\begin{parts}' + '\n' + '\n'.join(
+                i._solution_traversal_to_latex(depth + 1) for i in self.children) + r'\end{parts}' + '\n'
+
+        return total_string + '\n'
+
+    def write_question(self, f):
+        self._instantiate_tree()
+        f.write(self._question_traversal_to_latex())
+
+    def write_solution(self, f):
+        f.write(self._solution_traversal_to_latex())
 
     def show_question(self):
         """Return a question's latex (assuming the question tree has already been populated).
         """
         self._instantiate_tree()
-        return self._traversal_to_latex()
+        return self._question_traversal_to_latex()
 
 
 def parse_structure(module):
