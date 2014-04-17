@@ -201,4 +201,4 @@ def relation(interval_or_relation, var=x):
 def union_of_probabilities(probabilities):
     """Return LaTeX to represent a union of probabilities.
     """
-    return r'\ \cap \ '.join(probabilities)
+    return r' \cap '.join(probabilities)
