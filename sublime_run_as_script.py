@@ -22,4 +22,9 @@ if __name__ == '__main__':
     module = importlib.import_module(script_name)
 
     question = relationships.parse_structure(module)
-    question_tester.question_tester(question, view_output=True)
+
+    try:
+        subprocess.call(['killall', 'evince'])
+        question_tester.question_tester(question, view_output=True)
+    except Exception as e:
+        raise e
