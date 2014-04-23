@@ -24,7 +24,10 @@ if __name__ == '__main__':
     question = relationships.parse_structure(module)
 
     try:
-        subprocess.call(['killall', 'evince'])
+        with open(os.devnull, 'w') as fnull:
+            # raises EV_IS_DOCUMENT error due to a bug in evince, which is fixed in an upcoming version of evince
+            # https://bugs.launchpad.net/ubuntu/+source/evince/+bug/1247208
+            subprocess.call(['killall', 'evince'], stdout=fnull, stderr=fnull)
         question_tester.question_tester(question, view_output=True)
     except Exception as e:
         raise e
