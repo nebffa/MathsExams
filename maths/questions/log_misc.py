@@ -1,6 +1,6 @@
 import sympy
 import random
-from ..symbols import x, x0, x1
+from ..symbols import x, x0, coeff0
 from .. import all_functions
 from ..utils import sensible_values
 from ..latex import solution_lines
@@ -87,7 +87,7 @@ class SolveLogEquation(relationships.QuestionPart):
         """
 
         single_log = sympy.logcombine(expr, force=True)
-        interior = single_log.match(x0 * sympy.log(x1))[x1]
+        interior = single_log.match(coeff0 * sympy.log(x0))[x0]
 
         numerator, denominator = interior.as_numer_denom()
 
@@ -134,7 +134,7 @@ class SolveLogEquation(relationships.QuestionPart):
         expr = sympy.logcombine(expr, force)
 
         if expr.could_extract_minus_sign():
-            interior = expr.match(x0 * sympy.log(x1))[x1]
+            interior = expr.match(coeff0 * sympy.log(x0))[x0]
             expr *= -1
             expr = sympy.log(1 / interior)
 
