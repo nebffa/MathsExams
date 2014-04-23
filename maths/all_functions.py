@@ -101,7 +101,7 @@ def inverse(function):  # requires future work as more things are included
         return solutions[0].replace(y, var)
 
 
-def request_linear(difficulty, var=x):  
+def request_linear(difficulty, var=x):
     return linear.request_linear(difficulty, var)
 
 
@@ -151,7 +151,7 @@ def request_trig(difficulty=None):
         return request_tan(difficulty)
 
 
-# for use when matching - e.g. say we have y = tan(2*x), we have to do y.match(a*tan(b) + c) - what if we don't know what the trig function is? 
+# for use when matching - e.g. say we have y = tan(2*x), we have to do y.match(a*tan(b) + c) - what if we don't know what the trig function is?
 # that's what this function is for
 def detect_expr_type(expr):
     sympy_types = [sympy.cos, sympy.sin, sympy.tan, sympy.cot, sympy.sec, sympy.csc, sympy.log, sympy.exp]
@@ -167,10 +167,10 @@ def detect_expr_type(expr):
     for sympy_type in sympy_types:
         if expr.has(sympy_type):
             return sympy_type
-    else:
-        if expr.is_polynomial():
-            return int(sympy.degree(expr))
 
+    if expr.is_polynomial():
+        degree = expr.as_poly().degree()
+        return sympy.poly(x ** degree, x)
 
 
 # takes an ordered list of x-values, and selects two values to return as a lower/upper bound pair
@@ -186,7 +186,7 @@ def choose_bounds(x_values):
     u_index = random.randint(l_index + 1, len(x_values) - 1)
 
     def test_indices_order(l_index, u_index):
-        assert (l_index < u_index)
+        assert l_index < u_index
 
     return (x_values[l_index], x_values[u_index])
 
@@ -206,9 +206,9 @@ def sensible_trig_x_values(function):
     inner_function = function.replace(trig_type(a), a)
 
     if trig_type in [sympy.sin, sympy.cos]:
-        primary_x_values = [sympy.pi/6 * i for i in range(-5, 7)]
+        primary_x_values = [sympy.pi / 6 * i for i in range(-5, 7)]
     elif trig_type == sympy.tan:
-        primary_x_values = [sympy.pi/6 * i for i in range(-5, 7) if i not in [-3, 3]]  # tan(-pi/2) and tan(pi/2) are undefined, so exclude those x-values
+        primary_x_values = [sympy.pi / 6 * i for i in range(-5, 7) if i not in [-3, 3]]  # tan(-pi/2) and tan(pi/2) are undefined, so exclude those x-values
 
     secondary_x_values = [sympy.solve(inner_function - i)[0] for i in primary_x_values]
 
