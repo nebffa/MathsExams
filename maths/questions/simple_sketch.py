@@ -111,7 +111,8 @@ class EquationTransformation:
 
         lines += 'Now we apply the mapping to the equation:'
 
-        noevalmapped_equation = noevals.noevalsub(self._qp['equation'], {x: reversed_mapping[0]})
+        noevaled_equation = noevals.noevalify(self._qp['equation'])
+        noevalmapped_equation = noevaled_equation.subs({x: reversed_mapping[0]})
         lines += r'${0} = {1}$'.format(sympy.latex(reversed_mapping[1]), sympy.latex(noevalmapped_equation))
 
         lines += r'Hence our mapped equation is $y = {0}$.'.format(sympy.latex(answer.apart()))
