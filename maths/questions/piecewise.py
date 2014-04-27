@@ -10,6 +10,19 @@ import copy
 
 @relationships.root
 class Piecewise(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    Setup a piecewise function.
+
+
+    Real-life instances
+    ===================
+
+    2008 6: [Blank slate]
+    """
+
     def __init__(self):
         self.num_lines, self.num_marks = 0, 0
         self._qp = {}
@@ -69,6 +82,19 @@ class Piecewise(relationships.QuestionPart):
 
 @relationships.is_child_of(Piecewise)
 class DomainDerivative(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    Calculate the domain of the derivative of a piecewise function.
+
+
+    Real-life instances
+    ===================
+
+    2008 6a: [3 lines] [1 mark]
+    """
+
     def __init__(self, part):
         self.num_lines, self.num_marks = 3, 1
         self._qp = copy.copy(part._qp)
@@ -100,6 +126,19 @@ class DomainDerivative(relationships.QuestionPart):
 
 @relationships.is_child_of(Piecewise)
 class AbsoluteValue(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    Sketch the absolute value of one side of a piecewise function.
+
+
+    Real-life instances
+    ===================
+
+    2008 6b: [0 lines] [2 marks]
+    """
+
     def __init__(self, part):
         self.num_lines, self.num_marks = 0, 2
         self._qp = copy.copy(part._qp)
