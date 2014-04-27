@@ -7,7 +7,7 @@ from . import relationships
 
 
 @relationships.root
-class SimpleInverse(object):
+class SimpleInverse(relationships.QuestionPart):
     def __init__(self):
 
         self.function_type = random.choice(['exp', 'hyperbola', 'log', 'cubic'])
@@ -77,5 +77,5 @@ class SimpleInverse(object):
             solution += [r'$d_{{f^{{-1}}}} = r_{{f}} = {0}$'.format(sympy.latex(self.inverse_domain))]
 
         solution += [r'$f^{{-1}}(x) = {0}$'.format(sympy.latex(self.inverse))]
-        
+
         return latex.latex_newline().join(solution)

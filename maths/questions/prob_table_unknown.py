@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 
 @relationships.root
-class ProbTableUnknown(object):
+class ProbTableUnknown(relationships.QuestionPart):
     def __init__(self):
         # 2010 Q8 [12 lines] [3 marks]
 
@@ -31,7 +31,7 @@ class ProbTableUnknown(object):
             quadratic = ((pos_root_denom*k - pos_root_numerator) * (neg_root_denom*k + neg_root_numerator) / neg_root_denom).expand()
             self._question_params['quadratic_shrinkage_factor'] = neg_root_denom
 
-            self._question_params['quadratic_solutions'] = (sympy.Rational(pos_root_numerator, pos_root_denom), 
+            self._question_params['quadratic_solutions'] = (sympy.Rational(pos_root_numerator, pos_root_denom),
                                                             sympy.Rational(-neg_root_numerator, neg_root_denom))
             self._question_params['answer'] = sympy.Rational(pos_root_numerator, pos_root_denom)
 
@@ -51,7 +51,7 @@ class ProbTableUnknown(object):
             p_square_partition = list(random.choice([i for i in not_named_yet.partition(abs(match[x0].p), include_zero=True) if 1 < len(i) < len(keys)]))
             p_linear_partition = list(random.choice([i for i in not_named_yet.partition(abs(match[x1].p), include_zero=True) if 1 < len(i) < len(keys)]))
             p_zeroth_partition = list(random.choice([i for i in not_named_yet.partition(abs(match[x2].p), include_zero=True) if 1 < len(i) < len(keys)]))
-            
+
             p_square_partition += [0] * (len(keys) - len(p_square_partition))
             p_linear_partition += [0] * (len(keys) - len(p_linear_partition))
             p_zeroth_partition += [0] * (len(keys) - len(p_zeroth_partition))
@@ -68,7 +68,7 @@ class ProbTableUnknown(object):
                 p_zeroth_partition = [-i for i in p_zeroth_partition]
             partitions = list(zip(p_square_partition, p_linear_partition, p_zeroth_partition))
 
-            if not all([partition[0]*self._question_params['answer']**2 + partition[1]*self._question_params['answer'] + 
+            if not all([partition[0]*self._question_params['answer']**2 + partition[1]*self._question_params['answer'] +
                     partition[2] > 0 for partition in partitions]):
                 continue  # some probabilities are negative
 
@@ -78,7 +78,7 @@ class ProbTableUnknown(object):
 
         self._question_params['prob_table'] = OrderedDict(list(zip(keys, values)))
 
-    def question_statement(self):        
+    def question_statement(self):
         table = probability_table(self._question_params['prob_table'])
         text = r'''The discrete random variable X has the probability distribution \\ {0} \\ Find the value of k.'''
 
@@ -92,10 +92,10 @@ class ProbTableUnknown(object):
         line_2 = r'''${0} = 0$'''.format(sympy.latex(quadratic))
 
         quadratic *= self._question_params['quadratic_shrinkage_factor']
-        line_3 = r'''${0} = 0$'''.format(sympy.latex(quadratic))        
+        line_3 = r'''${0} = 0$'''.format(sympy.latex(quadratic))
 
-        line_4 = r'''$k = {0} = {1}, {2}$'''.format(expressions.quadratic_formula(quadratic, var=k), 
-                                                        sympy.latex(self._question_params['quadratic_solutions'][0]), 
+        line_4 = r'''$k = {0} = {1}, {2}$'''.format(expressions.quadratic_formula(quadratic, var=k),
+                                                        sympy.latex(self._question_params['quadratic_solutions'][0]),
                                                         sympy.latex(self._question_params['quadratic_solutions'][1]))
 
         line_5 = r'''but $k > 0$ so k = ${0}$'''.format(sympy.latex(self._question_params['answer']))

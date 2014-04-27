@@ -9,8 +9,7 @@ import copy
 import math
 
 
-@relationships.root
-class PiecewiseProbDensityFunctionUnknown(object):
+class PiecewiseProbDensityFunctionUnknown():
     def __init__(self):
 
         # 2008 Q4 [7 lines] [2 marks]
@@ -76,7 +75,7 @@ class PiecewiseProbDensityFunctionUnknown(object):
 
         lines += r'The function $f(x) = {0}$'.format( expressions.piecewise(piecewise) )
         lines += r'is a probability density function for the continuous random variable $X$. Show that $k = {0}$.'.format(sympy.latex(self._qp['k']))
-        
+
         return lines.write()
 
     def solution_statement(self):
@@ -84,9 +83,9 @@ class PiecewiseProbDensityFunctionUnknown(object):
 
         lines += r'${0} = 1$'.format( expressions.integral(lb=self._qp['domain'].left, ub=self._qp['domain'].right, expr=self._qp['equation']) )
         lines += r'${0} = {1} = {2} = 1$'.format(
-                                    expressions.integral_intermediate(lb=self._qp['domain'].left, ub=self._qp['domain'].right, 
+                                    expressions.integral_intermediate(lb=self._qp['domain'].left, ub=self._qp['domain'].right,
                                             expr=self._qp['equation']),
-                                    expressions.integral_intermediate_eval(lb=self._qp['domain'].left, ub=self._qp['domain'].right, 
+                                    expressions.integral_intermediate_eval(lb=self._qp['domain'].left, ub=self._qp['domain'].right,
                                             expr=self._qp['equation']),
                                     sympy.latex(self._qp['equation'].integrate((x, self._qp['domain'].left, self._qp['domain'].right)))
                                     )
@@ -102,7 +101,7 @@ class PiecewiseProbDensityFunctionUnknown(object):
 
 
 @relationships.root
-class PiecewiseProbDensityFunctionKnown(PiecewiseProbDensityFunctionUnknown):
+class PiecewiseProbDensityFunctionKnown(relationships.QuestionPart, PiecewiseProbDensityFunctionUnknown):
     def __init__(self):
         super(PiecewiseProbDensityFunctionKnown, self).__init__()
 
@@ -129,7 +128,8 @@ class PiecewiseProbDensityFunctionKnown(PiecewiseProbDensityFunctionUnknown):
 
 
 # can be used for known and unknown
-class SimpleInterval:
+@relationships.is_child_of(PiecewiseProbDensityFunctionKnown)
+class SimpleInterval(relationships.QuestionPart):
     def __init__(self, part):
         # 2011 Q5a [5 lines] [2 marks]
         self.num_lines, self.num_marks = 5, 2
@@ -151,7 +151,7 @@ class SimpleInterval:
 
 
     def question_statement(self):
-        return r'''Find Pr(X {0} {1}).'''.format('\le' if self._qp['direction'] == 'left' else '\ge', self._qp['bound'])
+        return r'''Find $Pr(X {0} {1})$.'''.format('\le' if self._qp['direction'] == 'left' else '\ge', self._qp['bound'])
 
 
     def solution_statement(self):
@@ -169,7 +169,8 @@ class SimpleInterval:
 
 
 # can be used for known and unknown
-class Conditional:
+@relationships.is_child_of(PiecewiseProbDensityFunctionKnown)
+class Conditional(relationships.QuestionPart):
     def __init__(self, part):
         # 2008 Q4b [8 lines] [3 marks]
         # 2011 Q5b [5 lines] [2 marks]
@@ -186,8 +187,8 @@ class Conditional:
 
         self._qp['major_direction'] = r'\le' if self._qp['minor_bound'] < self._qp['major_bound'] else r'\ge'
         self._qp['minor_direction'] = random.choice([r'\le', r'\ge'])
-    
-        
+
+
     def question_statement(self):
         return r'Find $Pr(X {0} {1} | X {2} {3})$.'.format(self._qp['minor_direction'], sympy.latex(self._qp['minor_bound']),
                                                             self._qp['major_direction'], sympy.latex(self._qp['major_bound']))
@@ -235,7 +236,8 @@ class Conditional:
 
 
 # can be used for known
-class Cumulative:
+@relationships.is_child_of(PiecewiseProbDensityFunctionKnown)
+class Cumulative(relationships.QuestionPart):
     def __init__(self, part):
         self.num_lines, self.num_marks = 12, 3
 

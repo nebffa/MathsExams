@@ -8,8 +8,8 @@ from . import relationships
 
 
 # always produces Q1a
-@relationships.root
-class SimpleDiff:
+@relationships.is_child_of(relationships.DummyPart)
+class SimpleDiff(relationships.QuestionPart):
     def __init__(self):
         self.num_lines = 5
         self.num_marks = 2
@@ -91,20 +91,20 @@ class SimpleDiff:
 
 
 # always produces Q1b
-@relationships.root
-class SimpleDiffEval:
+@relationships.is_child_of(relationships.DummyPart)
+class SimpleDiffEval(relationships.QuestionPart):
     # function_type_in_simple_diff is the function type used in the class SimpleDiff. we need to know it so we don't use the same function type
     # since questions 1a and 1b never use the same function type
-    def __init__(self, part):
+    def __init__(self):
         self.num_lines = 5
         self.num_marks = 2
 
         function_types = ['product', 'quotient', 'composite']
-        try:
+        #try:
             # it might not be in function_types, in which case it will error
-            function_types.remove(part.function_type)
-        except:
-            pass
+        #    function_types.remove(part.function_type)
+        #except:
+        #    pass
         self.__function_type = random.choice(function_types)
 
         if self.__function_type == 'product':
@@ -234,9 +234,9 @@ class SimpleDiffEval:
 
             lines += r"${0}'({1}) = {2}$".format(self._question_type, sympy.latex(self.x_value), sympy.latex(no_eval))
             lines += ', '.join([r"${0} = {1}$".format(
-                            sympy.latex(noevals.noevalify(i, include=[sympy.sin, sympy.cos]).subs({x: self.x_value})), 
+                            sympy.latex(noevals.noevalify(i, include=[sympy.sin, sympy.cos]).subs({x: self.x_value})),
                             sympy.latex(i.subs({x: self.x_value}))
-                        ) 
+                        )
                         for i in self.derivative.find(lambda expr: expr.is_Function)])
 
         lines += r"${0}'({1}) = {2}$".format(self._question_type, sympy.latex(self.x_value), sympy.latex(self.answer))

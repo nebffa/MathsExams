@@ -8,7 +8,7 @@ from . import relationships
 
 
 @relationships.root
-class WordedDefiniteIntegral(object):
+class WordedDefiniteIntegral(relationships.QuestionPart):
     def __init__(self):
         # 2008 Q5 [8 lines] [3 marks]
 
@@ -51,7 +51,7 @@ class WordedDefiniteIntegral(object):
     def question_statement(self):
         sign = 'positive' if self._question_params['domain'].left == 0 else 'negative'
 
-        return r'''The area of the region bounded by the y-axis, the x-axis, the curve $y = {0}$ and the line x = {2}, where {2} is 
+        return r'''The area of the region bounded by the y-axis, the x-axis, the curve $y = {0}$ and the line x = {2}, where {2} is
                 a {3} real constant, is ${1}$. Find {2}.'''.format(sympy.latex(self._question_params['equation']),
                                                                 sympy.latex(self._question_params['area']),
                                                                 self._question_params['big_letter'],
@@ -66,26 +66,26 @@ class WordedDefiniteIntegral(object):
             question_domain = (0, self._question_params['big_letter'])
 
         lines = solution_lines.Lines()
-        
+
 
         if below_x_axis:
             signed_equation = -1 * self._question_params['equation']
 
 
             lines += r'Since the curve is below the x-axis, we take the signed area.'
-            lines += r'$= -{0} = {1}$'.format( 
+            lines += r'$= -{0} = {1}$'.format(
                 expressions.integral(lb=question_domain[0], ub=question_domain[1], expr=self._question_params['equation']),
                 expressions.integral(lb=question_domain[0], ub=question_domain[1], expr=signed_equation)
             )
 
 
-            lines += r'$= {0}$'.format( 
+            lines += r'$= {0}$'.format(
                 expressions.integral_intermediate(lb=question_domain[0], ub=question_domain[1], expr=signed_equation)
             )
-            
+
         else:
-            lines += r'${0}$'.format( 
-                expressions.integral(lb=question_domain[0], ub=question_domain[1], expr=self._question_params['equation']) 
+            lines += r'${0}$'.format(
+                expressions.integral(lb=question_domain[0], ub=question_domain[1], expr=self._question_params['equation'])
             )
 
             lines += r'$= {0}$'.format(
@@ -94,21 +94,21 @@ class WordedDefiniteIntegral(object):
 
 
         lines += r'''$= {0} = {1}$'''.format(
-            expressions.integral_intermediate_eval(lb=question_domain[0], ub=question_domain[1], expr=self._question_params['equation']), 
+            expressions.integral_intermediate_eval(lb=question_domain[0], ub=question_domain[1], expr=self._question_params['equation']),
             sympy.latex(self._question_params['area'])
         )
 
         # the value of the big letter is the sum of the ends of the domains (since one of the ends of the domains is 0)
         lines += r'''${0} = {1}$.'''.format(
-            self._question_params['big_letter'], 
+            self._question_params['big_letter'],
             sympy.latex(self._question_params['domain'].left + self._question_params['domain'].right)
         )
-        
+
         return lines.write()
 
 
     def sanity_check(self):
-        assert sympy.integrate(self._question_params['equation'], (x, self._question_params['domain'].left, 
+        assert sympy.integrate(self._question_params['equation'], (x, self._question_params['domain'].left,
                 self._question_params['domain'].right)) == self._question_params['area']
 
         # make sure we have no x-intercepts in the domain

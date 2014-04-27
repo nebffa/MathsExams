@@ -133,7 +133,10 @@ class PartTree:
         """Traverse the tree and instantiates an object of each class,
         creating a question for the student to do.
         """
-        if depth == 0:
+
+        if depth == 0:  # there's no parent part
+            self.object = self.cls()
+        elif isinstance(parent, DummyPart):  # there is a dummy for the parent part - there's no information to inherit
             self.object = self.cls()
         else:
             self.object = self.cls(part=parent)
@@ -211,7 +214,12 @@ def parse_structure(module):
     no_dummy_parent = all([i.parent != DummyPart for i in classes])
     if len(roots) != 1 and no_dummy_parent:
         raise RuntimeError('There needs to be 1 and only 1 root in {0}'.format(module.__name__))
-    root_part = roots[0]
+
+    if not no_dummy_parent:
+        root_part = DummyPart
+        classes.append(DummyPart)
+    else:
+        root_part = roots[0]
 
     def invalid_part(cls):
         """Returns false for any class that neither is the question root nor has a parent.

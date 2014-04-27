@@ -9,26 +9,19 @@ import decimal
 from . import relationships
 
 
-@relationships.is_child_of(relationships.DummyPart)
-class LinearApproximation:
+@relationships.root
+class LinearApproximationSetup(relationships.QuestionPart):
     """
     Question description
     ====================
 
-    Given an original point, use linear approximation to approximate the y-coordinate at a nearby point on the curve.
-
-
-    Real-life instances
-    ===================
-
-    2009 10a: Find an approximate value for cube_root(8.06) [7 lines] [4 marks]
+    Choose a function and a point to perform linear approximation on.
     """
 
     def __init__(self):
-        self.num_lines, self.num_marks = 7, 4
+        self.num_lines, self.num_marks = 0, 0
 
-        self._qp = {}
-        self._qi = {}
+        self._qp, self._qi = {}, {}
 
         self._qp['equation'] = random.choice([x ** sympy.Rational(1, random.randint(2, 3)), x ** random.randint(2, 3)])
         self._qi['noeval_equation'] = self._qp['equation'].replace(sympy.Pow, noevals.noevalPow)
@@ -43,6 +36,28 @@ class LinearApproximation:
 
         self._qp['delta'] = not_named_yet.randint_no_zero(-1, 1) * random.randint(5, 9) * decimal.Decimal('0.01')
         self._qp['new_location'] = self._qp['location'] + self._qp['delta']
+
+
+@relationships.is_child_of(LinearApproximationSetup)
+class LinearApproximation(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    Use linear approximation to approximate the y-coordinate at a nearby point on the curve.
+
+
+    Real-life instances
+    ===================
+
+    2009 10a: Find an approximate value for cube_root(8.06) [7 lines] [4 marks]
+    """
+
+    def __init__(self, part):
+        self.num_lines, self.num_marks = 7, 4
+
+        self._qp = copy.copy(part._qp)
+        self._qi = copy.copy(part._qi)
 
     def question_statement(self):
         f_of_new_location = self._qi['noeval_equation'].subs({x: self._qp['new_location']})
@@ -81,8 +96,8 @@ class LinearApproximation:
         return lines.write()
 
 
-@relationships.is_child_of(relationships.DummyPart)
-class LinearApproximationExplain:
+@relationships.is_child_of(LinearApproximationSetup)
+class LinearApproximationExplain(relationships.QuestionPart):
     """
     Question description
     ====================

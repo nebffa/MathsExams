@@ -7,14 +7,14 @@ from . import relationships
 
 
 @relationships.root
-class TrigProperties:
+class TrigProperties(relationships.QuestionPart):
     def __init__(self):
         # 2010 Q4a [4 lines] [2 marks]
         # 2011 Q3a [5 lines] [2 marks]
         self.num_lines, self.num_marks = 4, 2
         self._qp = {}
 
-        
+
         self._qp['amplitude'] = not_named_yet.randint(1, 4)
         trig_type = random.choice([sympy.sin, sympy.cos, sympy.tan])
 
@@ -50,5 +50,5 @@ class TrigProperties:
             )
 
         lines += r'The period is ${0}$'.format(sympy.latex(self._qp['period']))
-        
+
         return lines.write()
