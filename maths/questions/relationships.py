@@ -10,6 +10,7 @@ class DummyPart:
             a. some question
             b. some other related question
     """
+
     def __init__(self):
         self.num_lines, self.num_marks = 0, 0
 
@@ -20,6 +21,7 @@ class DummyPart:
 class QuestionPart:
     """Base class for all question parts.
     """
+
     is_root = False
     parent = None
 
