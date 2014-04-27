@@ -1,8 +1,8 @@
-from maths.questions import trig_properties
+from maths.questions import trig_properties, relationships
 from maths.latex.questions import QuestionTree
 from .question_tester import question_tester
 
 
-def test_TrigProperties():
-    q1 = trig_properties.TrigProperties()
-    question_tester(QuestionTree(part=q1))
+def test_trig_properties():
+    question = relationships.parse_structure(trig_properties)
+    question_tester(question)

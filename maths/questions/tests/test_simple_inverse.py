@@ -1,8 +1,8 @@
-from maths.questions import simple_inverse
+from maths.questions import simple_inverse, relationships
 from maths.latex.questions import QuestionTree
 from .question_tester import question_tester
 
 
-def test_SimpleInverse():
-    q1 = simple_inverse.SimpleInverse()
-    question_tester(QuestionTree(q1))
+def test_simple_inverse():
+    question = relationships.parse_structure(simple_inverse)
+    question_tester(question)

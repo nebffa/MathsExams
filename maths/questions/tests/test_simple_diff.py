@@ -1,15 +1,8 @@
-from maths.questions import simple_diff
+from maths.questions import simple_diff, relationships
 from maths.latex.questions import QuestionTree
 from .question_tester import question_tester
 
 
-def test_SimpleDiff():
-    q1 = simple_diff.SimpleDiff()
-    question_tester(QuestionTree(q1))
-
-
-def test_SimpleDiffEval():
-    q1 = simple_diff.SimpleDiff()
-    q2 = simple_diff.SimpleDiffEval(q1.function_type)
-
-    question_tester(QuestionTree(q2))
+def test_simple_diff():
+    question = relationships.parse_structure(simple_diff)
+    question_tester(question)

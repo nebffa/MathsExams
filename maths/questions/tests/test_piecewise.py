@@ -4,6 +4,6 @@ from .question_tester import question_tester
 import pytest
 
 
-def test_Piecewise():
+def test_piecewise():
     question = relationships.parse_structure(piecewise)
     question_tester(question)

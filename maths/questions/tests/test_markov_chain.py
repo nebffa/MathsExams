@@ -1,4 +1,4 @@
-from maths.questions import markov_chain
+from maths.questions import markov_chain, relationships
 from maths.latex.questions import QuestionTree
 from .question_tester import question_tester
 import decimal
@@ -15,8 +15,8 @@ location_names = ['A', 'B']
 
 
 def test_MarkovChain():
-    q1 = markov_chain.MarkovChainBinomial()
-    question_tester(QuestionTree(part=q1))
+    question = relationships.parse_structure(markov_chain)
+    question_tester(question)
 
 
 def test_all_path():
