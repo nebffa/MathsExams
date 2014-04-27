@@ -12,15 +12,15 @@ what is needed is a proper engine for selecting plausible values
 e.g. choose a value in a domain such that an integral from the left side to this point gives a simple value
 
 
-also what is needed is a solutions_working engine, for showing lines of standard solutions working - 
+also what is needed is a solutions_working engine, for showing lines of standard solutions working -
 e.g. solving 1/2 * cos(pi * a / 2) = -1/4 -- the answers are a = 4/3, 8/3, but we'd like something that parses the input, and solves it against a value
         storing the lines in a Lines() object as it goes (I think?)
 
 
 noevals has a couple issues that NEED TO BE FIXED
-1. noevalsin prints as noevalsin, not sin
-2. noevalMul doesn't replace Mul at all in noevalify
-3. NoEvalLatexPrinter is a mess
+this is fixed now - 1. noevalsin prints as noevalsin, not sin
+I think this is fixed now - 2. noevalMul doesn't replace Mul at all in noevalify
+3. NoEvalLatexPrinter is a bit hard to deal with (a bit bulky)
 
 
 
@@ -29,7 +29,7 @@ rewrite transformations to use matrices for transformations?
 
 sympy things to work on:
 
-1. 
+1.
 x = Symbol('x', real=True)
 solve(Abs(x - 1) - 1) errors
 
