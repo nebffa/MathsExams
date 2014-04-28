@@ -103,7 +103,7 @@ class PiecewiseProbDensityFunctionUnknown(relationships.QuestionPart):
     """
 
     def __init__(self, part):
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
         self.num_marks, self.num_lines = 3, 12
 
     def question_statement(self):
@@ -164,7 +164,7 @@ class SimpleInterval(relationships.QuestionPart):
         # 2011 Q5a [5 lines] [2 marks]
         self.num_lines, self.num_marks = 5, 2
 
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         choices = [self._qp['domain'].left + sympy.Rational(i, 4) * self._qp['domain'].measure for i in [1, 2, 3]]
         self._qp['bound'] = random.choice(choices)
@@ -225,7 +225,7 @@ class Conditional:
 
         self.num_lines, self.num_marks = 8, 2
 
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         self._qp['major_bound'], self._qp['minor_bound'] = sensible_values.conditional_integral(self._qp['equation'], self._qp['domain'])
 
@@ -297,7 +297,7 @@ class Cumulative(relationships.QuestionPart):
     def __init__(self, part):
         self.num_lines, self.num_marks = 12, 3
 
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         stripped_endpoints = sympy.Interval(self._qp['domain'].left, self._qp['domain'].right, True, True)
         self._qp['location'] = sensible_values.antiderivative(self._qp['equation'], stripped_endpoints)

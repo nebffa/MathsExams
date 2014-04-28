@@ -72,7 +72,7 @@ class SimpleNormalDistribution(relationships.QuestionPart):
 
     def __init__(self, part):
         self.num_lines, self.num_marks = 6, 2
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         self._qi = {}
         self._qi['unknown_variable'] = a
@@ -174,7 +174,7 @@ class OneSidedHalf(relationships.QuestionPart):
 
     def __init__(self, part):
         self.num_lines, self.num_marks = 2, 1
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         self._qp['interval'] = random.choice([
             sympy.Interval(-sympy.oo, self._qp['mean']),
@@ -254,7 +254,7 @@ class ProbabilityEquality(relationships.QuestionPart):
 
     def __init__(self, part):
         self.num_lines, self.num_marks = 4, 2
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         self._qp['num_standard_deviations'] = sympy.Rational(
             not_named_yet.randint(-3, 3, exclude=[0]),

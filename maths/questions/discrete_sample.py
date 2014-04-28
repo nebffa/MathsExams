@@ -69,7 +69,7 @@ class SpecificPermutation(relationships.QuestionPart):
     def __init__(self, part):
         self.num_lines, self.num_marks = 4, 1
 
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
     def question_statement(self):
         self._qp['choices'] = random.sample(self._qp['items'], self._qp['n_selections'])
@@ -217,7 +217,7 @@ class Sum(relationships.QuestionPart, DiscreteSum):
 
     def __init__(self, part):
         self.num_lines, self.num_marks = 5, 1
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         self._qp['sum'] = random.choice(self.appropriate_sums())
 
@@ -271,7 +271,7 @@ class ConditionalSum(relationships.QuestionPart, DiscreteSum):
     """
 
     def __init__(self, part):
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
         self.num_lines, self.num_marks = (4, 1) if self._qp['n_selections'] == 2 else (5, 2)
 
         self._qp['sum'] = random.choice(self.appropriate_sums())

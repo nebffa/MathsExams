@@ -56,8 +56,8 @@ class LinearApproximation(relationships.QuestionPart):
     def __init__(self, part):
         self.num_lines, self.num_marks = 7, 4
 
-        self._qp = copy.copy(part._qp)
-        self._qi = copy.copy(part._qi)
+        self._qp = copy.deepcopy(part._qp)
+        self._qi = copy.deepcopy(part._qi)
 
     def question_statement(self):
         f_of_new_location = self._qi['noeval_equation'].subs({x: self._qp['new_location']})
@@ -114,8 +114,8 @@ class LinearApproximationExplain(relationships.QuestionPart):
     def __init__(self, part):
         self.num_lines, self.num_marks = 4, 1
 
-        self._qp = copy.copy(part._qp)
-        self._qi = copy.copy(part._qi)
+        self._qp = copy.deepcopy(part._qp)
+        self._qi = copy.deepcopy(part._qi)
 
         self._qp['concave_or_convex'] = functions.concave_or_convex(self._qp['equation'], self._qp['location'])
 

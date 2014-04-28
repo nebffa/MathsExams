@@ -49,7 +49,7 @@ class SimpleSketch:
 class PointTransformation:
     def __init__(self, part):
         self.num_lines, self.num_marks = 4, 1
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         y_point = sympy.oo
         while y_point in [-sympy.oo, sympy.oo]:
@@ -80,7 +80,7 @@ class PointTransformation:
 class EquationTransformation:
     def __init__(self, part):
         self.num_lines, self.num_marks = 8, 2
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         self._qp['transformations'] = transformations.random_transformation(num_transformations=2)
 

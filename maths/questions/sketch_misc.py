@@ -14,7 +14,7 @@ class SketchDoubleInverse:
         # 2008 Q10b [0 lines] [1 mark] [Blank plot]
         self.num_lines, self.num_marks = 0, 1
 
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         if self._qp['domain'].left != -sympy.oo and self._qp['domain'].right != sympy.oo:
             raise ValueError('This questions needs an open ended domain.')

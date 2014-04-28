@@ -67,7 +67,7 @@ class Derivative(relationships.QuestionPart):
 
     def __init__(self, part):
         self.num_lines, self.num_marks = 3, 1
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
     def question_statement(self):
         return r'''Find $f'(x)$.'''
@@ -99,7 +99,7 @@ class Integration(relationships.QuestionPart):
 
     def __init__(self, part):
         self.num_lines, self.num_marks = 12, 3
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         domain = sympy.Interval(-2 * sympy.pi, 2 * sympy.pi)
         bounds = sensible_values.integral_domain(self._qp['equation'], domain)

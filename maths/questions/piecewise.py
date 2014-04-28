@@ -97,7 +97,7 @@ class DomainDerivative(relationships.QuestionPart):
 
     def __init__(self, part):
         self.num_lines, self.num_marks = 3, 1
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         self._qp['domain'] = sympy.Interval(-sympy.oo, sympy.oo)
         for piecewise_part in self._qp['equation'].args:
@@ -141,7 +141,7 @@ class AbsoluteValue(relationships.QuestionPart):
 
     def __init__(self, part):
         self.num_lines, self.num_marks = 0, 2
-        self._qp = copy.copy(part._qp)
+        self._qp = copy.deepcopy(part._qp)
 
         # find the half of the piecewise that is not already an absolute value
         func_left, func_right = self._qp['equation'].args
