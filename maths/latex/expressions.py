@@ -29,6 +29,11 @@ def integral_intermediate(lb, ub, expr, var=x):
 
 def integral_intermediate_eval(lb, ub, expr, var=x):
     """Return LaTex that displays both evaluated bounds of the integral.
+
+    >>> k = sympy.Symbol('k')
+    >>> y = -k + 1
+    >>> integral_intermediate_eval(lb=-5, ub=5, expr=y)
+    '- 5 k + 5 - (5 k - 5)'
     """
 
     antideriv = expr.integrate(var)
@@ -39,13 +44,8 @@ def integral_intermediate_eval(lb, ub, expr, var=x):
     left = antideriv.subs({var: ub})
     right = antideriv.subs({var: lb})
 
-    if isinstance(right, sympy.Add):  # an expression like (-1 + sqrt(3)/2).could_extract_minus_sign() returns False
-        right_leading_term = right.args[0]
-        if right_leading_term.could_extract_minus_sign():
-            return r'{0} - ({1})'.format(sympy.latex(left), sympy.latex(right))
-        else:
-            return r'{0} - {1}'.format(sympy.latex(left), sympy.latex(right))
-
+    if isinstance(right, sympy.Add):  # an expression like (-1 + sqrt(3)/2) or (k + 1)
+        return r'{0} - ({1})'.format(sympy.latex(left), sympy.latex(right))
     elif right.could_extract_minus_sign():
         return r'{0} - ({1})'.format(sympy.latex(left), sympy.latex(right))
     else:
