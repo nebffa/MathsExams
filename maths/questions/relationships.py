@@ -2,6 +2,8 @@ import inspect
 import os
 import pickle
 import random
+import copy
+import re
 
 
 class DummyPart:
@@ -23,7 +25,7 @@ class QuestionPart:
     """
 
     is_root = False
-    parent = None
+    parents = []
 
     @classmethod
     def storage_paths(cls):
@@ -93,12 +95,12 @@ def root(cls):
     return cls
 
 
-def is_child_of(parent):
+def is_child_of(*parents):
     """A class decorator to specify a part's parent.
     """
 
     def decorator(cls):
-        cls.parent = parent
+        cls.parents = parents
         return cls
     return decorator
 
@@ -113,7 +115,8 @@ class PartTree:
 
         Given the existing question tree, find out where to insert a new part.
         """
-        if cls.parent == self.cls:  # the current node is the parent
+
+        if self.cls in cls.parents:  # the current node is the parent
             return self
         else:  # check if any of the current node's children is the parent
             for i in self.children:
@@ -125,6 +128,7 @@ class PartTree:
     def add_subpart(self, cls):
         """Add a new class to the tree.
         """
+
         child = PartTree(cls)
         parent = self._find_parent(cls)
         parent.children.append(child)
@@ -147,6 +151,7 @@ class PartTree:
     def _question_traversal_to_latex(self, depth=0):  # uses the enumitem package which gives us some hbox errors
         """Traverse the tree, returning the latex for each instantiated object.
         """
+
         total_string = r'\item' + '\n'
 
         if depth == 0:
@@ -169,6 +174,7 @@ class PartTree:
     def _solution_traversal_to_latex(self, depth=0):  # uses the enumitem package which gives us some hbox errors
         """Traverse the tree, returning the latex for each instantiated object.
         """
+
         total_string = r'\item' + '\n'
 
         if depth == 0:
@@ -199,46 +205,108 @@ class PartTree:
         return self._question_traversal_to_latex()
 
 
+def exists_dummy_parent(parts):
+    """State whether there is a dummy parent for any part in a list of parts.
+    """
+
+    for part in parts:
+        if DummyPart in part.parents:
+            return True
+
+    return False
+
+
+def ordered_parts(module, parts):
+    """Return the parts in the order they appear within the module.
+
+    inspect.getmembers(module, inspect.isclass) will give us all the classes in a file, but in alphabetical order.
+
+    We want the classes in the order they are defined in the module, since a part may logically come before another
+    in a question, and we store that information by having it defined first.
+    """
+
+    with open(module.__file__, 'r') as f:
+        module_text = f.read()
+
+    part_locations_in_file = {}
+    search_for = r'class {class_name}\('
+    for part in parts:
+        if part == DummyPart:  # we place dummy parts at the front since they will always be parents
+            part_locations_in_file[part] = 0
+            continue
+
+        search = search_for.format(class_name=part.__name__)
+
+        match = re.search(search, module_text)
+
+        part_locations_in_file[part] = match.start()
+
+    return sorted(part_locations_in_file, key=part_locations_in_file.get)
+
+
 def parse_structure(module):
     """Parse the question structure based on the relationships of classes in a module.
 
     Will be evolved over time!!!
     """
-    classes = []
 
-    for _, obj in inspect.getmembers(module):
-        if inspect.isclass(obj) and issubclass(obj, QuestionPart):  # get all the question parts
-            classes.append(obj)
+    parts = []
+    for _, member in inspect.getmembers(module, inspect.isclass):
+        if issubclass(member, QuestionPart):  # get all the question parts
+            parts.append(member)
 
-    roots = [i for i in classes if i.is_root]
-    no_dummy_parent = all([i.parent != DummyPart for i in classes])
-    if len(roots) != 1 and no_dummy_parent:
-        raise RuntimeError('There needs to be 1 and only 1 root in {0}'.format(module.__name__))
+    roots = [i for i in parts if i.is_root]
+    if exists_dummy_parent(parts):
+        roots.append(DummyPart)
+        parts.append(DummyPart)
 
-    if not no_dummy_parent:
-        root_part = DummyPart
-        classes.append(DummyPart)
-    else:
-        root_part = roots[0]
+    if len(roots) == 0:
+        raise RuntimeError('There must be at least 1 root or DummyPart parent in {0}'.format(module.__name__))
 
-    def invalid_part(cls):
+    def invalid_part(part):
         """Returns false for any class that neither is the question root nor has a parent.
         """
-        if not cls.is_root and cls.parent is None:
+
+        if part == DummyPart:
+            return False
+        if not part.is_root and part.parents is None:
             return True
         else:
             return False
 
-    root_node = PartTree(root_part)
-    classes.remove(root_part)
-    while classes:
-        for i in range(len(classes)):
-            cls = classes[i]
-            if invalid_part(cls):
-                raise ValueError('The part: {0} is neither the root part nor a subpart.'.format(cls.__name__))
+    for part in parts:
+        if invalid_part(part):
+            raise ValueError('The part: {0} is neither the root part nor a subpart.'.format(part.__name__))
 
-            root_node.add_subpart(cls)
-            classes.remove(cls)
-            break  # we just removed something from the list, so we need to reset our iterator variable
+    def build_from_root(root, parts):
+        """Given a root, build a question tree out of the part heirarchy.
+        """
 
-    return root_node
+        parts = copy.deepcopy(parts)
+
+        tree = PartTree(root)
+        parts.remove(root)
+
+        # since we will iterate over the reversed list, we want to reverse it here so we are still
+        # technically checking each part in order
+        parts = list(reversed(parts))
+        while parts:
+            # we iterate over the reversed list so we can remove as we go, otherwise we run into unintuitive errors
+            # like skipping items in the iteration
+            for part in reversed(parts):
+                try:
+                    tree.add_subpart(part)
+                except RuntimeError as e:
+                    # the part could not be located in the tree
+                    # we could do this a more efficient way, but we are dealing with O(1) parts so raising a couple of
+                    # exceptions here won't change much
+                    pass
+
+                parts.remove(part)
+
+        return tree
+
+    parts = ordered_parts(module, parts)
+    trees = [build_from_root(root, parts) for root in roots]
+
+    return trees
