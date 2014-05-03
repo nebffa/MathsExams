@@ -5,7 +5,7 @@ import itertools
 import functools
 import operator
 from ..phrasing import days, first_names
-from ..latex import latex, solution_lines
+from ..latex import latex, solutions
 from . import relationships
 
 
@@ -152,7 +152,7 @@ class MarkovChainBinomial(relationships.QuestionPart):
         return setup + latex.latex_newline() + question
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         paths = MarkovChainBinomial.all_paths(self._qp['start_state'], self._qp['binomial']['n_trials'])
         if self._qp['binomial']['cinema'] == 0:

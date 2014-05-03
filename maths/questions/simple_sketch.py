@@ -5,7 +5,7 @@ from ..plot import plot
 from ..utils import transformations, noevals
 import random
 import copy
-from ..latex import latex, solution_lines
+from ..latex import latex, solutions
 from . import relationships
 
 
@@ -95,7 +95,7 @@ class EquationTransformation:
         answer = transformations.apply_transformations(self._qp['transformations'], self._qp['equation'])
 
         
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         lines += r'${0}$'.format(mapping_chain)
 

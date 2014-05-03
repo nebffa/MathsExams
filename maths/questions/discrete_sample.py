@@ -1,6 +1,6 @@
 import sympy
 import random
-from ..latex import solution_lines, expressions
+from ..latex import solutions, expressions
 from ..phrasing import item_position, items
 import copy
 import functools
@@ -79,7 +79,7 @@ class SpecificPermutation(relationships.QuestionPart):
         return r'''Find the probability that the values of the balls are {values_text}, respectively.'''.format(values_text=values_text)
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         probabilities = ['ball_{ball_number} = {ball_value}'.format(ball_number=index + 1, ball_value=ball_value) for
                          index, ball_value in enumerate(self._qp['choices'])]
@@ -189,7 +189,7 @@ class Sum(relationships.QuestionPart, DiscreteSum):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         ball_combinations = itertools.combinations(self._qp['items'], self._qp['n_selections'])
         valid_total_sum_combinations = [i for i in ball_combinations if sum(i) == self._qp['sum']]
@@ -257,7 +257,7 @@ class ConditionalSum(relationships.QuestionPart, DiscreteSum):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         ball_combinations = list(itertools.combinations(self._qp['items'], self._qp['n_selections']))
         valid_total_sum_combinations = [i for i in ball_combinations if sum(i) == self._qp['sum']]

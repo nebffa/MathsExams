@@ -1,5 +1,5 @@
 from ..symbols import x0, x1, x2, x
-from . import latex, solution_lines
+from . import latex, solutions
 from ..utils import functions
 import sympy
 
@@ -143,15 +143,16 @@ def shrink_solution_set(expr, domain, expr_equal_to=0, var=x):
     e.g. c = 5/3, 7/3
     but c is in the domain [1, 2], so c = 5/3
     """
-    solutions = sympy.solve(expr - expr_equal_to)
 
-    lines = solution_lines.Lines()
+    var_solutions = sympy.solve(expr - expr_equal_to)
 
-    solutions_text = ', '.join([sympy.latex(i) for i in solutions])
+    lines = solutions.Lines()
+
+    var_solutions_text = ', '.join([sympy.latex(i) for i in var_solutions])
     # HERE IS WHERE I WAS WORKING UP TO
-    lines += r'${0} = {1}$'.format(sympy.latex(var), solutions_text)
+    lines += r'${0} = {1}$'.format(sympy.latex(var), var_solutions_text)
 
-    smaller_set_text = ', '.join([sympy.latex(i) for i in solutions if i in domain])
+    smaller_set_text = ', '.join([sympy.latex(i) for i in var_solutions if i in domain])
 
     if isinstance(domain, sympy.Interval) and domain.left == -sympy.oo:
         domain_text = r'${0} {1} {2}$'.format(sympy.latex(var), r'\le' if domain.right_open else r'\lte', sympy.latex(domain.right))

@@ -2,7 +2,7 @@ import sympy
 import random
 from ..symbols import x0, x1, x
 from .. import all_functions, not_named_yet
-from ..latex import latex, expressions, solution_lines
+from ..latex import latex, expressions, solutions
 from ..utils import noevals
 from . import relationships
 
@@ -64,7 +64,7 @@ class DefiniteIntegralEquality(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         intermediate = expressions.integral_intermediate(lb=self._qp['boundary'].left, ub=self._qp['boundary'].right, expr=self._qp['equation'])
         lines += r'${integral_intermediate}$'.format(

@@ -3,7 +3,7 @@ import random
 from .. import all_functions, not_named_yet
 from ..symbols import *
 from ..utils import functions
-from ..latex import expressions, latex, solution_lines
+from ..latex import expressions, latex, solutions
 from . import relationships
 
 
@@ -65,7 +65,7 @@ class WordedDefiniteIntegral(relationships.QuestionPart):
         else:
             question_domain = (0, self._question_params['big_letter'])
 
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
 
         if below_x_axis:

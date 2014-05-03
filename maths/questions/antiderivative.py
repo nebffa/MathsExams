@@ -1,7 +1,7 @@
 import sympy
 import random
 from .. import all_functions, not_named_yet
-from ..latex import latex, solution_lines
+from ..latex import latex, solutions
 from ..symbols import x0
 from . import relationships
 
@@ -62,7 +62,7 @@ class Antiderivative(relationships.QuestionPart):
 
         constant_of_integration = not_named_yet.randint_no_zero(-3, 3)
 
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         # without using .factor() here, we could have (x + 1)**(-3) integrate to -1/(2*x**2 + 4*x + 2) which is expanded
         antiderivative = proper_antiderivative.factor() + constant_of_integration

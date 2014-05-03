@@ -1,7 +1,7 @@
 import sympy
 import random
 from .. import all_functions, not_named_yet
-from ..latex import latex, solution_lines
+from ..latex import latex, solutions
 from ..utils import noevals
 from ..symbols import *
 from . import relationships
@@ -220,7 +220,7 @@ class SimpleDiffEval(relationships.QuestionPart):
     def solution_statement(self):
         # needs more work at the moment - likely an inbetween step to evaluate every subexpression in f'(x) but not f'(x) itself
 
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
         lines += r"${0}'(x) = {1}$".format(self._question_type, sympy.latex(self.derivative))
 
 

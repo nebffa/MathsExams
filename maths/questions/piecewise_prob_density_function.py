@@ -2,7 +2,7 @@ import sympy
 import random
 from .. import domains
 from ..symbols import x, k
-from ..latex import expressions, solution_lines
+from ..latex import expressions, solutions
 from ..utils import sensible_values
 from . import relationships
 import copy
@@ -50,7 +50,7 @@ class PiecewiseProbDensityFunction:
     def question_statement(self):
         piecewise = sympy.Piecewise((self._qp['equation'], sympy.And(self._qp['domain'].left <= x, x <= self._qp['domain'].right)), (0, True))
 
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         lines += r'The function $$f(x) = {equation}$$ is a probability density function for the continuous random variable $X$.'.format(
             equation=expressions.piecewise(piecewise)
@@ -115,7 +115,7 @@ class PiecewiseProbDensityFunctionUnknown(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         integral, integral_intermediate, integral_intermediate_eval = \
             expressions.integral_trifecta(lb=self._qp['domain'].left, ub=self._qp['domain'].right, expr=self._qp['equation'])
@@ -183,7 +183,7 @@ class SimpleInterval(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         lines += '$= {integral}$'.format(
             integral=expressions.integral(expr=self._qp['equation'], lb=self._qp['domain'].left, ub=self._qp['domain'].right)
@@ -241,7 +241,7 @@ class Conditional:
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         minor_event = r'X {minor_direction} {minor_bound}'.format(**self._qp)
         major_event = r'X {major_direction} {major_bound}'.format(**self._qp)
@@ -323,7 +323,7 @@ class Cumulative(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         integral, integral_intermediate, integral_intermediate_eval = \
             expressions.integral_trifecta(expr=self._qp['equation'], lb=self._qi['domain'].left, ub=self._qi['domain'].right)

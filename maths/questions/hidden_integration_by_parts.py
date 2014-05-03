@@ -1,7 +1,7 @@
 import sympy
 import random
 from ..symbols import x
-from ..latex import solution_lines, expressions
+from ..latex import solutions, expressions
 from ..utils import sensible_values
 import copy
 from . import relationships
@@ -73,7 +73,7 @@ class Derivative(relationships.QuestionPart):
         return r'''Find $f'(x)$.'''
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         # e.g. f'(x) = 2 * x * log(x) + x
         lines += r'''$f'(x) = {0}$'''.format(sympy.latex(self._qp['equation'].diff()))
@@ -113,7 +113,7 @@ class Integration(relationships.QuestionPart):
         return r'Use the result of part a. to find the value of ${0}$.'.format(integral)
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         # so that we can easily jumble around the parts of the equation, we make symbols for f' and f
         f_ = sympy.Symbol("f'(x)")

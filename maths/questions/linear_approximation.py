@@ -2,7 +2,7 @@ import sympy
 import random
 from ..symbols import x
 from .. import not_named_yet
-from ..latex import solution_lines, expressions
+from ..latex import solutions, expressions
 from ..utils import noevals, functions
 import copy
 import decimal
@@ -65,7 +65,7 @@ class LinearApproximation(relationships.QuestionPart):
             to find an approximate value for ${f_of_new_location}$.'''.format(f_of_new_location=sympy.latex(f_of_new_location))
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         derivative = self._qp['equation'].diff()
         lines += r'''$y = {equation}, y' = {derivative}$'''.format(
@@ -128,7 +128,7 @@ class LinearApproximationExplain(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         second_derivative = self._qp['equation'].diff().diff()
         second_derivative_leibniz_form = r'{derivative}({location})'.format(

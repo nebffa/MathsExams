@@ -2,7 +2,7 @@ import sympy
 import random
 from .. import all_functions
 from ..symbols import x, y, x0, x1, x2, x3, a, b, c, d, coeff0, coeff1, coeff2, coeff3
-from ..latex import solution_lines
+from ..latex import solutions
 from ..utils import transformations, noevals
 import collections
 from . import relationships
@@ -131,7 +131,7 @@ class MatrixLinearTransformation(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         # e.g. T([x; y]) = [x - 2; y] = [x'; y']
         x_, y_ = sympy.symbols("x' y'")

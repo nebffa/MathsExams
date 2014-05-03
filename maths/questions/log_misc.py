@@ -3,7 +3,7 @@ import random
 from ..symbols import x, x0, coeff0
 from .. import all_functions
 from ..utils import sensible_values
-from ..latex import solution_lines
+from ..latex import solutions
 import functools
 import operator
 from . import relationships
@@ -190,7 +190,7 @@ class SolveLogEquation(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         left_combined = SolveLogEquation.logcombine_include_negative_power(self._qp['left_side'], force=True)
         right_combined = SolveLogEquation.logcombine_include_negative_power(self._qp['right_side'], force=True)
@@ -216,9 +216,9 @@ class SolveLogEquation(relationships.QuestionPart):
             collected_like_terms=sympy.latex(collected_like_terms)
         )
 
-        solutions = sympy.solve(collected_like_terms)
+        solutions_for_x = sympy.solve(collected_like_terms)
         lines += r'$x = {solutions}$'.format(
-            solutions=', '.join([sympy.latex(solution) for solution in solutions])
+            solutions=', '.join([sympy.latex(solution) for solution in solutions_for_x])
         )
 
         invalid_solutions = set(self._qp['maybe_invalid_solutions']) - set(self._qp['valid_solutions'])

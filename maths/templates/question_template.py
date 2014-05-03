@@ -2,7 +2,7 @@ import sympy
 import random
 from maths.symbols import *
 from maths import all_functions, not_named_yet
-from maths.latex import solution_lines
+from maths.latex import solutions
 
 
 class name:
@@ -23,7 +23,7 @@ class name:
 
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
         
 
 

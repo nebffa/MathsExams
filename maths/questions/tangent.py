@@ -2,7 +2,7 @@ import sympy
 import random
 from ..symbols import x
 from .. import all_functions, not_named_yet
-from ..latex import solution_lines
+from ..latex import solutions
 from . import relationships
 import itertools
 import os
@@ -139,7 +139,7 @@ class Tangent(relationships.QuestionPart):
 
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
 
 

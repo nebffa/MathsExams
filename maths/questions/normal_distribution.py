@@ -1,7 +1,7 @@
 import sympy
 import random
 from .. import not_named_yet
-from ..latex import solution_lines, expressions
+from ..latex import solutions, expressions
 from ..symbols import a
 from . import relationships
 import copy
@@ -114,7 +114,7 @@ class SimpleNormalDistribution(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         left_pr = sympy.Rational(1, 2)
         if self._qp['event_provided_to_student'].left == -sympy.oo:
@@ -187,7 +187,7 @@ class OneSidedHalf(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
         lines += r'${answer}$'.format(
             answer=sympy.latex(sympy.Rational(1, 2))
         )
@@ -294,7 +294,7 @@ class ProbabilityEquality(relationships.QuestionPart):
         )
 
     def solution_statement(self):
-        lines = solution_lines.Lines()
+        lines = solutions.Lines()
 
         if self._qp['unknown_location'] == 'Z':
             interval = ProbabilityEquality.N_to_Z_interval(
