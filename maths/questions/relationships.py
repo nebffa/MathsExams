@@ -86,6 +86,16 @@ class QuestionPart:
 
         return pickle.loads(pickled_question)
 
+    def combined_question_dict(self):
+        """Return the combined dictionary of a question's parameters and information.
+        """
+
+        combined = copy.deepcopy(self._qp)
+        if hasattr(self, '_qi'):
+            combined.update(self._qi)
+
+        return combined
+
 
 def root(cls):
     """A class decorator to specify a question root.
