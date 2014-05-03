@@ -201,4 +201,43 @@ def relation(interval_or_relation, var=x):
 def union_of_probabilities(probabilities):
     """Return LaTeX to represent a union of probabilities.
     """
+
     return r' \cap '.join(probabilities)
+
+
+def sum_combination_probabilities(combinations):
+    """Return LaTeX to represent the sum of the probabilities of selecting particular
+    combinations of items.
+    """
+
+    probabilities = []
+    n_selections = len(combinations[0])
+    for combination in combinations:
+        event = union_of_probabilities(['ball_{ball_number} = {ball_value}'.format(
+            ball_number=index + 1, ball_value=item_value) for index, item_value in enumerate(combination)])
+
+        probability = r'{n_selections}! \times Pr({event})'.format(
+            n_selections=n_selections,
+            event=event
+        )
+
+        probabilities.append(probability)
+
+    return ' + '.join(probabilities)
+
+
+def sum_permutation_probabilities(permutations):
+    """Return LaTeX to represent the sum of the probabilities of selecting particular
+    permutations of items.
+    """
+
+    probabilities = []
+    for permutation in permutations:
+        event = union_of_probabilities(['ball_{ball_number} = {ball_value}'.format(
+            ball_number=index + 1, ball_value=item_value) for index, item_value in enumerate(permutation)])
+
+        probabilities.append(
+            r'Pr({event})'.format(event=event)
+        )
+
+    return ' + '.join(probabilities)

@@ -118,44 +118,6 @@ class DiscreteSum():
 
         return too_few < num_permutations < too_many
 
-    @staticmethod
-    def sum_combination_probabilities(combinations):
-        """Return LaTeX to represent the sum of the probabilities of selecting particular
-        combinations of items.
-        """
-
-        probabilities = []
-        n_selections = len(combinations[0])
-        for combination in combinations:
-            event = expressions.union_of_probabilities(['ball_{ball_number} = {ball_value}'.format(
-                ball_number=index + 1, ball_value=item_value) for index, item_value in enumerate(combination)])
-
-            probability = r'{n_selections}! \times Pr({event})'.format(
-                n_selections=n_selections,
-                event=event
-            )
-
-            probabilities.append(probability)
-
-        return ' + '.join(probabilities)
-
-    @staticmethod
-    def sum_permutation_probabilities(permutations):
-        """Return LaTeX to represent the sum of the probabilities of selecting particular
-        permutations of items.
-        """
-
-        probabilities = []
-        for permutation in permutations:
-            event = expressions.union_of_probabilities(['ball_{ball_number} = {ball_value}'.format(
-                ball_number=index + 1, ball_value=item_value) for index, item_value in enumerate(permutation)])
-
-            probabilities.append(
-                r'Pr({event})'.format(event=event)
-            )
-
-        return ' + '.join(probabilities)
-
     def single_combination_probability(self):
         """Return the probability of an arbitrary combination of item selections occurring.
 
@@ -235,7 +197,7 @@ class Sum(relationships.QuestionPart, DiscreteSum):
         # e.g. Pr(sum = 14) = 3! * Pr(ball1 = 3 and ball2 = 5 and ball3 = 6)
         lines += r'$Pr(\text{{sum}} = {sum}) = {sum_of_probabilities}$'.format(
             sum=self._qp['sum'],
-            sum_of_probabilities=self.__class__.sum_combination_probabilities(valid_total_sum_combinations)
+            sum_of_probabilities=expressions.sum_combination_probabilities(valid_total_sum_combinations)
         )
 
         probability_of_a_single_combination = self.single_combination_probability()
@@ -303,7 +265,7 @@ class ConditionalSum(relationships.QuestionPart, DiscreteSum):
         # e.g. Pr(sum = 14) = 3! * Pr(ball1 = 2 and ball2 = 5 and ball3 = 6) + 3! * Pr(ball1 = 3 and ball2 = 4 and ball3 = 6)
         lines += r'$Pr(\text{{sum}} = {0}) = {1}$'.format(
             self._qp['sum'],
-            self.__class__.sum_combination_probabilities(valid_total_sum_combinations)
+            expressions.sum_combination_probabilities(valid_total_sum_combinations)
         )
 
         probability_of_a_single_combination = self.single_combination_probability()
@@ -327,7 +289,7 @@ class ConditionalSum(relationships.QuestionPart, DiscreteSum):
 
         # e.g. Pr(ball3  = 6 and sum = 13) = Pr(ball1 = 2 and ball2 = 5 and ball3 = 6) + Pr(ball1 = 3 and ball2 = 4 and ball3 = 6) + ...
         lines += r'$Pr(ball_{{{ball_index}}} = {ball_value} \, \cap \, \text{{sum}} = {{{sum}}}) = {sum_of_probabilities}$'.format(
-            sum_of_probabilities=self.__class__.sum_permutation_probabilities(valid_givee_permutations),
+            sum_of_probabilities=expressions.sum_permutation_probabilities(valid_givee_permutations),
             **self._qp
         )
 
