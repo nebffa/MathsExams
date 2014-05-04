@@ -202,8 +202,7 @@ def sensible_trig_x_values(function):
     elif function.has(sympy.tan):
         trig_type = sympy.tan
 
-    a = sympy.Wild('a')
-    inner_function = function.replace(trig_type(a), a)
+    inner_function = function.find(trig_type).pop().args[0]
 
     if trig_type in [sympy.sin, sympy.cos]:
         primary_x_values = [sympy.pi / 6 * i for i in range(-5, 7)]
