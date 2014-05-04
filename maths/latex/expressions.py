@@ -101,6 +101,18 @@ def piecewise(func):
     return line_begin + ''.join(lines) + line_end
 
 
+def symbolic_discrete_expectation_x(degree=1):
+    """Return LaTeX to display the symbolic expectation of a variable.
+
+    i.e. Using sigma notation and without any specific number values.
+    """
+
+    if degree != 1:
+        return r'\sum\limits_{{i=1}}^{{n}} x_{{i}}^{degree} \times Pr(X = x_{{i}})'.format(degree=degree)
+    else:
+        return r'\sum\limits_{{i=1}}^{{n}} x_{{i}} \times Pr(X = x_{{i}})'
+
+
 def discrete_expectation_x_squared(prob_table):
     """Return LaTeX to display the summation of data points used to calculate
     the expectation of a variable squared.
