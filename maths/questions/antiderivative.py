@@ -1,7 +1,7 @@
 import sympy
 import random
 from .. import all_functions, not_named_yet
-from ..latex import latex, solutions
+from ..latex import solutions
 from ..symbols import x0
 from . import relationships
 
