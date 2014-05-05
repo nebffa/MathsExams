@@ -7,239 +7,218 @@ from ..symbols import *
 from . import relationships
 
 
-# always produces Q1a
 @relationships.is_child_of(relationships.DummyPart)
 class SimpleDiff(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    Find the derivative of an equation.
+    """
+
     def __init__(self):
-        self.num_lines = 5
-        self.num_marks = 2
+        self.num_lines, self.num_marks = 5, 2
+        self._qp = {}
 
-        # since we will never write the function type when writing the exam, we would like to not expose this. however,
-        # class SimpleDiffEval needs to know what function type was used here as 1a and 1b never use the same function type
-        self.function_type = random.choice(['sqrt', 'quadratic', 'product'])
+        function_type = random.choice(['sqrt', 'quadratic', 'product'])
 
-        if self.function_type == 'sqrt':
-            # 2011 1a: y = sqrt(4 - x)
+        if function_type == 'sqrt':
             outer_function = all_functions.request_linear(difficulty=2).equation
             inner_function = all_functions.request_linear(difficulty=1).equation
             inner_function = inner_function.replace(lambda expr: expr.is_Symbol, lambda expr: sympy.sqrt(expr))
 
+            self._qp['equation'] = outer_function.replace(x, inner_function)
+            self._qp['derivative'] = sympy.diff(self._qp['equation'])
 
-            self.equation = outer_function.replace(x, inner_function)
-            self.derivative = sympy.diff(self.equation)
-
-        elif self.function_type == 'quadratic':
-            # 2008 1a: y = (3x**2 - 5x) ** 5
-            # 2012 1a: y = (x**2 - 5x) ** 4
-
+        elif function_type == 'quadratic':
             power_two_coeff = not_named_yet.randint_no_zero(-3, 3)
             power_one_coeff = not_named_yet.randint_no_zero(-5, 5)
             inner_function = power_two_coeff * x ** 2 + power_one_coeff * x
             index = random.randint(3, 5)
 
-            self.equation = inner_function ** index
-            self.derivative = sympy.diff(self.equation)
+            self._qp['equation'] = inner_function ** index
+            self._qp['derivative'] = sympy.diff(self._qp['equation'])
 
-        elif self.function_type == 'product':
-            # 2009 1a: y = x * ln(x)
-            # 2010 1a: y = (x ** 3) * e ** (2x)
-
+        elif function_type == 'product':
             left_function = x ** random.randint(1, 3)
             right_outer_function = random.choice([sympy.sin, sympy.cos, sympy.log, sympy.exp])
             right_inner_function = not_named_yet.randint_no_zero(-3, 3) * x
 
-            self.equation = left_function * right_outer_function(right_inner_function)
-            self.derivative = sympy.diff(self.equation)
+            self._qp['equation'] = left_function * right_outer_function(right_inner_function)
+            self._qp['derivative'] = sympy.diff(self._qp['equation'])
 
     def question_statement(self):
-        equation_text = sympy.latex(self.equation)
-
-        question = random.choice(
-            [{'statement': r'Differentiate $%s$ with respect to $x$.', 'type': 'f'},
-                {'statement': r'If $y = %s$, find $\frac{dy}{dx}$.', 'type': 'y'},
-                {'statement': r'Differentiate $%s$.', 'type': 'f'},
-                {'statement': r'Let $y = %s$. Find $\frac{dy}{dx}$.', 'type': 'f'}])
-
-        # write_solution needs to know if we are using y or f(x) in order to modify the solution
-        self._question_type = question['type']
-        return question['statement'] % equation_text
-
+        return r"Let $f(x) = {equation}$. Find $f'(x)$.".format(
+            equation=sympy.latex(self._qp['equation'])
+        )
 
     def solution_statement(self):
-        lines = []
-        if self._question_type == 'f':
-            # look for chain rule candidates and show extra working for the chain rule
-            if self.equation.as_base_exp()[1] != 1:
-                u = sympy.Symbol('u')
-                inner_function, exponent = self.equation.as_base_exp()
-                lines.append( r"Let $f(x) = {0} = {1}, u = {2}$".format(sympy.latex(self.equation), sympy.latex(u ** exponent), sympy.latex(inner_function)) )
-                lines.append( r"$f'(x) = \frac{{dy}}{{du}} \times \frac{{du}}{{dx}} = %s \times u'$" % sympy.latex((u ** exponent).diff()) )
+        lines = solutions.Lines()
 
-            lines.append( r"$f'(x) = {0}$".format( sympy.latex(self.derivative.factor()) ) )
-
-        elif self._question_type == 'y':
         # look for chain rule candidates and show extra working for the chain rule
-            if self.equation.as_base_exp()[1] != 1:
-                u = sympy.Symbol('u')
-                inner_function, exponent = self.equation.as_base_exp()
-                lines.append( r'Let $y = {0} = {1}, u = {2}$'.format(sympy.latex(self.equation), sympy.latex(u ** exponent), sympy.latex(inner_function)) )
-                lines.append( r"$\frac{{dy}}{{dx}} = \frac{{dy}}{{du}} \times \frac{{du}}{{dx}} = {0} \times u'$".format( sympy.latex((u ** exponent).diff()) ))
+        if self._qp['equation'].as_base_exp()[1] != 1:
+            u = sympy.Symbol('u')
+            inner_function, exponent = self._qp['equation'].as_base_exp()
+            lines += r"Let $f(x) = {0} = {1}, u = {2}$".format(sympy.latex(self._qp['equation']), sympy.latex(u ** exponent), sympy.latex(inner_function))
+            lines += r"$f'(x) = \frac{{dy}}{{du}} \times \frac{{du}}{{dx}} = %s \times u'$" % sympy.latex((u ** exponent).diff())
 
-            lines.append( r'$\frac{{dy}}{{dx}} = {0}$'.format( sympy.latex(self.derivative) ) )
+        lines += r"$f'(x) = {0}$".format(
+            sympy.latex(self._qp['derivative'].factor())
+        )
 
-        return latex.latex_newline().join(lines)
+        return lines.write()
 
 
-# always produces Q1b
 @relationships.is_child_of(relationships.DummyPart)
 class SimpleDiffEval(relationships.QuestionPart):
-    # function_type_in_simple_diff is the function type used in the class SimpleDiff. we need to know it so we don't use the same function type
-    # since questions 1a and 1b never use the same function type
-    def __init__(self):
-        self.num_lines = 5
-        self.num_marks = 2
+    """
+    Question description
+    ====================
 
-        function_types = ['product', 'quotient', 'composite']
-        #try:
-            # it might not be in function_types, in which case it will error
-        #    function_types.remove(part.function_type)
-        #except:
-        #    pass
-        self.__function_type = random.choice(function_types)
+    Find the derivative of an equation and then evaluate it at a particular location.
+    """
 
-        if self.__function_type == 'product':
-            # 2008 1b: y = x * e**(3x), a = 0
-            # 2011 1b: y = x**2 * sin(2x), a = pi / 6
-            index = random.randint(1, 3)
-            left_function = x ** index
+    def create_product_differentiation(self):
+        """Create a product to differentiate.
+        """
 
-            right_outer_function = random.choice([sympy.sin, sympy.cos, sympy.log, sympy.exp])
-            right_inner_function = not_named_yet.randint_no_zero(-3, 3) * x
+        index = random.randint(1, 3)
+        left_function = x ** index
 
-            self.equation = left_function * right_outer_function(right_inner_function)
-            self.derivative = sympy.diff(self.equation)
+        right_outer_function = random.choice([sympy.sin, sympy.cos, sympy.log, sympy.exp])
+        right_inner_function = not_named_yet.randint_no_zero(-3, 3) * x
 
-            if right_outer_function in [sympy.sin, sympy.cos]:
-                # using multiples of pi/6 can lead to large coefficients like pi**3/54
-                if index == 1:
-                    self.x_value = random.choice([sympy.pi/6 * i for i in range(-5, 7)])
-                elif index in [2, 3]:
-                    self.x_value = random.choice([sympy.pi/2 * i for i in range(-1, 3)])
+        self._qp['equation'] = left_function * right_outer_function(right_inner_function)
+        self._qp['derivative'] = sympy.diff(self._qp['equation'])
 
-            elif right_outer_function == sympy.log:
-                self.x_value = sympy.Rational(1, right_inner_function.coeff(x)) * sympy.E ** random.randint(1, 3)
-            elif right_outer_function == sympy.exp:
-                # with something like x**3 * e^x using x = 3, we'd get large answers. we restrict x values based on the index of x
-                self.x_value = random.randint(-3 // index, 3 // index)
+        if right_outer_function in [sympy.sin, sympy.cos]:
+            # using multiples of pi/6 can lead to large coefficients like pi**3/54
+            if index == 1:
+                self._qp['x_value'] = random.choice([sympy.pi / 6 * i for i in range(-5, 7)])
+            elif index in [2, 3]:
+                self._qp['x_value'] = random.choice([sympy.pi / 2 * i for i in range(-1, 3)])
 
-        elif self.__function_type == 'quotient':
-            # 2009 1b: y = cos(x) / (2x + 2), a = pi
-            # 2012 1b: y = x / sin(x), a = pi / 2
-            special_function = random.choice([sympy.cos(x), sympy.sin(x), sympy.exp(x)])
-            linear_function = all_functions.request_linear(difficulty=3).equation
+        elif right_outer_function == sympy.log:
+            self._qp['x_value'] = sympy.Rational(1, right_inner_function.coeff(x)) * sympy.E ** random.randint(1, 3)
+        elif right_outer_function == sympy.exp:
+            # with something like x**3 * e^x using x = 3, we'd get large answers. we restrict x values based on the index of x
+            self._qp['x_value'] = random.randint(-3 // index, 3 // index)
 
-            if random.randint(0, 1):
-                self.equation = special_function / linear_function
-                bottom_function = linear_function
+    def create_quotient_differentiation(self):
+        """Create a quotient to differentiate.
+        """
+
+        non_linear_function = random.choice([sympy.cos(x), sympy.sin(x), sympy.exp(x)])
+        linear_function = all_functions.request_linear(difficulty=3).equation
+
+        self._qp['equation'] = non_linear_function / linear_function
+        if random.choice([True, False]):
+            self._qp['equation'] = 1 / self._qp['equation']
+        denominator = linear_function.as_numer_denom()[1]
+
+        while True:
+            if non_linear_function == sympy.exp(x):
+                self._qp['x_value'] = random.randint(-2, 2)
             else:
-                self.equation = linear_function / special_function
-                bottom_function = special_function
+                possible_x_values = [-sympy.pi, 0, sympy.pi]
+                self._qp['x_value'] = random.choice(possible_x_values)
 
-            while True:
-                if special_function in [sympy.sin(x), sympy.cos(x)]:
-                    # with the trig function we can easily get overly complicated answers like 2*sqrt(3)*(3 + 2*pi)/3
-                    # so we will restrict x
-                    if special_function == sympy.cos(x):
-                        self.x_value = random.choice([0, sympy.pi, -sympy.pi])
-                    elif special_function == sympy.sin(x):
-                        self.x_value = random.choice([-1, 1]) * sympy.pi / 2
+            if denominator.subs({x: self._qp['x_value']}) != 0:
+                break
 
-                elif special_function == sympy.exp(x):
-                    self.x_value = random.randint(-2, 2)
+    def create_composite_differentiation(self):
+        """Create a composite function to differentiate.
+        """
 
-                if (bottom_function ** 2).subs({x: self.x_value}) != 0:
-                    break
+        outer_function = random.choice([sympy.exp, sympy.log])
 
-        elif self.__function_type == 'composite':
-            # 2010 1b: y = ln(x**2 + 1), a = 2
-
-            # i thought of including sin and cos, but i can't remember ever seeing a question where a quadratic was nested inside
-            # of a trig function
-            outer_function = random.choice([sympy.exp, sympy.log])
-
+        if outer_function == sympy.exp:
+            # with bad x values we can get things like: dy/dx = (4*x + 4)*exp(2*x**2 + 4*x + 20), at x = 1, dy/dx = exp(26)
+            self._qp['x_value'] = random.randint(-3, 3)
             inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 3)).equation
 
-            if outer_function == sympy.exp:
-                # with bad x values we can get things like: dy/dx = (4*x + 4)*exp(2*x**2 + 4*x + 20), at x = 1, dy/dx = exp(26)
-                count = 0
-                while True:
-                    self.x_value = random.randint(-3, 3)
-                    if -5 < inner_function.subs({x: self.x_value}) < 5 and -5 < inner_function.diff().subs({x: self.x_value}):
-                        break
-                    else:
-                        count += 1
+        elif outer_function == sympy.log:
+            # the inner quadratic may never yield a positive number in this domain, so we will try
+            # a couple of times to find an x value that works, then we will request a new quadratic
+            while True:
+                self._qp['x_value'] = random.randint(-3, 3)
+                inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 3)).equation
+                if inner_function.subs({x: self._qp['x_value']}) > 0:
+                    break
 
-                    if count > 5:
-                        inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 3)).equation
-            elif outer_function == sympy.log:
-                # the inner quadratic may never yield a positive number in this domain, so we will try
-                # a couple of times to find an x value that works, then we will request a new quadratic
-                count = 0
-                while True:
-                    self.x_value = random.randint(-3, 3)
-                    if 0 < inner_function.subs({x: self.x_value}) < 5:
-                        break
-                    else:
-                        count += 1
+        self._qp['equation'] = outer_function(inner_function)
 
-                    if count > 5:
-                        inner_function = all_functions.request_quadratic(difficulty=random.randint(1, 3)).equation
-            self.equation = outer_function(inner_function)
+    def __init__(self):
+        self.num_lines, self.num_marks = 5, 2
+        self._qp = {}
 
-        if self.__function_type == 'quotient':
+        function_types = ['product', 'quotient', 'composite']
+        function_type = random.choice(function_types)
+
+        if function_type == 'product':
+            # 2008 1b: y = x * e**(3x), a = 0
+            # 2011 1b: y = x**2 * sin(2x), a = pi / 6
+            self.create_product_differentiation()
+
+        elif function_type == 'quotient':
+            # 2009 1b: y = cos(x) / (2x + 2), a = pi
+            # 2012 1b: y = x / sin(x), a = pi / 2
+            self.create_quotient_differentiation()
+
+        elif function_type == 'composite':
+            # I thought of including sin and cos, but I can't remember ever seeing a question where a quadratic was nested inside
+            # of a trig function
+            self.create_composite_differentiation()
+
+        if function_type == 'quotient':
             # quotients are always written as one big fraction, but sympy always separates them into multiple fractions, so we have to factorise
-            self.derivative = sympy.diff(self.equation).together()
+            self._qp['derivative'] = sympy.diff(self._qp['equation']).together()
         else:
-            self.derivative = sympy.diff(self.equation)
+            self._qp['derivative'] = sympy.diff(self._qp['equation'])
 
-        self.answer = self.derivative.subs({x: self.x_value})
+        self._qp['answer'] = self._qp['derivative'].subs({x: self._qp['x_value']})
 
     def question_statement(self):
-        equation_text = sympy.latex(self.equation)
-        x_value_text = sympy.latex(self.x_value)
-
-        question = random.choice(
-            [{'statement': "Let $f(x) = %s$. Evaluate $f'(%s)$.", 'type': 'f'},
-                {'statement': "For $f(x) = %s$, find $f'(%s)$.", 'type': 'f'},
-                {'statement': "If $g(x) = %s$, find $g'(%s)$.", 'type': 'g'},
-                {'statement': "If $f(x) = %s$, find $f'(%s)$.", 'type': 'f'}])
-
-        self._question_type = question['type']
-        return question['statement'] % (equation_text, x_value_text)
+        return r"If $f(x) = {equation}$, find $f'({x_value})$.".format(
+            equation=sympy.latex(self._qp['equation']),
+            x_value=sympy.latex(self._qp['x_value'])
+        )
 
     def solution_statement(self):
         # needs more work at the moment - likely an inbetween step to evaluate every subexpression in f'(x) but not f'(x) itself
 
         lines = solutions.Lines()
-        lines += r"${0}'(x) = {1}$".format(self._question_type, sympy.latex(self.derivative))
-
+        lines += r"$f'(x) = {derivative}$".format(
+            derivative=sympy.latex(self._qp['derivative'])
+        )
 
         # print extra steps when dealing with trig functions
-        if self.equation.find(sympy.sin) or self.equation.find(sympy.cos):
+        if self._qp['equation'].find(sympy.sin) or self._qp['equation'].find(sympy.cos):
+            noeval_derivative = noevals.noevalify(self._qp['derivative'], include=[sympy.sin, sympy.cos])
 
+            lines += r"$f'({x_value}) = {derivative}$".format(
+                x_value=sympy.latex(self._qp['x_value']),
+                derivative=sympy.latex(noeval_derivative)
+            )
 
+            subpart_values = []
+            for subpart in self._qp['derivative'].find(sympy.Function):
+                noeval_subpart = noevals.noevalify(subpart)
 
-            no_eval = self.derivative.replace(sympy.sin, noevals.noevalsin)
-            no_eval = no_eval.replace(sympy.cos, noevals.noevalcos)
+                subpart_value = subpart.subs({x: self._qp['x_value']})
+                unevaluated_subpart = noeval_subpart.subs({x: self._qp['x_value']})
+                subpart_text = r'${unevaluated_subpart} = {subpart_value}$'.format(
+                    unevaluated_subpart=sympy.latex(unevaluated_subpart),
+                    subpart_value=sympy.latex(subpart_value)
+                )
 
-            lines += r"${0}'({1}) = {2}$".format(self._question_type, sympy.latex(self.x_value), sympy.latex(no_eval))
-            lines += ', '.join([r"${0} = {1}$".format(
-                            sympy.latex(noevals.noevalify(i, include=[sympy.sin, sympy.cos]).subs({x: self.x_value})),
-                            sympy.latex(i.subs({x: self.x_value}))
-                        )
-                        for i in self.derivative.find(lambda expr: expr.is_Function)])
+                subpart_values.append(subpart_text)
 
-        lines += r"${0}'({1}) = {2}$".format(self._question_type, sympy.latex(self.x_value), sympy.latex(self.answer))
+            lines += ', '.join(subpart_values)
+
+        lines += r"$f'({x_value}) = {answer}$".format(
+            x_value=sympy.latex(self._qp['x_value']),
+            answer=sympy.latex(self._qp['answer'])
+        )
 
         return lines.write()
-
