@@ -23,13 +23,13 @@ def noevalify(expr, include=None):
         if old_expr == expr:
             break
 
-    if not is_eval_free(expr):
+    if not is_eval_free(expr, include=include):
         raise RuntimeError("Noevalify hasn't worked.")
 
     return expr
 
 
-def is_eval_free(expr):
+def is_eval_free(expr, include=None):
     """Check whether an expression has only noeval subclasses or not.
 
     >>> is_eval_free(x + 2)
@@ -37,9 +37,16 @@ def is_eval_free(expr):
 
     >>> is_eval_free(noevalAdd(x, 2))
     True
+
+    >>> is_eval_free(noevalAdd(sympy.sin(x), 2), include=[noevalAdd])
+    True
     """
 
     for eval_function, noeval_function in noevalmapping().items():
+        if include is not None:
+            if eval_function not in include:
+                continue
+
         instances = expr.find(eval_function)
         for instance in instances:
             if is_eval_instance(instance, noeval_function):
