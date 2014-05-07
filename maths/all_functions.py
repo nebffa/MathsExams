@@ -92,7 +92,7 @@ def inverse(function):  # requires future work as more things are included
 
     if function.as_poly().degree() == 3:
         for solution in solutions:
-            if sympy.ask(sympy.Q.evartended_real(solution), sympy.Q.real(y)):
+            if sympy.ask(sympy.Q.extended_real(solution), sympy.Q.real(y)):
                 return solution.replace(y, var)
 
     if len(solutions) > 1:
