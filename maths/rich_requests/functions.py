@@ -13,9 +13,9 @@ def cubic(spec):
 
     The algorithm works by generating 4 pieces of information, and then to solve for the cubic's constants via matrices.
 
-    I don't know if this algorithm is air-tight, and if it isn't, I don't know if it can be made air-tight. 
+    I don't know if this algorithm is air-tight, and if it isn't, I don't know if it can be made air-tight.
 
-    It's not all bad though, this seems to be an infinitely better way to request cubics than what I had before. It will probably 
+    It's not all bad though, this seems to be an infinitely better way to request cubics than what I had before. It will probably
     just need some fixing/tweaking over time.
 
     '''
@@ -39,7 +39,7 @@ def cubic(spec):
     k0, k1, k2, k3 = sympy.symbols('k0:4')
     y = k0*x**3 + k1*x**2 + k2*x + k3
     y_diff = y.diff(x)
-    y_diffdiff = y_diff.diff(x)
+    y_diff_diff = y_diff.diff(x)
     information = []  # holds tuples - linear combinations of a, b, c and d corresponding to the values those linear combinations take
 
     # 'clear' pieces of information
@@ -159,13 +159,13 @@ def cubic(spec):
                 quadratic = all_functions.request_quadratic(difficulty=random.randint(4, 5)).equation  # a quadratic with discriminant < 0
                 if len(information) == 0:
                     return quadratic.integrate() + random.randint(-3, 3)  # make it a cubic and give it a meaningful y-intercept
-                else:  # we already have an x-intercept or y-intercept, add 3 points of information to the 
+                else:  # we already have an x-intercept or y-intercept, add 3 points of information to the
                             #matrix and let the solver compute the constant of integration
                     equation = quadratic.integrate()
                     information.append((1, 0, 0, 0), equation.coeff(x**3))
                     information.append((0, 1, 0, 0), equation.coeff(x**2))
                     information.append((0, 0, 1, 0), equation.coeff(x))
-                
+
             elif spec['turning_points']['n'] == 1:
                 if spec['turning_points']['locations'] is not None:  # there must be a turning point specified - make it an SPI
                     information.append( (y_diff_diff.subs({x: spec['turning_points']['locations'][0] }), 0) )
@@ -173,7 +173,7 @@ def cubic(spec):
                     x_loc = random.choice(tps_location)
                     y_loc = random.choice(Y_RANGE)
                     add_spi(x_loc, y_loc)
-            elif spec['turning_points']['n'] == 2:  
+            elif spec['turning_points']['n'] == 2:
                 if isinstance(spec['turning_points']['locations'], tuple):  # there must be a turning point already specified
                     if len(information) <= 2:
                         x_loc = random.choice([i for i in tps_location if i != spec['turning_points']['locations'][0] ])
@@ -215,7 +215,7 @@ def cubic(spec):
 
             information_needed = 4 - len(information)
 
-        # at this point we have 4 pieces of information - time to solve the matrix equation!            
+        # at this point we have 4 pieces of information - time to solve the matrix equation!
         # the matrix looks like:
         #   [(k0 + 5*k2 + 3*k3, 0), (2*k0 + 3*k1, 1), ...]
         square_matrix = sympy.Matrix([[i[0].coeff(k0), i[0].coeff(k1), i[0].coeff(k2), i[0].coeff(k3)] for i in information])
@@ -325,7 +325,7 @@ def hyperbola(spec):
         else:
             a = [i for i in a if i < 0]
 
-        
+
     a, b, c = (i if isinstance(i, discretes) else random.choice(i) for i in (a, b, c))
 
     return a / (x - b) + c

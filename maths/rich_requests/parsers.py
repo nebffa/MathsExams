@@ -98,7 +98,7 @@ def parse_cubic(**kwargs):
     }
 
     # regular expressions
-    TURNING_POINT = r'[(tp)(turn)]'
+    TURNING_POINT = r'[(tp)|(turn)]'
     INFLEXION_POINT = r'inflex'
     DIRECTION = r'dir'
     LOCATION = r'loc'
