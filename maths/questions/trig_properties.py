@@ -1,7 +1,7 @@
 import sympy
 import random
-from sympy.abc import *
-from .. import all_functions, not_named_yet
+from ..symbols import x
+from .. import not_named_yet
 from ..latex import solutions
 from . import relationships
 
@@ -14,10 +14,9 @@ class TrigProperties(relationships.QuestionPart):
         self.num_lines, self.num_marks = 4, 2
         self._qp = {}
 
-
-        self._qp['amplitude'] = not_named_yet.randint(1, 4)
         trig_type = random.choice([sympy.sin, sympy.cos, sympy.tan])
 
+        self._qp['amplitude'] = not_named_yet.randint(1, 4)
         self._qp['period'] = random.choice([1, sympy.pi]) * sympy.Rational(random.randint(1, 3), random.randint(1, 4))
         if trig_type == sympy.tan:
             self._qp['period'] *= sympy.Rational(1, 2)
@@ -28,27 +27,25 @@ class TrigProperties(relationships.QuestionPart):
         self._qp['equation'] = self._qp['amplitude'] * trig_type(interior, evaluate=False) + self._qp['c']
         self._qp['range'] = sympy.Interval(-self._qp['amplitude'] + self._qp['c'], self._qp['amplitude'] + self._qp['c'])
 
-
     def question_statement(self):
         self._qi = {}
         self._qi['range_or_amplitude'] = random.choice(['range', 'amplitude'])
         self._qi['range_or_amplitude_answer'] = self._qp[self._qi['range_or_amplitude']]
 
-        return r'''State the {0} and period of the function $f, R \rightarrow R, f(x) = {1}$'''.format(
-                self._qi['range_or_amplitude'],
-                sympy.latex(self._qp['equation'])
-            )
-
+        return r'''State the {range_or_amplitude} and period of the function $f, R \rightarrow R, f(x) = {equation}$'''.format(
+            range_or_amplitude=self._qi['range_or_amplitude'],
+            equation=sympy.latex(self._qp['equation'])
+        )
 
     def solution_statement(self):
         lines = solutions.Lines()
 
+        lines += r'The {range_or_amplitude} is ${range_or_amplitude_answer}$'.format(
+            **self._qi
+        )
 
-        lines += r'The {0} is ${1}$'.format(
-                self._qi['range_or_amplitude'],
-                self._qi['range_or_amplitude_answer']
-            )
-
-        lines += r'The period is ${0}$'.format(sympy.latex(self._qp['period']))
+        lines += r'The period is ${answer}$'.format(
+            answer=sympy.latex(self._qp['period'])
+        )
 
         return lines.write()
