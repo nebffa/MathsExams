@@ -6,7 +6,7 @@ from .. import not_named_yet
 
 def translation(lb=-5, ub=5, direction_of_change=None):
     amount = not_named_yet.randint(lb, ub, exclude=[0])
-    
+
     if direction_of_change is None:
         direction_of_change = random.choice(['x', 'y'])
 
@@ -62,7 +62,7 @@ def overall_transformation(transformations):
             coords += transf
         return coords
 
-    if isinstance(transformations, sympy.Matrix):    
+    if isinstance(transformations, sympy.Matrix):
         raise ValueError("Can only pass in a list of transformations.")
     else:
         coords = sympy.Matrix([[x], [y]])
@@ -87,7 +87,7 @@ def apply_transformations(transformations, thing):
     ''' Transform a point or an expression according to a list of transformations.
     '''
 
-    if isinstance(transformations, sympy.Matrix):    
+    if isinstance(transformations, sympy.Matrix):
         raise ValueError("Can only pass in a list of transformations.")
     else:
         transf = overall_transformation(transformations)
@@ -122,7 +122,7 @@ def _print_transformation(transformation):
                 amount = transformation[3]
 
 
-            return r'dilation of factor ${0}$ from the {1}-axis'.format(sympy.latex(amount), dilated_from_which_axis)            
+            return r'dilation of factor ${0}$ from the {1}-axis'.format(sympy.latex(amount), dilated_from_which_axis)
 
     # translation
     elif transformation.shape == (2, 1):
@@ -140,7 +140,7 @@ def _print_transformation(transformation):
                 )
 
 
-def print_transformations(transformations):
+def description_of_transformations(transformations):
     strings = map(_print_transformation, transformations)
     return r' under a ' + ', followed by a '.join(strings)
 
@@ -148,13 +148,13 @@ def print_transformations(transformations):
 def show_mapping(transformations):
     coords = (x, y)
     mapping = sympy.latex(coords)
-    
+
     for transf in transformations:
         mapped_coords = _reduce_transformation(transf, coords)
         coords = mapped_coords
 
         mapping += r' \rightarrow {0}'.format(sympy.latex(mapped_coords))
-        
+
 
     return mapping
 
