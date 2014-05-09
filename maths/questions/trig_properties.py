@@ -8,9 +8,21 @@ from . import relationships
 
 @relationships.root
 class TrigProperties(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    For a given trigonometric function, determine the period as well as one of the range or amplitude.
+
+
+    Real-life instances
+    ===================
+
+    2010 4: [4 lines] [2 marks]
+    2011 3a: [5 lines] [2 marks]
+    """
+
     def __init__(self):
-        # 2010 Q4a [4 lines] [2 marks]
-        # 2011 Q3a [5 lines] [2 marks]
         self.num_lines, self.num_marks = 4, 2
         self._qp = {}
 
