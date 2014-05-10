@@ -8,6 +8,21 @@ from . import relationships
 
 @relationships.root
 class SimpleInverse(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    Find the derivative of an equation.
+
+
+    Real-life instances
+    ===================
+
+    2008 10a: [6 lines] [2 marks]
+    2009 3: [7 lines] [3 marks]
+    2012 3: [5 lines] [2 marks]
+    """
+
     def __init__(self):
         self.num_lines, self.num_marks = 7, 3
 
@@ -16,7 +31,6 @@ class SimpleInverse(relationships.QuestionPart):
         self._qp['function_type'] = random.choice(['exp', 'hyperbola', 'log', 'cubic'])
 
         if self._qp['function_type'] == 'exp':
-            # 2008 10a: f(x) = e^(2x) - 1 [6 lines] [2 marks]
             func = all_functions.request_exp(difficulty=3)
             self._qp['domain'], self._qp['range'] = func.domain, func.range
 
@@ -24,7 +38,6 @@ class SimpleInverse(relationships.QuestionPart):
             self._qp['inverse'] = simplify.canonise_log(all_functions.inverse(self._qp['equation']))
 
         elif self._qp['function_type'] == 'hyperbola':
-            # 2009 3: f(x) = 3/x - 4 [7 lines] [3 marks]
             func = all_functions.request_hyperbola(difficulty=3)
             self._qp['domain'], self._qp['range'] = func.domain, func.range
 
@@ -32,7 +45,6 @@ class SimpleInverse(relationships.QuestionPart):
             self._qp['inverse'] = sympy.apart(all_functions.inverse(self._qp['equation']))
 
         elif self._qp['function_type'] == 'log':
-            # there was no exam question involving a log, but since it's the inverse of exp which has been used, I thought to include it
             func = all_functions.request_log(difficulty=3)
             self._qp['domain'], self._qp['range'] = func.domain, func.range
 
@@ -40,7 +52,6 @@ class SimpleInverse(relationships.QuestionPart):
             self._qp['inverse'] = all_functions.inverse(self._qp['equation'])
 
         elif self._qp['function_type'] == 'cubic':  # no base class for cubics so I make it here
-            # 2012 3: h(x) = 2x**3 + 1 [5 lines] [2 marks]
             m = not_named_yet.randint_no_zero(-3, 3)
             c = not_named_yet.randint_no_zero(-5, 5)
             self._qp['equation'] = m * x ** 3 + c

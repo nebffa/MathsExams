@@ -14,6 +14,12 @@ class SimpleDiff(relationships.QuestionPart):
     ====================
 
     Find the derivative of an equation.
+
+
+    Real-life instances
+    ===================
+
+    There are several, all with about 4-5 lines and 2 marks.
     """
 
     def __init__(self):
@@ -76,6 +82,12 @@ class SimpleDiffEval(relationships.QuestionPart):
     ====================
 
     Find the derivative of an equation and then evaluate it at a particular location.
+
+
+    Real-life instances
+    ===================
+
+    There are several, all with about 4-5 lines and 2 marks.
     """
 
     def create_product_differentiation(self):
