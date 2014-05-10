@@ -11,6 +11,20 @@ from . import relationships
 
 @relationships.root
 class SimpleSketch(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    Sketch the graph of an equation.
+
+
+    Real-life instances
+    ===================
+
+    2008 2: [4 lines] [4 marks]
+    2012 5a: [0 lines] [3 marks]
+    """
+
     def __init__(self):
 
         self.num_lines, self.num_marks = 0, 3
@@ -53,6 +67,19 @@ class SimpleSketch(relationships.QuestionPart):
 
 @relationships.is_child_of(SimpleSketch)
 class PointTransformation(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    Find the coordinates of a point after a linear transformation.
+
+
+    Real-life instances
+    ===================
+
+    2012 5b i: [4 lines] [1 mark]
+    """
+
     def __init__(self, part):
         self.num_lines, self.num_marks = 4, 1
         self._qp = copy.deepcopy(part._qp)
@@ -87,6 +114,19 @@ class PointTransformation(relationships.QuestionPart):
 
 @relationships.is_child_of(SimpleSketch)
 class EquationTransformation(relationships.QuestionPart):
+    """
+    Question description
+    ====================
+
+    Find the image of a curve after a linear transformation.
+
+
+    Real-life instances
+    ===================
+
+    2012 5b ii: [8 lines] [2 marks]
+    """
+
     def __init__(self, part):
         self.num_lines, self.num_marks = 8, 2
         self._qp = copy.deepcopy(part._qp)
@@ -101,19 +141,18 @@ class EquationTransformation(relationships.QuestionPart):
     def solution_statement(self):
         lines = solutions.Lines()
 
-        mapping = transformations.overall_transformation(self._qp['transformations'])
-        reversed_mapping = transformations.reverse_mapping(mapping)
-        answer = transformations.apply_transformations(self._qp['transformations'], self._qp['equation'])
-
-        mapping_chain = transformations.show_mapping(self._qp['transformations'])
-        lines += r'${0}$'.format(mapping_chain)
-
         x_, y_ = sympy.symbols("x' y'")
         new_coords = (x_, y_)
         lines += r"Let our new ${old_x_y_coordinates}$ coordinates be ${new_x_y_coordinates}$.".format(
             old_x_y_coordinates=sympy.latex((x, y)),
             new_x_y_coordinates=sympy.latex((x_, y_))
         )
+
+        mapping = transformations.overall_transformation(self._qp['transformations'])
+        reversed_mapping = transformations.reverse_mapping(mapping)
+
+        mapping_chain = transformations.show_mapping(self._qp['transformations'])
+        lines += r'${0}$'.format(mapping_chain)
 
         reversed_mapping = tuple(i.subs({x: x_, y: y_}) for i in reversed_mapping)
         lines += r'Hence, ${mapping} \rightarrow {new_mapping}$ and ${old_x_y_coordinates} \rightarrow {new_x_y_coordinates}$'.format(
@@ -132,6 +171,7 @@ class EquationTransformation(relationships.QuestionPart):
             sympy.latex(noevalmapped_equation)
         )
 
+        answer = transformations.apply_transformations(self._qp['transformations'], self._qp['equation'])
         lines += r'Hence our mapped equation is $y = {0}$.'.format(sympy.latex(answer.apart()))
 
         return lines.write()
