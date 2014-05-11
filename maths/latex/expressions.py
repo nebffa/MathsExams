@@ -167,9 +167,9 @@ def shrink_solution_set(expr, domain, expr_equal_to=0, var=x):
     smaller_set_text = ', '.join([sympy.latex(i) for i in var_solutions if i in domain])
 
     if isinstance(domain, sympy.Interval) and domain.left == -sympy.oo:
-        domain_text = r'${0} {1} {2}$'.format(sympy.latex(var), r'\le' if domain.right_open else r'\lte', sympy.latex(domain.right))
+        domain_text = r'{0} {1} {2}'.format(sympy.latex(var), r'\le' if domain.right_open else r'\lte', sympy.latex(domain.right))
     elif isinstance(domain, sympy.Interval) and domain.right == sympy.oo:
-        domain_text = r'${0} {1} {2}$'.format(sympy.latex(var), r'\ge' if domain.right_open else r'\gte', sympy.latex(domain.left))
+        domain_text = r'{0} {1} {2}'.format(sympy.latex(var), r'\ge' if domain.right_open else r'\gte', sympy.latex(domain.left))
     else:
         domain_text = r'{0} \in {1}'.format(sympy.latex(var), sympy.latex(domain))
 
