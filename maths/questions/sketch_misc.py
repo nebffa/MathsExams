@@ -8,6 +8,9 @@ from . import relationships
 import copy
 
 
+question_not_complete = True
+
+
 @relationships.root
 class SketchDoubleInverse:
     def __init__(self, part):
@@ -41,11 +44,11 @@ class SketchDoubleInverse:
         expr_domain = maximal_domain & sympy.Interval(-self._qp['MAX_PLOT_RANGE'], self._qp['MAX_PLOT_RANGE'])
 
         # an inverse of an inverse is always just "y = x"
-        path = plot.plot(x, 
-            plot_domain=sympy.Interval(-self._qp['MAX_PLOT_RANGE'], self._qp['MAX_PLOT_RANGE']), 
-            plot_range=sympy.Interval(-self._qp['MAX_PLOT_RANGE'], self._qp['MAX_PLOT_RANGE']), 
+        path = plot.plot(x,
+            plot_domain=sympy.Interval(-self._qp['MAX_PLOT_RANGE'], self._qp['MAX_PLOT_RANGE']),
+            plot_range=sympy.Interval(-self._qp['MAX_PLOT_RANGE'], self._qp['MAX_PLOT_RANGE']),
             expr_domain=expr_domain
         )
-        
+
         return r'''{0}'''.format(plot.latex(path))
 

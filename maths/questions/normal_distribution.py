@@ -275,7 +275,7 @@ class ProbabilityEquality(relationships.QuestionPart):
         self._qp['flipped'] = random.choice([True, False])
 
         if self._qp['flipped']:
-            self._qp['Z_interval'] = ProbabilityEquality.opposite_interval(self._qp['Z_interval'], mean=0)
+            self._qp['Z_interval'] = ProbabilityEquality.symmetrically_opposite_interval(self._qp['Z_interval'], mean=0)
 
         self._qp['unknown_location'] = random.choice(['original', 'Z'])
 
@@ -331,7 +331,7 @@ class ProbabilityEquality(relationships.QuestionPart):
         if self._qp['flipped']:
             # e.g. = Pr(Z <= 2/9)
             lines += r'''$= Pr({0})$'''.format(
-                expressions.relation(ProbabilityEquality.opposite_interval(interval, mean=0), var="Z")
+                expressions.relation(ProbabilityEquality.symmetrically_opposite_interval(interval, mean=0), var="Z")
             )
 
         answer = -value if self._qp['flipped'] else value

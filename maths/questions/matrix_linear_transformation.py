@@ -118,9 +118,11 @@ class MatrixLinearTransformation(relationships.QuestionPart):
             translation_matrix=sympy.latex(translation_matrix)
         )
 
-        # the symbols can get pulled out of order when looking at expr.free_symbols. As of 10/12/2013 we can use
-        # the builtin sorted to sort them in alphabetical order
-        wilds = sorted([i for i in self._qp['wildcard_equation'].free_symbols if i != x])
+        # the symbols can get pulled out of order when looking at expr.free_symbols
+        wilds = [a, b, c, d]
+        if d not in self._qp['wildcard_equation']:
+            wilds.remove(d)
+
         return r'''The transformation $T: R^{{2}} \rightarrow R^{{2}}$ is defined by \[{mapping}\]
             The image of the curve $y = {equation}$ under the transformation $T$ has equation y = ${wildcard_equation}$.
             Find the values of ${wilds}$.'''.format(

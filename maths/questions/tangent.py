@@ -9,6 +9,9 @@ import os
 import pickle
 
 
+question_not_complete = True
+
+
 def enumerate_quadratics():
     """Generate all quadratics for a certain range of coefficients.
 
@@ -51,7 +54,7 @@ def enumerate_tangents(curve, domain=list(range(-5, 6))):
     for x_coordinate in domain:
         y_coordinate_at_point_of_tangency = curve.subs({x: x_coordinate})
         curve_gradient_at_point_of_tangency = curve.diff().subs({x: x_coordinate})
-    
+
         tangent_y_intercept = y_coordinate_at_point_of_tangency - curve_gradient_at_point_of_tangency * x_coordinate
 
         enumerate_tangents.current_x = x_coordinate
