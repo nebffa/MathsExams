@@ -10,6 +10,18 @@ def latex_endline():
     return r' \\ ' + '\n'
 
 
+def decrement_question_counter(f):
+    """Decrement the question counter, which determines the number that the next question will be.
+
+    In some cases, we may want to display the solution of a question immediately after a question. Therefore,
+    we don't want to have 'Question 4' followed by a solution labeled 'Question 5'. Decrementing the counter
+    allows us to follow with a solution labeled 'Question 4'.
+    """
+
+    f.write(r'\addtocounter{partsi}{-1}' + '\n')
+
+
+
 def new_page(f):
     f.write(r'\newpage' + '\n')
 
@@ -73,7 +85,7 @@ def begin_tex_document(f):
     f.write('\n')
     f.write(r'\scrollmode' + '\n')
     begin(f)
-    
+
 
 
 def end_tex_document(f):
