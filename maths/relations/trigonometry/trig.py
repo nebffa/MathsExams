@@ -152,7 +152,7 @@ class Trig(object):
                     trig_value = 0
                 else:
                     trig_value = random.choice(list(value_to_radians.keys()))
-                    
+
 
                 equation = a * \
                     {
@@ -289,6 +289,24 @@ def domain(function, lower_bound, upper_bound):
     return [sympy.solve(function - test_value)[0] for test_value in values]
 
 
+def expr_period(expr):
+    if expr.has(sympy.cos):
+        function_type = sympy.cos
+    elif expr.has(sympy.sin):
+        function_type = sympy.sin
+    elif expr.has(sympy.tan):
+        function_type = sympy.tan
+    elif expr.has(sympy.cot):
+        function_type = sympy.cot
+
+    interior = expr.find(function_type).pop().args[0]
+
+    if function_type in [sympy.sin, sympy.cos]:
+        return abs(2 * sympy.pi / interior.coeff(x))
+    elif function_type in [sympy.tan, sympy.cot]:
+        return abs(sympy.pi / interior.coeff(x))
+
+
 def request_limited_domain(trig_function):
     if trig_function.has(sympy.cos):
         function_type = sympy.cos
@@ -299,13 +317,9 @@ def request_limited_domain(trig_function):
     elif trig_function.has(sympy.cot):
         function_type = sympy.cot
 
-    x0, x1, x2, x3 = sympy.Wild('x0'), sympy.Wild('x1'), sympy.Wild('x2'), sympy.Wild('x3')
-    match = trig_function.match(x0 * function_type(x1*x + x2) + x3)
+    interior = trig_function.find(function_type).pop().args[0]
 
-    if function_type in [sympy.cos, sympy.sin]:
-        period = abs(2*sympy.pi / match[x1])
-    elif function_type in [sympy.tan, sympy.cot]:
-        period = abs(sympy.pi / match[x1])
+    period = expr_period(trig_function)
 
     domain_middle = random.choice([sympy.pi/2 * i for i in range(-2, 3)])
     if function_type in [sympy.cos, sympy.sin]:
@@ -317,8 +331,7 @@ def request_limited_domain(trig_function):
 
     k = sympy.Symbol('k')
     if function_type == sympy.tan:
-        match = trig_function.match(x0 * function_type(x1) + x2)
-        interior = match[x1]
+        interior = trig_function.find(function_type).pop().args[0]
 
         base_asymptote = sympy.solve(interior - sympy.pi/2)[0]
 
@@ -326,15 +339,13 @@ def request_limited_domain(trig_function):
 
         domain = domain_remove_asymptotes(domain, asymptotes)
     elif function_type == sympy.cot:
-        match = trig_function.match(x0 * function_type(x1) + x2)
-        interior = match[x1]
+        interior = trig_function.find(function_type).pop().args[0]
 
         base_asymptote = sympy.solve(interior)[0]
 
         asymptotes = base_asymptote + k * period
 
         domain = domain_remove_asymptotes(domain, asymptotes)
-
 
     return domain
 
