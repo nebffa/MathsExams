@@ -260,6 +260,9 @@ def parse_structure(module):
     Will be evolved over time!!!
     """
 
+    if hasattr(module, 'question_not_complete'):
+        return None
+
     parts = []
     for _, member in inspect.getmembers(module, inspect.isclass):
         if issubclass(member, QuestionPart):  # get all the question parts
