@@ -3,40 +3,38 @@ import textwrap
 
 
 def create_tests():
+    """Creates a new test for every question that doesn't have one.
+    """
 
     maths_path = os.path.split(os.getcwd())[0]
-    parts_path = os.path.join(maths_path, 'maths', 'questions')
-    tests_path = os.path.join(maths_path, 'maths', 'questions', 'tests')
-
+    questions_path = os.path.join(maths_path, 'questions')
+    tests_path = os.path.join(maths_path, 'questions', 'tests')
 
     irrelevant_tests_files = ['__init__.py', 'question_tester.py']
-    irrelevant_parts_files = ['__init__.py']
+    irrelevant_parts_files = ['__init__.py', 'relationships.py']
 
     test_files = [filename for filename in os.listdir(tests_path) if filename.endswith('py') and filename not in irrelevant_tests_files]
-    part_files = [filename for filename in os.listdir(parts_path) if filename.endswith('py') and filename not in irrelevant_parts_files]
+    question_files = [filename for filename in os.listdir(questions_path) if filename.endswith('py') and filename not in irrelevant_parts_files]
 
-
-    for file_string in part_files:
-        test_filename = 'test_' + file_string
-
-
-        stripped_extension = os.path.splitext(file_string)[0]
-        test_class = stripped_extension.title().replace('_', '')
+    for question_file in question_files:
+        module_name = os.path.splitext(question_file)[0]
+        test_filename = 'test_' + question_file
 
         if test_filename in test_files:
-                continue
+            continue
 
-        full_path = os.path.join(tests_path, test_filename)
-        with open(full_path, 'w') as f:
+        new_testfile_path = os.path.join(tests_path, test_filename)
+
+        with open(new_testfile_path, 'w') as f:
             test_content = textwrap.dedent('''\
-                                from maths.questions import {0}
-                                from maths.latex.exams import QuestionTree
-                                from .question_tester import question_tester
+                from .. import relationships, {module_name}
+                from .question_tester import question_tester
 
 
-                                def test_{1}():
-                                    q1 = {0}.{1}()
-                                    question_tester(QuestionTree(part=q1))'''.format(file_string[:-3], test_class))
+                def test_{module_name}():
+                    question = relationships.parse_structure({module_name})
+                    question_tester(question)'''.format(module_name=module_name)
+                                           )
 
             f.write(test_content)
 
