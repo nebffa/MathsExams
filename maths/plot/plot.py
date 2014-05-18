@@ -11,7 +11,7 @@ import re
 import uuid
 import os
 import textwrap
-    
+
 
 def f7(seq):
     # removes repeating items in lists, preserving order
@@ -29,7 +29,7 @@ def get_undefined_points(expr):
 
 
 def numpify(expr):
-    ''' 
+    '''
     Takes a sympy expression and returns a numpy expression that accepts a darray "x_values".
     '''
 
@@ -39,10 +39,10 @@ def numpify(expr):
 
 
 def asymptote_proof(array):
-    ''' 
+    '''
     Takes a numpy.ndarray and asymptote-proofs the values so we don't plot over asymptotes.
     '''
-    
+
     threshold = 1000
     array[array > threshold] = numpy.inf
     array[array < -threshold] = numpy.inf
@@ -69,7 +69,7 @@ def latex(path):
     '''.format(os.path.splitext(latex_friendly_path)[0])) + '\n'
 
 
-    
+
 
 
 def _blank_plot(domain, ran):
@@ -152,29 +152,29 @@ def plot(expr, plot_domain, plot_range, expr_domain=None):
         raise ValueError('The supplied expr_domain goes to infinity: {0}'.format(plot_domain))
 
 
-    _blank_plot(plot_domain, plot_range)    
+    _blank_plot(plot_domain, plot_range)
 
 
-    # plot each part of a piecewise individually    
+    # plot each part of a piecewise individually
     if isinstance(expr, sympy.Piecewise):
 
         # get a list of the ends of domains for the piecewise parts
         domains = [numpy.float64( i[1].rhs ) for i in expr.args]
-        domains.insert(0, expr_domain.left)
-        domains.append(expr_domain.right)
+        domains.insert(0, numpy.float64(expr_domain.left))
+        domains.append(numpy.float64(expr_domain.right))
         domains = f7(domains)
 
         for i in range(len(expr.args)):
             numpified = numpify( expr.args[i][0] )
-            
+
             x_values = numpy.linspace(domains[i], domains[i + 1], num=5000)
             #undefined_points = get_undefined_points(expr.args[i][0])
             #undefined_indices = numpy.where(x_values == undefined_points)
             #x_values = numpy.delete(undefined_indices)
-            
+
             y_values = eval(r'{0}'.format(numpified))
             y_values = asymptote_proof(y_values)
-    
+
             plt.plot(x_values, y_values, color="k")
 
     else:
