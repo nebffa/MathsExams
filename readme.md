@@ -17,6 +17,13 @@ What if?
 ... we could generate educational content to serve that need using programming? This project explores that idea.
 
 
+Examples
+--------
+
+If you don't want to go through the installation (which can involve installing a bulky LaTeX compiler, if you don't already have one) - there
+are some example PDFs in the `/examples` folder.
+
+
 Installation
 ------------
 
