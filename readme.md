@@ -39,6 +39,13 @@ python exam.py
 This creates `exam.tex`, a (very simple) exam in the same directory. It showcases all of the questions that have been created so far. Use your LaTeX compiler to create a `.pdf` and have a look!
 
 
+Miscellaneous Information
+-------------------------
+
+These questions are based off the Victorian Certificate of Education (VCE) exams sat by year 12 students. Past papers
+can be found at the [Victorian Curriculum Assessment Authority (VCAA) website](http://www.vcaa.vic.edu.au/Pages/vce/studies/mathematics/cas/casexams.aspx).
+
+
 Contribute
 ----------
 
