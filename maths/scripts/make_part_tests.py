@@ -34,7 +34,7 @@ def create_tests():
                 def test_{module_name}():
                     question = relationships.parse_structure({module_name})
                     question_tester(question)'''.format(module_name=module_name)
-                                           )
+            )
 
             f.write(test_content)
 
