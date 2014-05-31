@@ -1,8 +1,19 @@
-from ..questions import relationships
+import sys
 import os
+
+
+cur_dir = os.path.split(os.path.abspath(__file__))[0]
+parent_dir = os.path.split(os.path.abspath(cur_dir))[0]
+grandparent_dir = os.path.split(os.path.abspath(parent_dir))[0]
+questions_dir = os.path.join(parent_dir, 'questions')
+sys.path.append(grandparent_dir)
+
+
+from maths.questions import relationships
 import glob
 import importlib
 import random
+
 
 
 def get_questions_dir():
@@ -41,11 +52,9 @@ def import_question_modules(question_paths):
 
     for question_path in question_paths:
         relative_path = os.path.relpath(question_path)
-
-        package = os.path.split(relative_path)[0].replace('/', '.')
         module_name = os.path.splitext(os.path.split(relative_path)[1])[0]
 
-        imported_module = importlib.import_module('.' + module_name, package=package)
+        imported_module = importlib.import_module('.' + module_name, package='maths.questions')
 
         if hasattr(imported_module, 'question_not_complete'):
             continue
