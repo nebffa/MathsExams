@@ -8,7 +8,7 @@ setup(
     author_email="ben.lucato@gmail.com",
     description="Create maths questions for students to practice with",
     url="https://github.com/nebffa/MathsExams",
-    packages=find_packages,
+    packages=find_packages(),
     install_requires=[
         "gmpy==1.17",
         "numpy==1.8.0",
