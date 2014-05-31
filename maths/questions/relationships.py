@@ -214,6 +214,19 @@ class PartTree:
         self._instantiate_tree()
         return self._question_traversal_to_latex()
 
+    def question_statement(self):
+        """Return the LaTeX representing the question.
+        """
+
+        self._instantiate_tree()
+        return self._question_traversal_to_latex()
+
+    def solution_statement(self):
+        """Return the LaTeX representing the solution.
+        """
+
+        return self._solution_traversal_to_latex()
+
 
 def exists_dummy_parent(parts):
     """State whether there is a dummy parent for any part in a list of parts.
