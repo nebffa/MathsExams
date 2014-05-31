@@ -75,4 +75,7 @@ def random_question():
     choice = random.choice(question_modules)
     built_question = relationships.parse_structure(choice)[0]
 
-    return built_question.question_statement(), built_question.solution_statement()
+    return {
+        'question': built_question.question_statement(),
+        'solution': built_question.solution_statement()
+    }
